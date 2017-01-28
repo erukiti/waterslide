@@ -28,6 +28,9 @@ class PackageJsonProvider {
     constructor() {
         this.path = 'package.json'
 
+        this.packages = []
+        this.devPackages = []
+
         const getProjectName = () => {
             return path.basename(process.cwd())
             // FIXME: いい感じに変換する仕組みを考える
@@ -50,6 +53,11 @@ class PackageJsonProvider {
     addPackage(name) {
         console.log(`add package: ${name}`)
     }
+
+    addDevPackage(name){
+        console.log(`add dev package: ${name}`)
+    }
+
 
     output() {
         return {
@@ -93,8 +101,8 @@ class JSEnv {
         const packageJsonProvider = new PackageJsonProvider()
         operator.addProvider('package.json', packageJsonProvider)
         operator.addProvider('babel', new BabelProvider())
-        packageJsonProvider.addPackage('babel-core')
-        packageJsonProvider.addPackage('babel-loader')
+        packageJsonProvider.addDevPackage('babel-core')
+        packageJsonProvider.addDevPackage('babel-loader')
     }
 }
 
@@ -106,7 +114,7 @@ class ES2016Env {
         const packageJsonProvider = operator.getProvider('package.json')
         const babelProvider = operator.getProvider('babel')
         babelProvider.addPreset('es2016')
-        packageJsonProvider.addPackage('babel-preset-es2016')
+        packageJsonProvider.addDevPackage('babel-preset-es2016')
 
     }
 }
@@ -138,9 +146,52 @@ class GitEnv {
         operator.addProvider('git', new GitProvider())
     }
 }
+
+class ElectronProvider {
+    constructor() {
+
+    }
+    output() {
+        const values = {'main': 'browser/app.js'}
+        return {
+            path: 'src/package.json',
+            text: JSON.stringify(values, null, '  ')
+        }
+    }
+}
+
+class ElectronEnv {
+    constructor() {
+
+    }
+    process(operator) {
+        operator.addProvider('electron', new ElectronProvider())
+        const packageJsonProvider = operator.getProvider('package.json')
+        packageJsonProvider.addDevPackage('electron-prebuilt')
+
+    }
+}
+
+class ReactReduxEnv {
+    constructor() {
+
+    }
+    process(operator) {
+        const babelProvider = operator.getProvider('babel')
+        babelProvider.addPreset('react')
+        babelProvider.addPlugin('babel-plugin-syntax-jsx')
+        const packageJsonProvider = operator.getProvider('package.json')
+        packageJsonProvider.addDevPackage('babel-preset-react')
+        packageJsonProvider.addDevPackage('babel-plugin-syntax-jsx')
+        packageJsonProvider.addPackage('react')
+        packageJsonProvider.addPackage('react-dom')
+        packageJsonProvider.addPackage('react-redux')
+        packageJsonProvider.addPackage('redux')
+    }
+}
+
+
 class EditorConfigEnv {}
-class ElectronEnv {}
-class ReactReduxEnv {}
 class PowerAssertEnv {}
 class MochaEnv {}
 class EslintEnv {}
@@ -153,6 +204,10 @@ const es2016Env = new ES2016Env()
 es2016Env.process(operator)
 const gitEnv = new GitEnv()
 gitEnv.process(operator)
+const electronEnv = new ElectronEnv()
+electronEnv.process(operator)
+const reactReduxEnv = new ReactReduxEnv()
+reactReduxEnv.process(operator)
 
 operator.output()
 
