@@ -1,7 +1,7 @@
 const process = require('process')
 
-const newProject = require('./new/project')
-const setting = require('./setting/index')
+const NewProject = require('./new/project')
+const Setting = require('./setting')
 
 if (process.argv.length <= 2) {
     console.error('need args')
@@ -9,9 +9,11 @@ if (process.argv.length <= 2) {
 }
 
 if (process.argv[2] === 'new') {
-    newProject(process.argv.slice(3))
+    const newProject = new NewProject()
+    newProject.run(process.argv.slice(3))
 }
 
 if (process.argv[2] == 'setting') {
-    setting(process.argv.slice(3))
+    const setting = new Setting()
+    setting.run(process.argv.slice(3))
 }

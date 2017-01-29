@@ -19,6 +19,10 @@ class SettingReader {
     get(key) {
         return this.config[key]
     }
+
+    getAll() {
+        return this.config
+    }
 }
 
 module.exports = SettingReader

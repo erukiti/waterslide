@@ -13,7 +13,6 @@ class SettingWriter {
         let config = {}
         try {
             config = JSON.parse(fs.readFileSync(this.configPath))
-            console.dir(config)
         } catch(e) {
             // nice catch
         }
