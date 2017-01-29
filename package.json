@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/erukiti/waterslider/issues"
   },
-  "homepage": "https://github.com/erukiti/waterslider#readme"
+  "homepage": "https://github.com/erukiti/waterslider#readme",
+  "dependencies": {
+    "mkdirp": "^0.5.1"
+  }
 }
