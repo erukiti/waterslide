@@ -1,7 +1,7 @@
 {
   "name": "waterslider",
   "version": "1.0.0",
-  "description": "",
+  "description": "waterslider is easy setting method for JavaScript.",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,9 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/erukiti/waterslider.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["waterslider", "webpack", "boilerplate"],
+  "author": "erukiti - SASAKI Shunsuke <erukiti+github@gmail.com>",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/erukiti/waterslider/issues"
   },

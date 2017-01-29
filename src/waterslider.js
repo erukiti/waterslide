@@ -1,7 +1,8 @@
 const process = require('process')
 const generateName = require('sillyname')
 
-const newProject = require('./new/project.js')
+const newProject = require('./new/project')
+const setting = require('./setting/index')
 
 const generateProjectDirName = () => {
     return generateName().toLowerCase().replace(' ', '-')
@@ -18,4 +19,8 @@ if (process.argv[2] === 'new') {
     } else {
         newProject(generateProjectDirName())
     }
+}
+
+if (process.argv[2] == 'setting') {
+    setting(process.argv.slice(3))
 }

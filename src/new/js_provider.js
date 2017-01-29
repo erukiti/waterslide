@@ -1,27 +1,37 @@
 'use strict'
 
+const SettingReader = require('../setting/reader')
+
 class JSProvider {
     constructor(operator) {
+        this.settingReader = new SettingReader()
+
         this.operator = operator
 
         this.packages = []
         this.devPackages = []
 
         const getProjectName = () => operator.getProjectDir()
-            // FIXME: いい感じに変換する仕組みを考える
-            //        大文字小文字や区切りをいじったり
+            // FIXME: project dir -> project name
 
         const getVersion = () => '1.0.0'
         const getDescription = () => ''
         const getMain = () => 'src/index.js'
+        const author = this.settingReader.get('author')
+        const license = this.settingReader.get('license')
+        const keywords = []
+
+        console.log(author)
 
         this.values = {
             name: getProjectName(),
             version: getVersion(),
             description: getDescription(),
-            main: getMain()
+            main: getMain(),
+            author,
+            license,
+            keywords
         }
-
     }
 
     addPackage(name) {
