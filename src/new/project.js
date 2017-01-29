@@ -1,3 +1,7 @@
+'use strict'
+
+const generateName = require('sillyname')
+
 const Operator = require('./operator')
 const JSEnv = require('./js_env')
 const EcmaScriptEnv = require('./ecma_script_env')
@@ -6,7 +10,13 @@ const ElectronEnv = require('./electron_target')
 const ReactReduxEnv = require('./react_redux_env')
 const WebpackEnv = require('./webpack_env')
 
-const create = projectDir => {
+const generateProjectDirName = () => {
+    return generateName().toLowerCase().replace(' ', '-')
+}
+
+const newProject = argv => {
+    const projectDir = argv.length > 0 ? argv[0] : generateProjectDirName()
+
     const operator = new Operator(projectDir)
 
     const jsEnv = new JSEnv(operator)
@@ -25,5 +35,5 @@ const create = projectDir => {
     operator.output()
 }
 
-module.exports = create
+module.exports = newProject
 
