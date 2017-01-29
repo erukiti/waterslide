@@ -8,6 +8,7 @@ const childProcess = require('child_process')
 
 const DocumentProvider = require('./document_provider')
 const SourceProvider = require('./source_provider')
+const SettingReader = require('../setting/reader')
 
 /**
  * creator()が生成するPromiseを非同期かつ直列的に実行する
@@ -24,6 +25,8 @@ class Operator {
         this.required = {}
         this.commands = []
         this.projectDir = projectDir
+
+        this.settingReader = new SettingReader()
 
         this.makeProjectDir = () => {
             fs.mkdirSync(projectDir)
@@ -61,6 +64,10 @@ class Operator {
 
         this.addProvider('document', new DocumentProvider(this))
         this.addProvider('source', new SourceProvider(this))
+    }
+
+    getSetting(key) {
+        return this.settingReader.get(key)
     }
 
     getProjectDir() {

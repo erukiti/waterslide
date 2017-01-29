@@ -3,7 +3,7 @@
   "bin": "bin/waterslider",
   "version": "1.0.0",
   "description": "waterslider is easy setting method for JavaScript.",
-  "main": "src/index.js",
+  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/erukiti/waterslider.git"
   },
-  "keywords": ["waterslider", "webpack", "boilerplate"],
+  "keywords": [
+    "waterslider",
+    "webpack",
+    "boilerplate"
+  ],
   "author": "erukiti - SASAKI Shunsuke <erukiti+github@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
@@ -19,7 +23,9 @@
   },
   "homepage": "https://github.com/erukiti/waterslider#readme",
   "dependencies": {
+    "github-api": "^3.0.0",
     "mkdirp": "^0.5.1",
+    "read": "^1.0.7",
     "sillyname": "^0.1.0"
   }
 }

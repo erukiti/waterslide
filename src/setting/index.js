@@ -5,7 +5,7 @@ const SettingWriter = require('./writer')
 const setting = (argv) => {
     const writer = new SettingWriter()
 
-    const validKeys = ['author', 'name', 'email', 'homepage', 'license']
+    const validKeys = ['author', 'name', 'email', 'homepage', 'license', 'github_token']
 
     if (argv.length >= 2) {
         const value = argv.slice(1).join(' ')

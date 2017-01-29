@@ -10,28 +10,6 @@ class JSProvider {
 
         this.packages = []
         this.devPackages = []
-
-        const getProjectName = () => operator.getProjectDir()
-            // FIXME: project dir -> project name
-
-        const getVersion = () => '1.0.0'
-        const getDescription = () => ''
-        const getMain = () => 'src/index.js'
-        const author = this.settingReader.get('author')
-        const license = this.settingReader.get('license')
-        const keywords = []
-
-        console.log(author)
-
-        this.values = {
-            name: getProjectName(),
-            version: getVersion(),
-            description: getDescription(),
-            main: getMain(),
-            author,
-            license,
-            keywords
-        }
     }
 
     addPackage(name) {
@@ -43,6 +21,26 @@ class JSProvider {
     }
 
     outputs() {
+        const getProjectName = () => this.operator.getProjectDir()
+            // FIXME: project dir -> project name
+
+        const getVersion = () => '1.0.0'
+        const getDescription = () => ''
+        const getMain = () => 'src/index.js'
+        const author = this.settingReader.get('author')
+        const license = this.settingReader.get('license')
+        const keywords = []
+
+        this.values = {
+            name: getProjectName(),
+            version: getVersion(),
+            description: getDescription(),
+            main: getMain(),
+            author,
+            license,
+            keywords
+        }
+
         this.packages.forEach(name => {
             this.operator.addCommand(0, `npm install ${name} -S`)
         })
