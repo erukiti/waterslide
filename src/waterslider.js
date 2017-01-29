@@ -1,7 +1,7 @@
 const process = require('process')
 const generateName = require('sillyname')
 
-const create = require('./create/create.js')
+const newProject = require('./new/project.js')
 
 const generateProjectDirName = () => {
     return generateName().toLowerCase().replace(' ', '-')
@@ -12,10 +12,10 @@ if (process.argv.length <= 2) {
     process.exit(1)
 }
 
-if (process.argv[2] === 'create') {
+if (process.argv[2] === 'new') {
     if (process.argv.length > 3) {
-        create(process.argv[3])
+        newProject(process.argv[3])
     } else {
-        create(generateProjectDirName())
+        newProject(generateProjectDirName())
     }
 }
