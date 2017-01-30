@@ -27,6 +27,7 @@ class NewProject{
     }
 
     setTarget(name) {
+        // ここらへんの仕組み Plugin に移動する
         const klass = this.plugin.requireTarget(name)
         this.objs.push(new klass(this.operator))
     }
@@ -36,12 +37,18 @@ class NewProject{
             return generateName().toLowerCase().replace(' ', '-')
         }
 
-        const projectDir = argv.length > 0 ? argv[0] : generateProjectDirName()
+        if (argv.length === 0) {
+            console.error('waterslider new <target> [projectName]')
+            return
+        }
+
+        const target = argv[0]
+
+        const projectDir = argv.length > 1 ? argv[1] : generateProjectDirName()
 
         this.operator = new Operator(projectDir)
 
         const envs = ['js', 'git', 'ecma_script', 'react_redux']
-        const target = 'electron'
 
         this.setTarget(target)
         this.requireEnv(envs)
