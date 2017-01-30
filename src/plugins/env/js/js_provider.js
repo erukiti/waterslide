@@ -1,6 +1,6 @@
 'use strict'
 
-const SettingReader = require('../setting/reader')
+const SettingReader = require('../../../setting/reader')
 
 class JSProvider {
     constructor(operator) {
