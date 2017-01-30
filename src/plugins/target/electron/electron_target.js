@@ -54,13 +54,10 @@ class ElectronTarget {
         const browserSampleSourceProvider = this.operator.getProvider('browser_sample_source')
         browserSampleSourceProvider.createSample('src/renderer', 'index')
 
-        const documentProvider = this.operator.getProvider('document')
-        documentProvider.setDirectory('src/', 'source code directory')
-        documentProvider.setDirectory('src/browser/', 'source code directory (Electron Browser Process)')
-        documentProvider.setDirectory('src/renderer/', 'source code directory (Electron Renderer Process)')
-        documentProvider.setDirectory('build/', 'compiled Electron apps directory')
-
-
+        this.operator.setDirectory('src', 'source', 'source code directory')
+        this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')
+        this.operator.setDirectory('src/renderer', null, 'source code directory (Electron Renderer Process)')
+        this.operator.setDirectory('build', 'destination', 'build directory')
     }
 }
 

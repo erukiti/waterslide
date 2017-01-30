@@ -7,7 +7,7 @@ class GitProvider {
         this.operator = operator
         this.ignoreFiles = ['node_modules/', 'npm-debug.log']
 
-        this.token = operator.getSetting('github_token')
+        this.token = operator.getConfig('github_token')
 
         // if (this.token) {
         //     this.githubRepository = `casual-${operator.getProjectDir()}`

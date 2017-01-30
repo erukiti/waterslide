@@ -1,7 +1,7 @@
 const process = require('process')
 
 const NewProject = require('./new/project')
-const Setting = require('./setting')
+const Config = require('./config/index')
 const Watch = require('./build/watch')
 
 if (process.argv.length <= 2) {
@@ -14,9 +14,9 @@ if (process.argv[2] === 'new') {
     newProject.run(process.argv.slice(3))
 }
 
-if (process.argv[2] === 'setting') {
-    const setting = new Setting()
-    setting.run(process.argv.slice(3))
+if (process.argv[2] === 'config') {
+    const config = new Config()
+    config.run(process.argv.slice(3))
 }
 
 if (process.argv[2] === 'watch') {

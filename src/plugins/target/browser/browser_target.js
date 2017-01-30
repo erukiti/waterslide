@@ -14,8 +14,8 @@ class BrowserTarget {
         browserSampleSourceProvider.createSample('src', 'index')
 
         const documentProvider = this.operator.getProvider('document')
-        documentProvider.setDirectory('src/', 'source code directory')
-
+        this.operator.setDirectory('src', 'source', 'source code directory')
+        this.operator.setDirectory('build', 'destination', 'build directory')
     }
 }
 

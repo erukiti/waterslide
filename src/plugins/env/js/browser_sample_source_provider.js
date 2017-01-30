@@ -23,6 +23,8 @@ const div = document.getElementById('root')
 div.outerHTML = '<div>HOGE</div>'
 `
 
+// FIXME: 仕組み的に微妙よなぁ。もっと抽象化してできないものか
+
 class BrowserSampleSourceProvider {
     constructor(operator) {
         this.operator = operator

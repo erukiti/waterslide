@@ -8,7 +8,7 @@ const childProcess = require('child_process')
 
 const DocumentProvider = require('./document_provider')
 const SourceProvider = require('./source_provider')
-const SettingReader = require('../setting/reader')
+const config = require('../config')
 
 /**
  * creator()が生成するPromiseを非同期かつ直列的に実行する
@@ -25,15 +25,14 @@ class Operator {
         this.required = {}
         this.commands = []
         this.projectDir = projectDir
+        this.directories = []
 
-        this.settingReader = new SettingReader()
-
-        this.makeProjectDir = () => {
+        this._makeProjectDir = () => {
             fs.mkdirSync(projectDir)
             process.chdir(projectDir)
         }
 
-        this.outputFile = (filename, text) => new Promise((resolve, reject) => {
+        this._outputFile = (filename, text) => new Promise((resolve, reject) => {
             if (path.dirname(filename)) {
                 mkdirp.sync(path.dirname(filename))
             }
@@ -47,7 +46,7 @@ class Operator {
             })
         })
 
-        this.command = command => new Promise((resolve, reject) => {
+        this._command = command => new Promise((resolve, reject) => {
             console.log(command)
             const child = childProcess.exec(command)
             child.on('error', err => reject(err))
@@ -66,8 +65,8 @@ class Operator {
         this.addProvider('source', new SourceProvider(this))
     }
 
-    getSetting(key) {
-        return this.settingReader.get(key)
+    getConfig(key) {
+        return config.getGlobal(key)
     }
 
     getProjectDir() {
@@ -94,13 +93,24 @@ class Operator {
         this.commands[priority].push(command)
     }
 
+    setDirectory(path, purpose, description) {
+        this.getProvider('document').setDirectory(path, description)
+        if (purpose) {
+            this.directories.push({path, purpose})
+        }
+    }
+
+    getDirectories() {
+        return this.directories
+    }
+
     output() {
-        this.makeProjectDir()
+        this._makeProjectDir()
 
         const outputFiles = []
         Object.keys(this.providers).forEach(key => {
             this.providers[key].outputs().forEach(provided => {
-                outputFiles.push(this.outputFile(provided.path, provided.text))
+                outputFiles.push(this._outputFile(provided.path, provided.text))
             })
         })
 
@@ -108,7 +118,7 @@ class Operator {
 
         this.commands.forEach(commands => {
             commands.forEach(command => {
-                doSerial(() => this.command(command))
+                doSerial(() => this._command(command))
             })
         })
         doSerial(() => {

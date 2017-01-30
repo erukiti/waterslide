@@ -1,11 +1,9 @@
 'use strict'
 
-const SettingReader = require('../../../setting/reader')
+const config = require('../../../config')
 
 class JSProvider {
     constructor(operator) {
-        this.settingReader = new SettingReader()
-
         this.operator = operator
 
         this.packages = []
@@ -27,8 +25,8 @@ class JSProvider {
         const getVersion = () => '1.0.0'
         const getDescription = () => ''
         const getMain = () => 'src/index.js'
-        const author = this.settingReader.get('author')
-        const license = this.settingReader.get('license')
+        const author = config.get('author')
+        const license = config.get('license')
         const keywords = []
 
         this.values = {

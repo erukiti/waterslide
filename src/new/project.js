@@ -4,11 +4,13 @@ const generateName = require('sillyname')
 
 const Operator = require('./operator')
 const Plugin = require('../plugin')
+const config = require('../config')
 
 class NewProject{
     constructor() {
         this.plugin = new Plugin()
         this.objs = []
+        this.target = null
     }
 
     preprocess() {
@@ -30,11 +32,13 @@ class NewProject{
         // ここらへんの仕組み Plugin に移動する
         const klass = this.plugin.requireTarget(name)
         this.objs.push(new klass(this.operator))
+        this.target = name
     }
 
     run(argv) {
         const generateProjectDirName = () => {
-            return generateName().toLowerCase().replace(' ', '-')
+            this.sillyname = generateName().toLowerCase().replace(' ', '-')
+            return this.sillyname
         }
 
         if (argv.length === 0) {
@@ -57,6 +61,12 @@ class NewProject{
         this.process()
         this.operator.output()
 
+        config.startLocal()
+        if (this.sillyname) {
+            config.writeLocal('sillyname', this.sillyname)
+        }
+        config.writeLocal('directories', this.operator.getDirectories())
+        config.writeLocal('env', envs)
     }
 }
 

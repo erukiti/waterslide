@@ -20,6 +20,10 @@ class ElectronFinalizer {
             this.electron.restart()
         }
     }
+
+    build() {
+
+    }
 }
 
 module.exports = ElectronFinalizer

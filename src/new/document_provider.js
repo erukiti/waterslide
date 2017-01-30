@@ -14,15 +14,15 @@ class DocumentProvider {
         this.operator = operator
         this.directories = []
     }
-    setDirectory(path, purpose) {
-        this.directories.push({path, purpose})
+    setDirectory(path, description) {
+        this.directories.push({path, description})
     }
 
     getDirectoriesText() {
-        let text = '| directory | purpose |\n'
-        text +=    '| --------- | ------- |\n'
+        let text = '| directory | description |\n'
+        text +=    '| --------- | ----------- |\n'
         this.directories.forEach(directory => {
-            text += `| ${directory.path} | ${directory.purpose} |\n`
+            text += `| ${directory.path} | ${directory.description} |\n`
         })
         return text
     }

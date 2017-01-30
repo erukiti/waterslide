@@ -1,22 +1,19 @@
 'use strict'
 
-const SettingWriter = require('./writer')
-const SettingReader = require('./reader')
+const config = require('../config')
 const readPrompt = require('read')
 
 class Setting {
     constructor() {
-        this.writer = new SettingWriter()
-        this.reader = new SettingReader()
     }
 
     getPromptCreator(prompt, key) {
         return new Promise((resolve, reject) => {
-            if (this.reader.get(key)) {
+            if (config.getGlobal(key)) {
                 resolve()
             } else {
                 readPrompt({prompt}, (err, result) => {
-                    this.writer.write(key, result)
+                    config.writeGlobal(key, result)
                     resolve()
                 })
             }
@@ -39,19 +36,19 @@ class Setting {
 
     run(argv) {
         if (argv.length === 0) {
-            console.dir(this.reader.getAll())
+            console.log(JSON.stringify(config.getGlobalAll(), null, '  '))
         } else if (argv.length >= 2) {
             const validKeys = ['author', 'name', 'email', 'homepage', 'license', 'github_token']
 
             const value = argv.slice(1).join(' ')
 
             if (validKeys.includes(argv[0])) {
-                this.writer.write(argv[0], value)
+                config.writeGlobal(argv[0], value)
             } else {
                 switch(argv[0]) {
                     case 'license': {
                         // FIXME: SPDX license list にないものは警告をだす？
-                        this.writer.write(argv[0], value)
+                        config.writeGlobal(argv[0], value)
                     }
                 }
             }
