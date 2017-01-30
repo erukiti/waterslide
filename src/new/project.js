@@ -48,7 +48,7 @@ class NewProject{
 
         this.operator = new Operator(projectDir)
 
-        const envs = ['js', 'git', 'ecma_script', 'react_redux']
+        const envs = ['js', 'git', 'ecma_script', 'react_redux', 'webpack']
 
         this.setTarget(target)
         this.requireEnv(envs)

@@ -45,6 +45,7 @@ class ElectronTarget {
 
     process() {
         this.operator.getProvider('js').addDevPackage('electron')
+        this.operator.getProvider('js').addDevPackage('electron-connect')
 
         const sourceProvider = this.operator.getProvider('source')
         sourceProvider.addEntry('src/browser/app.js', appJsText, {env: 'node'})
