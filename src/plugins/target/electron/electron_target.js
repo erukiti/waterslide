@@ -40,7 +40,6 @@ class ElectronTarget {
         operator.requireProvider('js')
         operator.requireProvider('document')
         operator.requireProvider('source')
-        operator.requireProvider('browser_sample_source')
     }
 
     process() {
@@ -48,11 +47,11 @@ class ElectronTarget {
         this.operator.getProvider('js').addDevPackage('electron-connect')
 
         const sourceProvider = this.operator.getProvider('source')
-        sourceProvider.addEntry('src/browser/app.js', appJsText, {env: 'node'})
-        sourceProvider.addAsset('src/package.json', JSON.stringify({'main': 'browser/app.js'}, null, '  '))
 
-        const browserSampleSourceProvider = this.operator.getProvider('browser_sample_source')
-        browserSampleSourceProvider.createSample('src/renderer', 'index')
+
+        this.operator.generateSource('browser', 'src/renderer/index.js', {type: 'browser'})
+        this.operator.addSource('src/browser/app.js', appJsText, {type: 'node'})
+        this.operator.addSource('src/package.json', JSON.stringify({'main': 'browser/app.js'}, null, '  '), {type: 'copy'})
 
         this.operator.setDirectory('src', 'source', 'source code directory')
         this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')

@@ -9,6 +9,7 @@ const childProcess = require('child_process')
 const DocumentProvider = require('./document_provider')
 const SourceProvider = require('./source_provider')
 const config = require('../config')
+const Plugin = require('../plugin')
 
 /**
  * creator()が生成するPromiseを非同期かつ直列的に実行する
@@ -26,6 +27,9 @@ class Operator {
         this.commands = []
         this.projectDir = projectDir
         this.directories = []
+        this.generators = {}
+        this.plugin = new Plugin()
+        this.entries = []
 
         this._makeProjectDir = () => {
             fs.mkdirSync(projectDir)
@@ -104,10 +108,41 @@ class Operator {
         return this.directories
     }
 
+    replaceGenerator(name, generator) {
+        // 既に登録済みだとwarning出すべきかな
+        this.generators[name] = generator
+    }
+
+    generateSource(generatorName, name, opts = {}) {
+        if (!this.generators[generatorName]) {
+            const klass = this.plugin.requireGenerator(generatorName)
+
+            // if (!klass) の処理を書く
+
+            this.generators[generatorName] = new klass(this)
+        }
+        this.entries = this.entries.concat(this.generators[generatorName].generateSource(name, opts))
+    }
+
+    addSource(name, text, opts = {}) {
+        this.entries.push({path: name, text, opts})
+    }
+
+    getEntries() {
+        return this.entries.map(entry => {
+            return {path: entry.path, opts: entry.opts}
+        })
+    }
+
     output() {
         this._makeProjectDir()
 
         const outputFiles = []
+
+        this.entries.forEach(entry => {
+            outputFiles.push(this._outputFile(entry.path, entry.text))
+        })
+
         Object.keys(this.providers).forEach(key => {
             this.providers[key].outputs().forEach(provided => {
                 outputFiles.push(this._outputFile(provided.path, provided.text))

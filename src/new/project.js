@@ -67,6 +67,7 @@ class NewProject{
         }
         config.writeLocal('directories', this.operator.getDirectories())
         config.writeLocal('env', envs)
+        config.writeLocal('entries', this.operator.getEntries())
     }
 }
 
