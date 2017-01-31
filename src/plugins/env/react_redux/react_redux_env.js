@@ -1,11 +1,14 @@
 'use strict'
 
+const ReactReduxGenerator = require('./react_redux_generator')
+
 class ReactReduxEnv {
     constructor(operator) {
         this.operator = operator
         operator.requireProvider('js')
         operator.requireProvider('babel')
 
+        operator.replaceGenerator('browser', new ReactReduxGenerator(operator))
     }
     process() {
         const babelProvider = this.operator.getProvider('babel')

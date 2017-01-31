@@ -4,23 +4,23 @@ const path = require('path')
 const process = require('process')
 
 const config = {
-    entry: './src/renderer/index.js',
+    entry: './src/renderer/index.jsx',
     output: {
         path: './build/renderer/',
         filename: 'index.js'
     },
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx']
     },
     module: {
         loaders: [{
             test: /\.jsx?$/,
             exclude: /node_modules/,
-            loader: 'babel?sourceMap'
+            loader: 'babel-loader?sourceMap'
         }]
     },
     devtool: '#source-map',
-    target: 'electron'
+    target: 'electron-renderer'
 }
 
 class WebpackBuilder {
@@ -46,10 +46,7 @@ class WebpackBuilder {
             }
             if (stats.hasErrors()) {
                 stats.compilation.errors.forEach(error => {
-                    this.ev.emit('compile error', {
-                        string: error.error.toString(),
-                        codeFrame: error.error.codeFrame
-                    })
+                    this.ev.emit('compile error', error.error.error)
                 })
                 return
             }

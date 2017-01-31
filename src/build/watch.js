@@ -29,6 +29,10 @@ class Watch {
                 ev.emit('run')
             }
         })
+        ev.on('error', err => console.dir(err))
+        ev.on('compile error', details => console.error(details))
+        ev.on('warning', warning => console.dir(warning))
+
     }
 
     run() {
