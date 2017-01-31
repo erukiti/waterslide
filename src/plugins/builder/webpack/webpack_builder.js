@@ -3,36 +3,45 @@
 const path = require('path')
 const process = require('process')
 
-const config = {
-    entry: './src/renderer/index.jsx',
-    output: {
-        path: './build/renderer/',
-        filename: 'index.js'
-    },
-    resolve: {
-        extensions: ['.js', '.jsx']
-    },
-    module: {
-        loaders: [{
-            test: /\.jsx?$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader?sourceMap'
-        }]
-    },
-    devtool: '#source-map',
-    target: 'electron-renderer'
+const createConfig = filename => {
+    return {
+        entry: `./${filename}`,
+        output: {
+            path: path.dirname(filename.replace(/^src\//, './build/')),
+            filename: path.basename(filename.replace(/\.[a-z]+$/, '.js'))
+        },
+        resolve: {
+            extensions: ['.js', '.jsx']
+        },
+        module: {
+            loaders: [{
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader?sourceMap'
+            }]
+        },
+        devtool: '#source-map',
+        target: 'electron-renderer'
+    }
 }
 
 class WebpackBuilder {
     constructor(ev) {
         this.ev = ev
 
+        this.flags = {}
+
         const webpackPath = path.join(process.cwd(), 'node_modules', 'webpack')
         this.webpack = require(webpackPath)
     }
 
-    watch(opts) {
-        const compiler = this.webpack(config)
+    getTypes() {
+        return ['node', 'browser', 'electron', 'electron-renderer']
+    }
+
+    _compile(entry) {
+        const compiler = this.webpack(createConfig(entry.path))
+        this.flags[entry.path] = true
         compiler.watch({}, (err, stats) => {
             if (err) {
                 this.ev.emit('error', err)
@@ -40,8 +49,10 @@ class WebpackBuilder {
             }
 
             if (stats.hasWarnings()) {
-                stats.compiler.warnings.forEach(warning => {
-                    this.ev.emit('warning', warning)
+                stats.compilation.warnings.forEach(warning => {
+                    console.dir(Object.keys(warning))
+                    console.log(warning.details)
+                    // this.ev.emit('warning', warning)
                 })
             }
             if (stats.hasErrors()) {
@@ -51,8 +62,18 @@ class WebpackBuilder {
                 return
             }
 
-            this.ev.emit('compiled', this)
+            this.flags[entry.path] = false
+            if (Object.keys(this.flags).filter(key => {
+                return this.flags[key]
+            }).length === 0) {
+                this.ev.emit('compiled', this)
+            }
+
         })
+    }
+
+    watch(entries) {
+        entries.forEach(entry => this._compile(entry))
     }
 }
 

@@ -49,9 +49,9 @@ class ElectronTarget {
         const sourceProvider = this.operator.getProvider('source')
 
 
-        this.operator.generateSource('browser', 'src/renderer/index.js', {type: 'browser'})
-        this.operator.addSource('src/browser/app.js', appJsText, {type: 'node'})
-        this.operator.addSource('src/package.json', JSON.stringify({'main': 'browser/app.js'}, null, '  '), {type: 'copy'})
+        this.operator.generateSource('browser', 'src/renderer/index.js', {type: 'electron-renderer'})
+        this.operator.addSource('src/browser/app.js', appJsText, {type: 'copy'})
+        this.operator.addSource('src/package.json', JSON.stringify({'main': 'browser/app.js'}, null, '  ') + '\n', {type: 'copy'})
 
         this.operator.setDirectory('src', 'source', 'source code directory')
         this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')

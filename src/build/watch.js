@@ -2,6 +2,8 @@
 
 const {EventEmitter} = require('events')
 
+const config = require('../config')
+
 const WebpackBuilder = require('../plugins/builder/webpack/webpack_builder')
 const CopyBuilder = require('../plugins/builder/copy/copy_builder')
 const ElectronFinalizer = require('../plugins/finalizer/electron/electron_finalizer')
@@ -36,8 +38,11 @@ class Watch {
     }
 
     run() {
-        this.copyBuilder.watch(['package.json', 'browser/app.js', 'renderer/index.html'])
-        this.webpackBuilder.watch('renderer/index.js')
+        config.startLocal()
+        const entries = config.getLocal('entries')
+
+        this.copyBuilder.watch(entries.filter(entry => entry.opts && this.copyBuilder.getTypes().includes(entry.opts.type)))
+        this.webpackBuilder.watch(entries.filter(entry => entry.opts && this.webpackBuilder.getTypes().includes(entry.opts.type)))
     }
 }
 

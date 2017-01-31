@@ -13,7 +13,6 @@ class ElectronFinalizer {
     run() {
         if (!this.electron) {
             this.electron = require(path.join(process.cwd(), 'node_modules', 'electron-connect')).server.create({path: './build'})
-            console.dir(this.electron)
             this.electron.start()
             this.electron.on('quit', () => process.exit(0))
         } else {
