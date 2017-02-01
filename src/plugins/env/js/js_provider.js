@@ -1,6 +1,6 @@
 'use strict'
 
-const config = require('../../../config')
+const {config} = require('../../../waterslider')
 
 class JSProvider {
     constructor(operator) {
@@ -8,6 +8,7 @@ class JSProvider {
 
         this.packages = []
         this.devPackages = []
+        this.main = ''
     }
 
     addPackage(name) {
@@ -18,22 +19,25 @@ class JSProvider {
         this.devPackages.push(name)
     }
 
+    setMain(name) {
+        this.main = name
+    }
+
     outputs() {
         const getProjectName = () => this.operator.getProjectDir()
             // FIXME: project dir -> project name
 
         const getVersion = () => '1.0.0'
         const getDescription = () => ''
-        const getMain = () => 'src/index.js'
         const author = config.get('author')
         const license = config.get('license')
         const keywords = []
 
         this.values = {
+            main: this.main,
             name: getProjectName(),
             version: getVersion(),
             description: getDescription(),
-            main: getMain(),
             author,
             license,
             keywords

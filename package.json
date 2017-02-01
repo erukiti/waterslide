@@ -3,7 +3,7 @@
   "bin": "bin/waterslider",
   "version": "1.0.0",
   "description": "waterslider is easy setting method for JavaScript.",
-  "main": "",
+  "main": "src/waterslider.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -38,13 +38,13 @@ class ElectronTarget {
     constructor(operator) {
         this.operator = operator
         operator.requireProvider('js')
-        operator.requireProvider('document')
-        operator.requireProvider('source')
     }
 
     process() {
-        this.operator.getProvider('js').addDevPackage('electron')
-        this.operator.getProvider('js').addDevPackage('electron-connect')
+        const jsProvider = this.operator.getProvider('js')
+        jsProvider.addDevPackage('electron')
+        jsProvider.addDevPackage('electron-connect')
+        jsProvider.setMain('src/browser/app.js')
 
         const sourceProvider = this.operator.getProvider('source')
 

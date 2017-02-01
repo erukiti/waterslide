@@ -3,6 +3,7 @@
 class EcmaScriptProvider {
     constructor(operator) {
         this.operator = operator
+        operator.requireEnv('js')
         operator.requireProvider('js')
         operator.requireProvider('babel')
     }

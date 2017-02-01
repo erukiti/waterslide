@@ -30,6 +30,8 @@ class Operator {
         this.generators = {}
         this.plugin = new Plugin()
         this.entries = []
+        this.objs = []
+        this.envs = {}
 
         this._makeProjectDir = () => {
             fs.mkdirSync(projectDir)
@@ -132,6 +134,29 @@ class Operator {
         return this.entries.map(entry => {
             return {path: entry.path, opts: entry.opts}
         })
+    }
+
+    requireEnv(name) {
+        if (!this.envs[name]) {
+            const klass = this.plugin.requireEnv(name)
+            this.objs.push(new klass(this))
+            this.envs[name] = true
+        }
+    }
+
+    setTarget(name) {
+        const klass = this.plugin.requireTarget(name)
+        this.objs.push(new klass(this))
+
+        // FIXME 二回目以後はエラー
+    }
+
+    preprocess() {
+        this.objs.forEach(obj => obj.preprocess())
+    }
+
+    process() {
+        this.objs.forEach(obj => obj.process())
     }
 
     output() {
