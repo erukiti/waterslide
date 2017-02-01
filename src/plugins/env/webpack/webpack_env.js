@@ -4,6 +4,7 @@ class WebpackEnv {
     constructor(operator) {
         this.operator = operator
         operator.requireEnv('js')
+        operator.addBuilder('webpack')
     }
     process() {
         const jsProvider = this.operator.getProvider('js')

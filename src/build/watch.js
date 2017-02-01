@@ -3,31 +3,33 @@
 const {EventEmitter} = require('events')
 
 const config = require('../config')
-
-const WebpackBuilder = require('../plugins/builder/webpack/webpack_builder')
-const CopyBuilder = require('../plugins/builder/copy/copy_builder')
-const ElectronFinalizer = require('../plugins/finalizer/electron/electron_finalizer')
+const Plugin = require('../plugin')
 
 class Watch {
     constructor() {
-        const ev = new EventEmitter()
+        config.startLocal()
 
-        this.webpackBuilder = new WebpackBuilder(ev)
-        this.copyBuilder = new CopyBuilder(ev)
-        this.finalizer = new ElectronFinalizer(ev)
+        const ev = new EventEmitter()
+        this.plugin = new Plugin()
+        this.entries = config.getLocal('entries')
+        this.builders = []
+        this.compiled = {}
         this.isWebpack = false
         this.isCopy = false
+        if (config.getLocal('finalizer')) {
+            const klass = this.plugin.requireFinalizer(config.getLocal('finalizer'))
+            new klass(ev)
+        }
+        config.getLocal('builders').forEach(name => {
+            const klass = this.plugin.requireBuilder(name)
+            this.builders.push(new klass(ev))
+        })
+        const list = config.getLocal('builders').sort().join(',')
 
-        ev.on('compiled', obj => {
-            if (obj === this.webpackBuilder) {
-                this.isWebpack = true
-            } else if (obj === this.copyBuilder) {
-                this.isCopy = true
-            } else {
-                console.error('unknown message!!!!!')
-            }
+        ev.on('compiled', name => {
+            this.compiled[name] = name
 
-            if (this.isWebpack && this.isCopy) {
+            if (list === Object.keys(this.compiled).sort().join(',')) {
                 ev.emit('run')
             }
         })
@@ -38,11 +40,11 @@ class Watch {
     }
 
     run() {
-        config.startLocal()
-        const entries = config.getLocal('entries')
-
-        this.copyBuilder.watch(entries.filter(entry => entry.opts && this.copyBuilder.getTypes().includes(entry.opts.type)))
-        this.webpackBuilder.watch(entries.filter(entry => entry.opts && this.webpackBuilder.getTypes().includes(entry.opts.type)))
+        this.builders.forEach(builder => {
+            builder.watch(this.entries.filter(entry => {
+                return entry.opts && builder.getTypes().includes(entry.opts.type)
+            }))
+        })
     }
 }
 

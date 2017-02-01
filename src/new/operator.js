@@ -32,6 +32,7 @@ class Operator {
         this.entries = []
         this.objs = []
         this.envs = {}
+        this.builders = []
 
         this._makeProjectDir = () => {
             fs.mkdirSync(projectDir)
@@ -69,6 +70,7 @@ class Operator {
 
         this.addProvider('document', new DocumentProvider(this))
         this.addProvider('source', new SourceProvider(this))
+        this.addBuilder('copy')
     }
 
     getConfig(key) {
@@ -149,6 +151,22 @@ class Operator {
         this.objs.push(new klass(this))
 
         // FIXME 二回目以後はエラー
+    }
+
+    setFinalizer(name) {
+        this.finalizer = name
+    }
+
+    getFinalizer() {
+        return this.finalizer
+    }
+
+    addBuilder(name) {
+        this.builders.push(name)
+    }
+
+    getBuilders() {
+        return this.builders
     }
 
     preprocess() {

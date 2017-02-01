@@ -38,6 +38,7 @@ class ElectronTarget {
     constructor(operator) {
         this.operator = operator
         operator.requireProvider('js')
+        operator.setFinalizer('electron')
     }
 
     process() {

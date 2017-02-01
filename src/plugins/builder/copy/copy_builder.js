@@ -35,12 +35,12 @@ class CopyBuilder {
             this.copy(filepath)
         })
 
-        this.ev.emit('compiled', this)
+        this.ev.emit('compiled', 'copy')
 
         files.forEach(filepath => {
             fs.watch(filepath, (event, filename) => {
                 this.copy(filepath)
-                this.ev.emit('compiled', this)
+                this.ev.emit('compiled', 'copy')
             })
         })
     }

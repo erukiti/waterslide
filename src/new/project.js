@@ -46,6 +46,8 @@ class NewProject{
         config.writeLocal('directories', operator.getDirectories())
         config.writeLocal('env', envs)
         config.writeLocal('entries', operator.getEntries())
+        config.writeLocal('finalizer', operator.getFinalizer())
+        config.writeLocal('builders', operator.getBuilders())
     }
 }
 

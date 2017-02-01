@@ -66,7 +66,7 @@ class WebpackBuilder {
             if (Object.keys(this.flags).filter(key => {
                 return this.flags[key]
             }).length === 0) {
-                this.ev.emit('compiled', this)
+                this.ev.emit('compiled', 'webpack')
             }
 
         })
