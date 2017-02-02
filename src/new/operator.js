@@ -66,10 +66,6 @@ class Operator {
         this.addBuilder('copy')
     }
 
-    getConfig(key) {
-        return config.getGlobal(key)
-    }
-
     getProjectDir() {
         return this.projectDir
     }
@@ -115,17 +111,6 @@ class Operator {
         return this.generators[name]
     }
 
-    generateSource(generatorName, name, opts = {}) {
-        const generator = this.getGenerator(generatorName)
-        generator.generate(name, opts)
-    }
-
-    getEntries() {
-        return this.entries.map(entry => {
-            return {path: entry.path, opts: entry.opts}
-        })
-    }
-
     setTarget(name) {
         const klass = this.plugin.requireTarget(name)
         this.target = new klass(this)
@@ -137,16 +122,8 @@ class Operator {
         this.finalizer = name
     }
 
-    getFinalizer() {
-        return this.finalizer
-    }
-
     addBuilder(name) {
         this.builders.push(name)
-    }
-
-    getBuilders() {
-        return this.builders
     }
 
     output() {
@@ -191,10 +168,10 @@ class Operator {
 
         config.startLocal()
 
-        config.writeLocal('directories', this.getDirectories())
+        config.writeLocal('directories', this.directories)
         config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {return {path: entry.path, opts: entry.opts}}))
-        config.writeLocal('finalizer', this.getFinalizer())
-        config.writeLocal('builders', this.getBuilders())
+        config.writeLocal('finalizer', this.finalizer)
+        config.writeLocal('builders', this.builders)
         if (this.sillyname) {
             config.writeLocal('sillyname', this.sillyname)
         }
