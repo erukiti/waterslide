@@ -30,7 +30,7 @@ class NewProject{
 
         const operator = new Operator(projectDir)
 
-        const envs = ['git', 'ecma_script', 'react_redux', 'webpack']
+        const envs = ['git', 'ecma_script', 'react_redux', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig']
 
         operator.setTarget(target)
         envs.forEach(env => operator.requireEnv(env))

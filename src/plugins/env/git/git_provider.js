@@ -5,7 +5,7 @@ const GithubApi = require('github-api')
 class GitProvider {
     constructor(operator) {
         this.operator = operator
-        this.ignoreFiles = ['node_modules/', 'npm-debug.log']
+        this.ignoreFiles = ['node_modules/', 'npm-debug.log', 'build/']
 
         this.token = operator.getConfig('github_token')
 
