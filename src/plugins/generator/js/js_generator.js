@@ -2,7 +2,7 @@
 
 const {config} = require('../../../waterslider')
 
-class JSProvider {
+class JsGenerator {
     constructor(operator) {
         this.operator = operator
 
@@ -23,7 +23,11 @@ class JSProvider {
         this.main = name
     }
 
-    outputs() {
+    process() {
+
+    }
+
+    output() {
         const getProjectName = () => this.operator.getProjectDir()
         // FIXME: project dir -> project name
 
@@ -67,4 +71,4 @@ class JSProvider {
     }
 }
 
-module.exports = JSProvider
+module.exports = JsGenerator

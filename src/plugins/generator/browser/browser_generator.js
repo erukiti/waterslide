@@ -26,22 +26,30 @@ div.outerHTML = '<div>HOGE</div>'
 class BrowserGenerator {
     constructor(operator) {
         this.operator = operator
+        this.sources = []
     }
 
-    generateSource(name, opts = {}) {
+    generate(name, opts = {}) {
         const dirname = path.dirname(name)
         const prefix = path.basename(name, '.js')
 
-        return [{
+        this.sources.push({
                 path: path.join(dirname, `${prefix}.html`),
                 text: createHtml(prefix),
                 opts: {type: 'copy'}
-            }, {
+        })
+        this.sources.push({
                 path: path.join(dirname, `${prefix}.js`),
                 text: createJS(),
                 opts
-            }
-        ]
+        })
+    }
+
+    process() {
+
+    }
+    output() {
+        return this.sources
     }
 }
 

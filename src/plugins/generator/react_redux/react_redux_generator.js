@@ -148,48 +148,62 @@ export default connect(mapStateToProps, mapDispatchToProps)(App)
 class ReactReduxGenerator {
     constructor(operator) {
         this.operator = operator
+        this.sources = []
     }
 
-    generateSource(name, opts = {}) {
+    generate(name, opts = {}) {
         const dirname = path.dirname(name)
         const prefix = path.basename(name, '.js')
 
-        const sources = []
-
-        sources.push({
+        this.sources.push({
             path: path.join(dirname, `${prefix}.html`),
             text: createHtml(prefix),
             opts: {type: 'copy'}
         })
-        sources.push({
+        this.sources.push({
             path: path.join(dirname, `${prefix}.jsx`),
             text: createJS(),
             opts
         })
 
         // 一回きりにする
-        sources.push({
+        this.sources.push({
             path: path.join(dirname, 'reducers.js'),
             text: createReducersJS()
         })
-        sources.push({
+        this.sources.push({
             path: path.join(dirname, 'actions.js'),
             text: createActionsJs()
         })
-        sources.push({
+        this.sources.push({
             path: path.join(dirname, 'actions', 'app.js'),
             text: createActionsAppJs()
         })
-        sources.push({
+        this.sources.push({
             path: path.join(dirname, 'components', 'app.js'),
             text: createComponentsAppJs()
         })
-        sources.push({
+        this.sources.push({
             path: path.join(dirname, 'containers', 'app.js'),
             text: createContainersAppJs()
         })
+    }
 
-        return sources
+    process() {
+        const babelGenerator = this.operator.getGenerator('babel')
+        babelGenerator.addPreset('react')
+        babelGenerator.addPlugin('babel-plugin-syntax-jsx')
+
+        const jsGenerator = this.operator.getGenerator('js')
+        jsGenerator.addDevPackage('babel-preset-react')
+        jsGenerator.addDevPackage('babel-plugin-syntax-jsx')
+        jsGenerator.addPackage('react')
+        jsGenerator.addPackage('react-dom')
+        jsGenerator.addPackage('react-redux')
+        jsGenerator.addPackage('redux')
+    }
+    output() {
+        return this.sources
     }
 }
 

@@ -55,25 +55,22 @@ const eslintrc = {
     "extends": "eslint:recommended"
 }
 
-class eslintEnv {
+class eslintGenerator {
     constructor(operator) {
         this.operator = operator
-        this.operator.requireProvider('js')
-        this.operator.requireProvider('babel')
     }
 
     process() {
-        const babelProvider = this.operator.getProvider('babel')
-        babelProvider.addPlugin('babel-eslint')
-
-        const jsProvider = this.operator.getProvider('js')
-        jsProvider.addDevPackage('eslint')
-        jsProvider.addDevPackage('babel-eslint')
-
-        this.operator.addSource('.eslintignore', eslintIgnoreText)
-        this.operator.addSource('.eslintrc', JSON.stringify(eslintrc, null, '  '))
-
+        const jsGenerator = this.operator.getGenerator('js')
+        jsGenerator.addDevPackage('eslint')
+        jsGenerator.addDevPackage('babel-eslint')
+    }
+    output() {
+        return [
+            {path: '.eslintignore', text: eslintIgnoreText},
+            {path: '.eslintrc', text: JSON.stringify(eslintrc, null, '  ') + '\n'}
+        ]
     }
 }
 
-module.exports = eslintEnv
+module.exports = eslintGenerator

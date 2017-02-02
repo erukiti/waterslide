@@ -2,7 +2,7 @@
 
 const GithubApi = require('github-api')
 
-class GitProvider {
+class GitGenerator {
     constructor(operator) {
         this.operator = operator
         this.ignoreFiles = ['node_modules/', 'npm-debug.log', 'build/']
@@ -36,7 +36,7 @@ class GitProvider {
         return this.githubUsername
     }
 
-    outputs() {
+    process() {
         if (this.githubUser) {
             // FIXME: 制御の流れを考える。たとえばoutputsを全部Promise化
             this.githubUser.createRepo({
@@ -45,7 +45,12 @@ class GitProvider {
             }).catch(err => console.dir(err))
         }
 
-
+        // FIXME: git リポジトリがまだ存在しないことを確認する必要がある
+        this.operator.addCommand(9, 'git init')
+        this.operator.addCommand(9, 'git add .')
+        this.operator.addCommand(9, "git commit -m 'first commited by waterslider. see. http://github.com/erukiti/waterslider/'")
+    }
+    output() {
         return [{
             path: '.gitignore',
             text: this.ignoreFiles.join('\n')
@@ -53,4 +58,4 @@ class GitProvider {
     }
 }
 
-module.exports = GitProvider
+module.exports = GitGenerator

@@ -1,6 +1,6 @@
 'use strict'
 
-class BabelProvider {
+class BabelGenerator {
     constructor(operator) {
         this.presets = []
         this.plugins = []
@@ -13,7 +13,10 @@ class BabelProvider {
         this.plugins.push(name)
     }
 
-    outputs() {
+    process() {
+
+    }
+    output() {
         const values = {
             presets: this.presets,
             plugins: this.plugins
@@ -25,4 +28,4 @@ class BabelProvider {
     }
 }
 
-module.exports = BabelProvider
+module.exports = BabelGenerator

@@ -30,24 +30,17 @@ class NewProject{
 
         const operator = new Operator(projectDir)
 
-        const envs = ['git', 'ecma_script', 'react_redux', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig']
+        const envs = ['ecma_script', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig', 'js', 'babel', 'git']
+
+        operator.replaceGenerator('browser','react_redux')
 
         operator.setTarget(target)
-        envs.forEach(env => operator.requireEnv(env))
+        envs.forEach(env => operator.getGenerator(env))
 
-        // operator.preprocess()
-        operator.process()
-        operator.output()
-
-        config.startLocal()
         if (this.sillyname) {
-            config.writeLocal('sillyname', this.sillyname)
+            operator.setSillyname(this.sillyname)
         }
-        config.writeLocal('directories', operator.getDirectories())
-        config.writeLocal('env', envs)
-        config.writeLocal('entries', operator.getEntries())
-        config.writeLocal('finalizer', operator.getFinalizer())
-        config.writeLocal('builders', operator.getBuilders())
+        operator.output()
     }
 }
 

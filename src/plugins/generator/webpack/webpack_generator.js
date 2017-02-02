@@ -1,14 +1,13 @@
 'use strict'
 
-class WebpackEnv {
+class WebpackGenerator {
     constructor(operator) {
         this.operator = operator
-        operator.requireEnv('js')
         operator.addBuilder('webpack')
     }
     process() {
-        const jsProvider = this.operator.getProvider('js')
-        jsProvider.addDevPackage('webpack')
+        const jsGenerator = this.operator.getGenerator('js')
+        jsGenerator.addDevPackage('webpack')
         // jsProvider.addDevPackage('file-loader')
         // jsProvider.addDevPackage('webpack-unassert-loader')
         // jsProvider.addDevPackage('url-loader')
@@ -19,10 +18,11 @@ class WebpackEnv {
         // jsProvider.addDevPackage('json-loader')
         // jsProvider.addDevPackage('')
         // jsProvider.addDevPackage('')
-        if (this.operator.isRequiredProvider('babel')) {
-            jsProvider.addDevPackage('babel-loader')
-        }
+        jsGenerator.addDevPackage('babel-loader')
+    }
+    output() {
+        return []
     }
 }
 
-module.exports = WebpackEnv
+module.exports = WebpackGenerator

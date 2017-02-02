@@ -57,7 +57,7 @@ class WebpackBuilder {
             }
             if (stats.hasErrors()) {
                 stats.compilation.errors.forEach(error => {
-                    this.ev.emit('compile error', error.error.error)
+                    this.ev.emit('compile error', error.error)
                 })
                 return
             }

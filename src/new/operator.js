@@ -6,8 +6,6 @@ const fs = require('fs')
 const mkdirp = require('mkdirp')
 const childProcess = require('child_process')
 
-const DocumentProvider = require('./document_provider')
-const SourceProvider = require('./source_provider')
 const config = require('../config')
 const Plugin = require('../plugin')
 
@@ -22,16 +20,13 @@ const doSerial = creator => p = p.then(creator)
 
 class Operator {
     constructor(projectDir) {
-        this.providers = {}
-        this.required = {}
         this.commands = []
         this.projectDir = projectDir
         this.directories = []
         this.generators = {}
         this.plugin = new Plugin()
         this.entries = []
-        this.objs = []
-        this.envs = {}
+        this.target = []
         this.builders = []
 
         this._makeProjectDir = () => {
@@ -68,8 +63,6 @@ class Operator {
             })
         })
 
-        this.addProvider('document', new DocumentProvider(this))
-        this.addProvider('source', new SourceProvider(this))
         this.addBuilder('copy')
     }
 
@@ -81,18 +74,6 @@ class Operator {
         return this.projectDir
     }
 
-    addProvider(name, provider) {
-        this.providers[name] = provider
-    }
-
-    requireProvider(name) {
-        this.required[name] = true
-    }
-
-    isRequiredProvider(name) {
-        return this.required[name]
-    }
-
     addCommand(priority, command) {
         if (this.commands[priority] === undefined) {
             this.commands[priority] = []
@@ -102,7 +83,8 @@ class Operator {
     }
 
     setDirectory(path, purpose, description) {
-        this.getProvider('document').setDirectory(path, description)
+        const documentGenerator = this.getGenerator('document')
+        documentGenerator.setDirectory(path, description)
         if (purpose) {
             this.directories.push({path, purpose})
         }
@@ -112,24 +94,30 @@ class Operator {
         return this.directories
     }
 
-    replaceGenerator(name, generator) {
+    replaceGenerator(src, dest) {
         // 既に登録済みだとwarning出すべきかな
-        this.generators[name] = generator
+        if (this.generators[src]) {
+            console.error(`${src} is already loaded.`)
+            process.exit(1)
+        }
+        const klass = this.plugin.requireGenerator(dest)
+        this.generators[src] = new klass(this)
     }
 
-    generateSource(generatorName, name, opts = {}) {
-        if (!this.generators[generatorName]) {
-            const klass = this.plugin.requireGenerator(generatorName)
+    getGenerator(name) {
+        if (!this.generators[name]) {
+            const klass = this.plugin.requireGenerator(name)
 
             // if (!klass) の処理を書く
 
-            this.generators[generatorName] = new klass(this)
+            this.generators[name] = new klass(this)
         }
-        this.entries = this.entries.concat(this.generators[generatorName].generateSource(name, opts))
+        return this.generators[name]
     }
 
-    addSource(name, text, opts = {}) {
-        this.entries.push({path: name, text, opts})
+    generateSource(generatorName, name, opts = {}) {
+        const generator = this.getGenerator(generatorName)
+        generator.generate(name, opts)
     }
 
     getEntries() {
@@ -138,17 +126,9 @@ class Operator {
         })
     }
 
-    requireEnv(name) {
-        if (!this.envs[name]) {
-            const klass = this.plugin.requireEnv(name)
-            this.objs.push(new klass(this))
-            this.envs[name] = true
-        }
-    }
-
     setTarget(name) {
         const klass = this.plugin.requireTarget(name)
-        this.objs.push(new klass(this))
+        this.target = new klass(this)
 
         // FIXME 二回目以後はエラー
     }
@@ -169,27 +149,31 @@ class Operator {
         return this.builders
     }
 
-    preprocess() {
-        this.objs.forEach(obj => obj.preprocess())
-    }
-
-    process() {
-        this.objs.forEach(obj => obj.process())
-    }
-
     output() {
         this._makeProjectDir()
 
         const outputFiles = []
 
-        this.entries.forEach(entry => {
-            outputFiles.push(this._outputFile(entry.path, entry.text))
+        // process()
+        Object.keys(this.generators).forEach(key => {
+            this.generators[key].process()
         })
 
-        Object.keys(this.providers).forEach(key => {
-            this.providers[key].outputs().forEach(provided => {
-                outputFiles.push(this._outputFile(provided.path, provided.text))
+        this.target.process()
+
+        // outputs
+        Object.keys(this.generators).forEach(key => {
+            this.generators[key].output().forEach(file => {
+                this.entries.push(file)
             })
+        })
+
+        this.target.output().forEach(file => {
+            this.entries.push(file)
+        })
+
+        this.entries.forEach(entry => {
+            outputFiles.push(this._outputFile(entry.path, entry.text))
         })
 
         doSerial(() => Promise.all(outputFiles))
@@ -204,10 +188,24 @@ class Operator {
             console.log(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
             console.log(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
         }).catch(err => console.error(err))
+
+        config.startLocal()
+
+        config.writeLocal('directories', this.getDirectories())
+        config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {return {path: entry.path, opts: entry.opts}}))
+        config.writeLocal('finalizer', this.getFinalizer())
+        config.writeLocal('builders', this.getBuilders())
+        if (this.sillyname) {
+            config.writeLocal('sillyname', this.sillyname)
+        }
     }
 
-    getProvider(name) {
-        return this.providers[name]
+    setSillyname(sillyname) {
+        this.sillyname = sillyname
+    }
+
+    verbose(message) {
+        console.log(`\x1b[32m${message}\x1b[m]`)
     }
 }
 

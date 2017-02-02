@@ -16,10 +16,12 @@ class ElectronTarget {
         const jsProvider = this.operator.getProvider('js')
         jsProvider.setMain('src/index.js')
 
-        this.operator.addSource('src/index.js', indexJsText, {type: 'node'})
-
         this.operator.setDirectory('src', 'source', 'source code directory')
         // this.operator.setDirectory('build', 'destination', 'build directory')
+
+        return [
+            {path: 'src/index.js', text: indexJsText, opts: {type: 'node'}}
+        ]
     }
 }
 

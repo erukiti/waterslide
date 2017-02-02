@@ -13,14 +13,19 @@ indent_size = 4
 insert_final_newline = true
 `
 
-class EditorconfigEnv {
+class EditorconfigGenerator {
     constructor(operator) {
         this.operator = operator
     }
 
     process() {
-        this.operator.addSource('.editorconfig', editorconfigText)
+
+    }
+    output() {
+        return [
+            {path: '.editorconfig', text: editorconfigText}
+        ]
     }
 }
 
-module.exports = EditorconfigEnv
+module.exports = EditorconfigGenerator

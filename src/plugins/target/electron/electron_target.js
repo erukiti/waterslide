@@ -37,27 +37,27 @@ app.on('ready', () => {
 class ElectronTarget {
     constructor(operator) {
         this.operator = operator
-        operator.requireProvider('js')
         operator.setFinalizer('electron')
     }
 
     process() {
-        const jsProvider = this.operator.getProvider('js')
-        jsProvider.addDevPackage('electron')
-        jsProvider.addDevPackage('electron-connect')
-        jsProvider.setMain('src/browser/app.js')
+        const jsGenerator = this.operator.getGenerator('js')
+        jsGenerator.addDevPackage('electron')
+        jsGenerator.addDevPackage('electron-connect')
+        jsGenerator.setMain('src/browser/app.js')
 
-        const sourceProvider = this.operator.getProvider('source')
-
-
-        this.operator.generateSource('browser', 'src/renderer/index.js', {type: 'electron-renderer'})
-        this.operator.addSource('src/browser/app.js', appJsText, {type: 'copy'})
-        this.operator.addSource('src/package.json', JSON.stringify({'main': 'browser/app.js'}, null, '  ') + '\n', {type: 'copy'})
+        this.operator.getGenerator('browser').generate('src/renderer/index.js', {type: 'electron-renderer'})
 
         this.operator.setDirectory('src', 'source', 'source code directory')
         this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')
         this.operator.setDirectory('src/renderer', null, 'source code directory (Electron Renderer Process)')
         this.operator.setDirectory('build', 'destination', 'build directory')
+    }
+    output() {
+        return [
+            {path: 'src/browser/app.js', text: appJsText, opts: {type: 'copy'}},
+            {path: 'src/package.json', text: JSON.stringify({'main': 'browser/app.js'}, null, '  ') + '\n', opts: {type: 'copy'}}
+        ]
     }
 }
 
