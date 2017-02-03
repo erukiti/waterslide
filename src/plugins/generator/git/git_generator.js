@@ -2,13 +2,14 @@
 
 const GithubApi = require('github-api')
 
-const {config} = require('../../../waterslider')
+const {getConfig} = require('../../../waterslider')
 
 class GitGenerator {
     constructor(operator) {
         this.operator = operator
         this.ignoreFiles = ['node_modules/', 'npm-debug.log', 'build/']
 
+        const config = getConfig()
         this.token = config.getGlobal('github_token')
 
         // if (this.token) {

@@ -6,8 +6,10 @@ const fs = require('fs')
 const mkdirp = require('mkdirp')
 const childProcess = require('child_process')
 
-const config = require('../config')
-const Plugin = require('../plugin')
+
+const {getLogger, getConfig, Plugin} = require('../waterslider')
+const config = getConfig()
+const logger = getLogger()
 
 /**
  * creator()が生成するPromiseを非同期かつ直列的に実行する

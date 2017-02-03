@@ -1,11 +1,20 @@
 'use strict'
 
+let logger = null
+
 const waterslider = {
-    config: require('./config'),
-    plugin: require('./plugin'),
-    build: require('./build/build'),
-    watch: require('./build/watch'),
-    newProject: require('./new/project'),
+    getConfig: () => require('./config'),
+    Plugin: require('./plugin'),
+    getLogger: () => {
+        if (!logger) {
+            const klass = require('./logger')
+            logger = new klass()
+        }
+        return logger
+    },
+    Build: require('./build/build'),
+    Watch: require('./build/watch'),
+    NewProject: require('./new/project'),
 
 }
 

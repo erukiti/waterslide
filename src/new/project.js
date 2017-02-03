@@ -14,10 +14,10 @@ class NewProject{
     }
 
     run(argv) {
-        const generateProjectDirName = () => {
-            this.sillyname = generateName().toLowerCase().replace(' ', '-')
-            return this.sillyname
-        }
+          const generateProjectDirName = () => {
+                this.sillyname = generateName().toLowerCase().replace(' ', '-')
+                return this.sillyname
+            }
 
         if (argv.length === 0) {
             console.error('waterslider new <target> [projectName]')
@@ -31,9 +31,7 @@ class NewProject{
         const operator = new Operator(projectDir)
 
         const envs = ['ecma_script', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig', 'js', 'babel', 'git']
-
         operator.replaceGenerator('browser','react_redux')
-
         operator.setTarget(target)
         envs.forEach(env => operator.getGenerator(env))
 

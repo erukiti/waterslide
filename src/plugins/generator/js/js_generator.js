@@ -1,6 +1,6 @@
 'use strict'
 
-const {config} = require('../../../waterslider')
+const {getConfig} = require('../../../waterslider')
 
 class JsGenerator {
     constructor(operator) {
@@ -30,6 +30,8 @@ class JsGenerator {
     output() {
         const getProjectName = () => this.operator.getProjectDir()
         // FIXME: project dir -> project name
+
+        const config = getConfig()
 
         const main = this.main
         const name = getProjectName()
