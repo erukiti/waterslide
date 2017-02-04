@@ -44,6 +44,8 @@ class ElectronTarget {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('electron')
         jsGenerator.addDevPackage('electron-connect')
+        jsGenerator.addDevPackage('electron-packger')
+        jsGenerator.addDevPackage('node-7z')
         jsGenerator.setMain('src/browser/app.js')
 
         this.operator.getGenerator('browser').generate('src/renderer/index.js', {type: 'electron-renderer'})
@@ -52,7 +54,9 @@ class ElectronTarget {
         this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')
         this.operator.setDirectory('src/renderer', null, 'source code directory (Electron Renderer Process)')
         this.operator.setDirectory('build', 'destination', 'build directory')
+        this.operator.setDirectory('release', null, 'release directory')
     }
+
     output() {
         return [
             {path: 'src/browser/app.js', text: appJsText, opts: {type: 'copy'}},

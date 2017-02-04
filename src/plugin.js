@@ -1,5 +1,7 @@
 'use strict'
 
+const process = require('process')
+
 class Plugin {
     constructor() {
 
@@ -19,6 +21,10 @@ class Plugin {
 
     requireBuilder(name) {
         return require(`./plugins/builder/${name}/${name}_builder`)
+    }
+
+    requireLocal(name) {
+        return require(`${process.cwd()}/node_modules/${name}`)
     }
 }
 
