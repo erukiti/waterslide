@@ -1,7 +1,7 @@
 {
   "name": "waterslider",
   "bin": "bin/waterslider",
-  "version": "1.0.0",
+  "version": "0.8.0",
   "description": "waterslider is easy setting method for JavaScript.",
   "main": "src/waterslider.js",
   "scripts": {

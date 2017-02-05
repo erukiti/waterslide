@@ -44,7 +44,7 @@ class ElectronTarget {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('electron')
         jsGenerator.addDevPackage('electron-connect')
-        jsGenerator.addDevPackage('electron-packger')
+        jsGenerator.addDevPackage('electron-packager')
         jsGenerator.addDevPackage('node-7z')
         jsGenerator.setMain('src/browser/app.js')
 

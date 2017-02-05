@@ -1,6 +1,6 @@
 const process = require('process')
 
-const NewProject = require('./new/project')
+const Generate = require('./generate/index')
 const Config = require('./config/index')
 const Watch = require('./build/watch')
 const Build = require('./build/build')
@@ -11,8 +11,13 @@ if (process.argv.length <= 2) {
 }
 
 if (process.argv[2] === 'new') {
-    const newProject = new NewProject()
-    newProject.run(process.argv.slice(3))
+    const generate = new Generate()
+    generate.run(['project'].concat(process.argv.slice(3)))
+}
+
+if (process.argv[2] === 'generate') {
+    const generate = new Generate()
+    generate.run(process.argv.slice(3))
 }
 
 if (process.argv[2] === 'config') {

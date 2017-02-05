@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const process = require('process')
 
 const createHtml = prefix =>
 `<!DOCTYPE html>
@@ -27,6 +28,21 @@ class BrowserGenerator {
     constructor(operator) {
         this.operator = operator
         this.sources = []
+    }
+
+    fromCli(argv) {
+        if (argv.length < 1) {
+            console.log('waterslider generate browser <filename>')
+            process.exit(1)
+        }
+
+        this.operator.setProjectDir()
+
+        const opts = {type: 'browser'}
+
+
+
+        this.generate(argv[0], opts)
     }
 
     generate(name, opts = {}) {

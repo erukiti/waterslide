@@ -14,7 +14,7 @@ const waterslider = {
     },
     Build: require('./build/build'),
     Watch: require('./build/watch'),
-    NewProject: require('./new/project'),
+    Generate: require('./generate/index')
 
 }
 

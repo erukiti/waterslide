@@ -21,20 +21,15 @@ let p = Promise.resolve()
 const doSerial = creator => p = p.then(creator)
 
 class Operator {
-    constructor(projectDir) {
+    constructor() {
         this.commands = []
-        this.projectDir = projectDir
+        this.projectDir = null
         this.directories = []
         this.generators = {}
         this.plugin = new Plugin()
         this.entries = []
-        this.target = []
+        this.target = null
         this.builders = []
-
-        this._makeProjectDir = () => {
-            fs.mkdirSync(projectDir)
-            process.chdir(projectDir)
-        }
 
         this._outputFile = (filename, text) => new Promise((resolve, reject) => {
             if (path.dirname(filename)) {
@@ -58,7 +53,8 @@ class Operator {
                 if (code) {
                     child.stdout.pipe(process.stdout)
                     child.stderr.pipe(process.stdout)
-                    reject()
+
+                    reject(`error '${command}' is failed. ${code}`)
                 } else {
                     resolve()
                 }
@@ -68,7 +64,26 @@ class Operator {
         this.addBuilder('copy')
     }
 
+    setProjectDir(projectDir = './') {
+        this.projectDir = projectDir
+        if (projectDir !== './') {
+            fs.mkdirSync(projectDir)
+            process.chdir(projectDir)
+        }
+        config.startLocal()
+
+        // FIXME
+        this.directories = config.getLocal('directories')
+        config.getLocal('entries').forEach(entry => {
+            this.entries.push(entry)
+        })
+        this.finalizer = config.getLocal('finalizer')
+        this.builders = config.getLocal('builders')
+        this.sillyname = config.getLocal('sillyname')
+    }
+
     getProjectDir() {
+        // if (!this.projectDir)
         return this.projectDir
     }
 
@@ -129,8 +144,8 @@ class Operator {
     }
 
     output() {
-        this._makeProjectDir()
-
+        // if (!this.projectDir)
+        
         const outputFiles = []
 
         // process()
@@ -138,7 +153,9 @@ class Operator {
             this.generators[key].process()
         })
 
-        this.target.process()
+        if (this.target) {
+            this.target.process()
+        }
 
         // outputs
         Object.keys(this.generators).forEach(key => {
@@ -147,12 +164,16 @@ class Operator {
             })
         })
 
-        this.target.output().forEach(file => {
-            this.entries.push(file)
-        })
+        if (this.target) {
+            this.target.output().forEach(file => {
+                this.entries.push(file)
+            })
+        }
 
         this.entries.forEach(entry => {
-            outputFiles.push(this._outputFile(entry.path, entry.text))
+            if (entry.text) {
+                outputFiles.push(this._outputFile(entry.path, entry.text))
+            }
         })
 
         doSerial(() => Promise.all(outputFiles))
@@ -168,7 +189,7 @@ class Operator {
             console.log(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
         }).catch(err => console.error(err))
 
-        config.startLocal()
+        // console.log(JSON.stringify(config.localConfig, null, '  ')+'\n')
 
         config.writeLocal('directories', this.directories)
         config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {return {path: entry.path, opts: entry.opts}}))
@@ -184,7 +205,7 @@ class Operator {
     }
 
     verbose(message) {
-        console.log(`\x1b[32m${message}\x1b[m]`)
+        console.log(`\x1b[33m${message}\x1b[m]`)
     }
 }
 

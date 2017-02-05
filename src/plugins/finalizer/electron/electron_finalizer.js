@@ -46,17 +46,17 @@ class ElectronFinalizer {
         if (process.env.ELECTRON_SIGN_DARWIN) {
             packagerConfDarwin['sign'] = process.env.ELECTRON_SIGN_DARWIN
         }
-/*
+
         packager(packagerConfDarwin, (err2, path) => {
             let archive = new Zip()
             archive.add(`release/${packageInfo.name}-darwin-${packageInfo.version}.7z`, `release/${packageInfo.name}-darwin-x64/`, {
                 m0: '=BCJ',
                 m1: '=LZMA:d=21'
             }).then(() => {
-                // process.exit(1)
+                process.exit(1)
             }).catch(err3 => console.error(err3))
         })
-*/
+
 /*
         const packagerConfWin32 = {
             dir: 'build',
