@@ -30,16 +30,24 @@ class Operator {
         this.entries = []
         this.target = null
         this.builders = []
+        this.isOverwrite = true
 
-        this._outputFile = (filename, text) => new Promise((resolve, reject) => {
-            if (path.dirname(filename)) {
-                mkdirp.sync(path.dirname(filename))
+        this._outputFile = entry => new Promise((resolve, reject) => {
+            if (path.dirname(entry.path)) {
+                mkdirp.sync(path.dirname(entry.path))
             }
 
-            fs.writeFile(filename, text, { flag: 'wx' }, err => {
+            const opts = {}
+            if (entry.mode) {
+                opts.mode = entry.mode
+            }
+            opts.flag = this.isOverwrite ? 'w' : 'wx'
+
+            fs.writeFile(entry.path, entry.text, opts, err => {
                 if (err) {
                     reject(err)
                 } else {
+                    this.cliUtils.verbose(`file wrote: ${entry.path}`)
                     resolve()
                 }
             })
@@ -83,6 +91,10 @@ class Operator {
         this.sillyname = config.getLocal('sillyname')
     }
 
+    setOverwrite(isOverwrite) {
+        this.isOverwrite = isOverwrite
+    }
+
     getProjectDir() {
         // if (!this.projectDir)
         return this.projectDir
@@ -108,23 +120,27 @@ class Operator {
         return this.directories
     }
 
-    replaceGenerator(src, dest) {
-        if (this.generators[src]) {
-            this.cliUtils.error(`${src} is already loaded.`)
-            process.exit(1)
-        }
-        const klass = this.plugin.requireGenerator(dest)
-        this.generators[src] = new klass(this)
-    }
-
     getGenerator(name) {
         if (!this.generators[name]) {
             const klass = this.plugin.requireGenerator(name)
+
+            this.cliUtils.verbose(`generator: ${name}`)
+
+            if (klass.replace) {
+                this.cliUtils.verbose(`generator: ${name} -> ${klass.replace()}`)
+                name = klass.replace()
+            }
+
+            if (this.generators[name]) {
+                this.cliUtils.error(`${src} is already loaded.`)
+                process.exit(1)
+            }
 
             // if (!klass) の処理を書く
 
             this.generators[name] = new klass(this)
         }
+
         return this.generators[name]
     }
 
@@ -145,11 +161,15 @@ class Operator {
 
     output() {
         // if (!this.projectDir)
-        
+
+        // console.log(Object.keys(this.generators).join(', '))
+
         const outputFiles = []
 
+        // FIXME: process()の中でgetGeneretorされる対策
         // process()
         Object.keys(this.generators).forEach(key => {
+            // console.log(key)
             this.generators[key].process()
         })
 
@@ -172,7 +192,7 @@ class Operator {
 
         this.entries.forEach(entry => {
             if (entry.text) {
-                outputFiles.push(this._outputFile(entry.path, entry.text))
+                outputFiles.push(this._outputFile(entry))
             }
         })
 
@@ -205,7 +225,11 @@ class Operator {
     }
 
     verbose(message) {
-        this.cliUtils.verbose(message)
+        this.cliUtils.verbose(message, 1)
+    }
+
+    message(message) {
+        this.cliUtils.message(message, 1)
     }
 }
 

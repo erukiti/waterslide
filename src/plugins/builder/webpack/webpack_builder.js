@@ -3,28 +3,6 @@
 const path = require('path')
 const process = require('process')
 
-const createConfig = filename => {
-    return {
-        entry: `./${filename}`,
-        output: {
-            path: path.dirname(filename.replace(/^src\//, './build/')),
-            filename: path.basename(filename.replace(/\.[a-z]+$/, '.js'))
-        },
-        resolve: {
-            extensions: ['.js', '.jsx']
-        },
-        module: {
-            loaders: [{
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loader: 'babel-loader?sourceMap'
-            }]
-        },
-        devtool: '#source-map',
-        target: 'electron-renderer'
-    }
-}
-
 class WebpackBuilder {
     constructor(builder) {
         this.builder = builder
@@ -38,7 +16,35 @@ class WebpackBuilder {
     }
 
     getTypes() {
-        return ['node', 'browser', 'electron', 'electron-renderer']
+        return ['node', 'web', 'electron', 'electron-renderer']
+    }
+
+    _createConfig(filename) {
+        return {
+            entry: `./${filename}`,
+            output: {
+                path: path.dirname(filename.replace(/^src\//, './build/')),
+                filename: path.basename(filename.replace(/\.[a-z]+$/, '.js'))
+            },
+            resolve: {
+                extensions: ['.js', '.jsx']
+            },
+            module: {
+                loaders: [{
+                    test: /\.jsx?$/,
+                    exclude: /node_modules/,
+                    loader: 'babel-loader?sourceMap'
+                }]
+            },
+            devtool: '#source-map',
+            target: 'electron-renderer',
+
+            plugins: [
+                new this.webpack.DefinePlugin({
+                    'process.env.NODE_ENV': JSON.stringify('production')
+                })
+            ]
+        }
     }
 
     _compiled(entry, err, stats) {
@@ -67,7 +73,7 @@ class WebpackBuilder {
     }
 
     _compile(isWatch, entry) {
-        const compiler = this.webpack(createConfig(entry.path))
+        const compiler = this.webpack(this._createConfig(entry.path))
         if (isWatch) {
             compiler.watch({}, (err, stats) => this._compiled(entry, err, stats))
         } else {

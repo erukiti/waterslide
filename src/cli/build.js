@@ -25,7 +25,7 @@ class BuildCli {
     }
 
     run(args) {
-        this._run({isWatch: false, isBuild: true, isRun: ftrue, isTest: true})
+        this._run({isWatch: false, isBuild: false, isRun: true, isTest: true})
 
     }
 

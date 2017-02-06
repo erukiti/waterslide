@@ -25,6 +25,7 @@
   "dependencies": {
     "github-api": "^3.0.0",
     "mkdirp": "^0.5.1",
+    "open": "0.0.5",
     "read": "^1.0.7",
     "sillyname": "^0.1.0"
   },

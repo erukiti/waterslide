@@ -149,9 +149,16 @@ class ReactReduxGenerator {
     constructor(operator) {
         this.operator = operator
         this.sources = []
+        this.isGenerated = false
+    }
+
+    static replace() {
+        return 'browser'
     }
 
     generate(name, opts = {}) {
+        this.isGenerated = true
+
         const dirname = path.dirname(name)
         const prefix = path.basename(name, '.js')
 
@@ -190,6 +197,13 @@ class ReactReduxGenerator {
     }
 
     process() {
+/*
+        // FIXME: not works for timing
+        if (!this.isGenerated) {
+            this.operator.verbose('React-Redux is not generated.')
+            return
+        }
+*/
         const babelGenerator = this.operator.getGenerator('babel')
         babelGenerator.addPreset('react')
         babelGenerator.addPlugin('babel-plugin-syntax-jsx')

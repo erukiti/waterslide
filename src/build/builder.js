@@ -30,11 +30,11 @@ class Builder {
     }
 
     compileError(details) {
-        this.cliUtils.log('compile error')
+        this.cliUtils.message('compile error')
         this.cliUtils.error(details)
     }
     warning(details) {
-        this.cliUtils.log('compile warning')
+        this.cliUtils.message('compile warning')
         this.cliUtils.dir(details)
     }
 
@@ -69,6 +69,11 @@ class Builder {
         if (this.isBuild || this.isRun) {
             // assert if (config.getLocal('finalizer')) {
 
+            if (!config.getLocal('finalizer')) {
+                this.cliUtils.error('build only.')
+                return
+            }
+
             const klass = this.plugin.requireFinalizer(config.getLocal('finalizer'))
             const finalizer = new klass(this)
 
@@ -86,6 +91,8 @@ class Builder {
         this.isBuild = opts.isBuild
         this.isRun = opts.isRun
         this.isTest = opts.isTest
+        this.isWatch = opts.isWatch
+
         const testers = ['mocha', 'eslint'] // FIXME
 
         testers.forEach(name => {

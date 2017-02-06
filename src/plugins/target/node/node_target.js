@@ -3,22 +3,24 @@
 const indexJsText =
 `'use strict'
 
-console.log('hello, world.)
+console.log('Hello, Node.js World.')
 `
 
 class ElectronTarget {
     constructor(operator) {
         this.operator = operator
-        operator.requireProvider('js')
+        operator.setFinalizer('node')
     }
 
     process() {
-        const jsProvider = this.operator.getProvider('js')
-        jsProvider.setMain('src/index.js')
+        const jsGenerator = this.operator.getGenerator('js')
+        jsGenerator.setMain('src/index.js')
 
         this.operator.setDirectory('src', 'source', 'source code directory')
         // this.operator.setDirectory('build', 'destination', 'build directory')
+    }
 
+    output() {
         return [
             {path: 'src/index.js', text: indexJsText, opts: {type: 'node'}}
         ]

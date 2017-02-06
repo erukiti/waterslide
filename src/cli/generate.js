@@ -8,9 +8,15 @@ class GenerateCli {
         this.plugin = new Plugin()
         this.cliUtils = cliUtils
     }
+
     run(argv) {
         if (argv.length < 1) {
-            console.log('need args')
+            this.cliUtils.message('Usage: waterslider generate <generator>')
+            this.plugin.findGenerator().forEach(name => {
+                const purpose = this.plugin.requireGenerator(name).getPurpose()
+                this.cliUtils.message(`  ${name} : ${purpose}`)
+            })
+
             return
         }
 

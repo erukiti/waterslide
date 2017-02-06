@@ -1,14 +1,23 @@
 'use strict'
 
 const {getConfig} = require('../../../waterslider')
+const path = require('path')
+const fs = require('fs')
 
 class JsGenerator {
     constructor(operator) {
         this.operator = operator
 
+        try {
+            this.values = JSON.parse(fs.readFileSync('./package.json'))
+        } catch(e) {
+            this.values = {}
+        }
+
         this.packages = []
         this.devPackages = []
         this.main = ''
+        this.bin = {}
     }
 
     addPackage(name) {
@@ -19,43 +28,44 @@ class JsGenerator {
         this.devPackages.push(name)
     }
 
+    addBin(binPath) {
+        this.bin[path.basename(binPath)] = binPath
+    }
+
     setMain(name) {
         this.main = name
     }
 
     process() {
-
+        this.addDevPackage('babel-core')
+        this.addDevPackage('babel-loader')
+        this.addDevPackage('babel-preset-es2016')
+        this.operator.getGenerator('babel').addPreset('es2016')
     }
 
     output() {
         const getProjectName = () => this.operator.getProjectDir()
         // FIXME: project dir -> project name
 
-        const config = getConfig()
-
-        const main = this.main
-        const name = getProjectName()
-        const version = '1.0.0'
-        const description = ''
-        const author = config.get('author')
-        const license = config.get('license')
-        const keywords = []
-
         const scripts = {
-            start: 'waterslider watch',
+            start: 'waterslider run',
             build: 'waterslider build',
+            watch: 'waterslider watch',
             test: 'waterslider test'
         }
 
-        this.values = {
-            main,
-            name,
-            version,
-            description,
-            author,
-            license,
-            keywords,
-            scripts
+        const config = getConfig()
+
+        this.values.main = this.values.main || this.main
+        this.values.name = this.values.name || getProjectName()
+        this.values.version = this.values.version || '1.0.0'
+        this.values.description = this.values.description || ''
+        this.values.author = this.values.author || config.get('author')
+        this.values.license = this.values.license || config.get('license')
+        this.values.keywords = this.values.keywords || []
+        this.values.scripts = this.values.scripts || scripts
+        if (!this.values.bin || Object.keys(this.values.bin).length === 0) {
+            this.values.bin = this.bin
         }
 
         this.packages.forEach(name => {
@@ -68,7 +78,7 @@ class JsGenerator {
 
         return [{
             path: 'package.json',
-            text: JSON.stringify(this.values, null, '  ')
+            text: JSON.stringify(this.values, null, '  ') + '\n'
         }]
     }
 }

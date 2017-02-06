@@ -8,6 +8,10 @@ class ProjectGenerator {
         this.operator = operator
     }
 
+    static getPurpose() {
+        return 'generate project.'
+    }
+
     fromCli(argv) {
         const generateProjectDirName = () => {
             this.sillyname = generateName().toLowerCase().replace(' ', '-')
@@ -15,7 +19,7 @@ class ProjectGenerator {
         }
 
         if (argv.length === 0) {
-            console.error('waterslider new <target> [projectName]')
+            this.operator.message('Usage: waterslider new <target> [projectName]')
             // FIXME: waterslider new を決め打ちしてるのをなんとかする
 
             process.exit(1)
@@ -25,9 +29,9 @@ class ProjectGenerator {
 
         const projectDir = argv.length > 1 ? argv[1] : generateProjectDirName()
         this.operator.setProjectDir(projectDir)
+        this.operator.setOverwrite(false)
 
-        const envs = ['ecma_script', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig', 'js', 'babel', 'git']
-        this.operator.replaceGenerator('browser','react_redux')
+        const envs = ['document', 'js', 'babel', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig', 'git', 'react-redux']
         this.operator.setTarget(target)
         envs.forEach(env => this.operator.getGenerator(env))
 

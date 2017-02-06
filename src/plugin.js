@@ -1,6 +1,7 @@
 'use strict'
 
 const process = require('process')
+const fs = require('fs')
 
 class Plugin {
     constructor() {
@@ -17,6 +18,10 @@ class Plugin {
 
     requireGenerator(name) {
         return require(`./plugins/generator/${name}/${name}_generator`)
+    }
+
+    findGenerator() {
+        return ['project', 'browser']
     }
 
     requireFinalizer(name) {
