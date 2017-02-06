@@ -7,6 +7,10 @@ class Plugin {
 
     }
 
+    requireLocal(name) {
+        return require(`${process.cwd()}/node_modules/${name}`)
+    }
+
     requireTarget(name) {
         return require(`./plugins/target/${name}/${name}_target`)
     }
@@ -23,8 +27,8 @@ class Plugin {
         return require(`./plugins/builder/${name}/${name}_builder`)
     }
 
-    requireLocal(name) {
-        return require(`${process.cwd()}/node_modules/${name}`)
+    requireTester(name) {
+        return require(`./plugins/tester/${name}/${name}_tester`)
     }
 }
 

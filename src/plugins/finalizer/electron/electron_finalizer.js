@@ -6,11 +6,9 @@ const process = require('process')
 const { Plugin } = require('../../../waterslider')
 
 class ElectronFinalizer {
-    constructor(ev) {
-        this.ev = ev
+    constructor(builder) {
+        this.builder = builder
         this.electron = null
-        this.ev.on('run', () => this.run())
-        this.ev.on('build', () => this.build())
     }
 
     run() {
@@ -53,7 +51,7 @@ class ElectronFinalizer {
                 m0: '=BCJ',
                 m1: '=LZMA:d=21'
             }).then(() => {
-                process.exit(1)
+                // process.exit(1)
             }).catch(err3 => console.error(err3))
         })
 

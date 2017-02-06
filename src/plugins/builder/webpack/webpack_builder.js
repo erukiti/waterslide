@@ -26,10 +26,12 @@ const createConfig = filename => {
 }
 
 class WebpackBuilder {
-    constructor(ev) {
-        this.ev = ev
+    constructor(builder) {
+        this.builder = builder
 
         this.flags = {}
+
+        this.isCompiled = false
 
         const webpackPath = path.join(process.cwd(), 'node_modules', 'webpack')
         this.webpack = require(webpackPath)
@@ -39,42 +41,56 @@ class WebpackBuilder {
         return ['node', 'browser', 'electron', 'electron-renderer']
     }
 
-    _compile(entry) {
+    _compiled(entry, err, stats) {
+        if (err) {
+            this.builder.error(err)
+            return
+        }
+
+        if (stats.hasWarnings()) {
+            stats.compilation.warnings.forEach(warning => {
+                this.builder.warning(warning.details)
+            })
+        }
+        if (stats.hasErrors()) {
+            stats.compilation.errors.forEach(error => {
+                this.builder.compileError(error.error)
+            })
+            return
+        }
+
+        this.flags[entry.path] = false
+        if (Object.keys(this.flags).filter(key => this.flags[key]).length === 0) {
+            this.isCompiled = true
+            this.builder.compiled()
+        }
+    }
+
+    _compile(isWatch, entry) {
         const compiler = this.webpack(createConfig(entry.path))
-        this.flags[entry.path] = true
-        compiler.watch({}, (err, stats) => {
-            if (err) {
-                this.ev.emit('error', err)
-                return
-            }
-
-            if (stats.hasWarnings()) {
-                stats.compilation.warnings.forEach(warning => {
-                    console.dir(Object.keys(warning))
-                    console.log(warning.details)
-                    // this.ev.emit('warning', warning)
-                })
-            }
-            if (stats.hasErrors()) {
-                stats.compilation.errors.forEach(error => {
-                    this.ev.emit('compile error', error.error)
-                })
-                return
-            }
-
-            this.flags[entry.path] = false
-            if (Object.keys(this.flags).filter(key => {
-                return this.flags[key]
-            }).length === 0) {
-                this.ev.emit('compiled', 'webpack')
-            }
-
-        })
+        if (isWatch) {
+            compiler.watch({}, (err, stats) => this._compiled(entry, err, stats))
+        } else {
+            compiler.run((err, stats) => this._compiled(entry, err, stats))
+        }
     }
 
     watch(entries) {
-        entries.forEach(entry => this._compile(entry))
+        entries.forEach(entry => {
+            this.flags[entry.path] = true
+            this._compile(true, entry)
+        })
     }
+
+    run(entries) {
+        entries.forEach(entry => {
+            this.builder.verbose(`webpack: ${entry.path} (${entry.opts.type})`)
+
+            this.flags[entry.path] = true
+            this._compile(false, entry)
+        })
+    }
+
 }
 
 module.exports = WebpackBuilder

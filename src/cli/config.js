@@ -3,7 +3,7 @@
 const config = require('../config')
 const readPrompt = require('read')
 
-class Setting {
+class Config {
     constructor() {
     }
 
@@ -56,4 +56,4 @@ class Setting {
     }
 }
 
-module.exports = Setting
+module.exports = Config

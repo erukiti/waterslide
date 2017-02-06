@@ -7,9 +7,8 @@ const mkdirp = require('mkdirp')
 const childProcess = require('child_process')
 
 
-const {getLogger, getConfig, Plugin} = require('../waterslider')
+const {getConfig, Plugin} = require('../waterslider')
 const config = getConfig()
-const logger = getLogger()
 
 /**
  * creator()が生成するPromiseを非同期かつ直列的に実行する
@@ -21,12 +20,13 @@ let p = Promise.resolve()
 const doSerial = creator => p = p.then(creator)
 
 class Operator {
-    constructor() {
+    constructor(cliUtils) {
+        this.plugin = new Plugin()
+        this.cliUtils = cliUtils
         this.commands = []
         this.projectDir = null
         this.directories = []
         this.generators = {}
-        this.plugin = new Plugin()
         this.entries = []
         this.target = null
         this.builders = []
@@ -46,7 +46,7 @@ class Operator {
         })
 
         this._command = command => new Promise((resolve, reject) => {
-            console.log(command)
+            this.cliUtils.verbose(command)
             const child = childProcess.exec(command)
             child.on('error', err => reject(err))
             child.on('exit', (code, signal) => {
@@ -73,12 +73,13 @@ class Operator {
         config.startLocal()
 
         // FIXME
-        this.directories = config.getLocal('directories')
-        config.getLocal('entries').forEach(entry => {
+        this.directories = config.getLocal('directories') || []
+        const entries = config.getLocal('entries') || []
+        entries.forEach(entry => {
             this.entries.push(entry)
         })
         this.finalizer = config.getLocal('finalizer')
-        this.builders = config.getLocal('builders')
+        this.builders = config.getLocal('builders') || ['copy']
         this.sillyname = config.getLocal('sillyname')
     }
 
@@ -108,9 +109,8 @@ class Operator {
     }
 
     replaceGenerator(src, dest) {
-        // 既に登録済みだとwarning出すべきかな
         if (this.generators[src]) {
-            console.error(`${src} is already loaded.`)
+            this.cliUtils.error(`${src} is already loaded.`)
             process.exit(1)
         }
         const klass = this.plugin.requireGenerator(dest)
@@ -184,9 +184,9 @@ class Operator {
             })
         })
         doSerial(() => {
-            console.log()
-            console.log(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
-            console.log(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
+            this.cliUtils.message()
+            this.cliUtils.message(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
+            this.cliUtils.message(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
         }).catch(err => console.error(err))
 
         // console.log(JSON.stringify(config.localConfig, null, '  ')+'\n')
@@ -205,7 +205,7 @@ class Operator {
     }
 
     verbose(message) {
-        console.log(`\x1b[33m${message}\x1b[m]`)
+        this.cliUtils.verbose(message)
     }
 }
 

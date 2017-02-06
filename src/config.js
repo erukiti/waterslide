@@ -55,7 +55,6 @@ class Config {
 
     writeLocal(key, value) {
         this.localConfig[key] = value
-        console.dir(this.localConfig)
         this._configWrite(this.localConfigPath, this.localConfig)
     }
 
