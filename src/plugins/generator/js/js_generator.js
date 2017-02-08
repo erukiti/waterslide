@@ -37,10 +37,18 @@ class JsGenerator {
     }
 
     process() {
+        this.operator.getGenerator('babel')
+
         this.addDevPackage('babel-core')
         this.addDevPackage('babel-loader')
-        this.addDevPackage('babel-preset-es2016')
-        this.operator.getGenerator('babel').addPreset('es2016')
+
+        if (this.operator.getOpts().includes('es2015')) {
+            this.addDevPackage('babel-preset-es2015')
+            this.operator.getGenerator('babel').addPreset('es2015')
+        } else {
+            this.addDevPackage('babel-preset-es2016')
+            this.operator.getGenerator('babel').addPreset('es2016')
+        }
     }
 
     output() {

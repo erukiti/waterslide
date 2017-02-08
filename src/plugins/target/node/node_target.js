@@ -14,10 +14,10 @@ class ElectronTarget {
 
     process() {
         const jsGenerator = this.operator.getGenerator('js')
-        jsGenerator.setMain('src/index.js')
+        jsGenerator.setMain('lib/index.js')
 
         this.operator.setDirectory('src', 'source', 'source code directory')
-        // this.operator.setDirectory('build', 'destination', 'build directory')
+        this.operator.setDirectory('lib', 'destination', 'build directory')
     }
 
     output() {

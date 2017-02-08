@@ -40,7 +40,7 @@ class CliUtils {
     debug(mesg = '', depth = 0) {
         if (this.isDebug) {
             const header = `debug ${path.basename(this._getCaller(depth + 1))}`
-            console.log(`\x1b[33m${header}:\x1b[m ${mesg}`)
+            console.log(`\x1b[36m${header}:\x1b[m ${mesg}`)
         }
     }
 
@@ -48,7 +48,7 @@ class CliUtils {
         if (this.isMessage) {
             let header = ''
             if (this.isDebug) {
-                console.log(`\x1b[33m${path.basename(this._getCaller(depth + 1))}\x1b[m: ${mesg}`)
+                console.log(`\x1b[32m${path.basename(this._getCaller(depth + 1))}\x1b[m: ${mesg}`)
             } else {
                 console.log(mesg)
             }

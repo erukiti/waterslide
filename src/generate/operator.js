@@ -31,6 +31,7 @@ class Operator {
         this.target = null
         this.builders = []
         this.isOverwrite = true
+        this.opts = []
 
         this._outputFile = entry => new Promise((resolve, reject) => {
             if (path.dirname(entry.path)) {
@@ -91,6 +92,18 @@ class Operator {
         this.sillyname = config.getLocal('sillyname')
     }
 
+    setOpts(opts) {
+        if (this.opts.length > 0) {
+            this.cliUtils.error('warning: opts is already set.')
+        }
+
+        this.opts = opts
+    }
+
+    getOpts(opts) {
+        return this.opts
+    }
+
     setOverwrite(isOverwrite) {
         this.isOverwrite = isOverwrite
     }
@@ -124,10 +137,10 @@ class Operator {
         if (!this.generators[name]) {
             const klass = this.plugin.requireGenerator(name)
 
-            this.cliUtils.verbose(`generator: ${name}`)
+            this.cliUtils.verbose(`generator: ${name}`, 1)
 
             if (klass.replace) {
-                this.cliUtils.verbose(`generator: ${name} -> ${klass.replace()}`)
+                this.cliUtils.verbose(`generator: ${name} -> ${klass.replace()}`, 1)
                 name = klass.replace()
             }
 

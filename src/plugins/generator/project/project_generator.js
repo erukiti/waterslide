@@ -8,14 +8,15 @@ class ProjectGenerator {
         this.operator = operator
     }
 
-    static getPurpose() {
-        return 'generate project.'
+    static getUsage() {
+        return `
+create new project.
+  waterslider new <target> [projectName]`
     }
 
-    fromCli(argv) {
+    fromCli(argv, opts) {
         const generateProjectDirName = () => {
-            this.sillyname = generateName().toLowerCase().replace(' ', '-')
-            return this.sillyname
+            return generateName().toLowerCase().replace(' ', '-')
         }
 
         if (argv.length === 0) {
@@ -27,16 +28,33 @@ class ProjectGenerator {
 
         const target = argv[0]
 
-        const projectDir = argv.length > 1 ? argv[1] : generateProjectDirName()
+        let sillyname = null
+        let projectDir = null
+
+        if (argv.length > 1) {
+            projectDir = argv[1]
+        } else {
+            projectDir = sillyname = generateProjectDirName()
+        }
+
         this.operator.setProjectDir(projectDir)
         this.operator.setOverwrite(false)
 
-        const envs = ['document', 'js', 'babel', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig', 'git', 'react-redux']
+        this.operator.setOpts(opts.opt)
+
+        let envs
+        if (opts.use.length > 0) {
+            envs = opts.use
+        } else {
+            envs = ['document', 'js', 'babel', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig', 'git', 'react-redux'].filter(value => !opts.noUse.includes(value))
+        }
+
         this.operator.setTarget(target)
+
         envs.forEach(env => this.operator.getGenerator(env))
 
-        if (this.sillyname) {
-            this.operator.setSillyname(this.sillyname)
+        if (sillyname) {
+            this.operator.setSillyname(sillyname)
         }
     }
 

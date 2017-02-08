@@ -30,11 +30,13 @@ class BrowserGenerator {
         this.sources = []
     }
 
-    static getPurpose() {
-        return 'generate JavaScript & HTML for web browser.'
+    static getUsage() {
+        return `
+generate JavaScript & HTML for web browser.
+  waterslider generate browser <filename>`
     }
 
-    fromCli(argv) {
+    fromCli(argv, opts) {
         if (argv.length < 1) {
             this.operator.message('Usage: waterslider generate browser <filename>')
             process.exit(1)
