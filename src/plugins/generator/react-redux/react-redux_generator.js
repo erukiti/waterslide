@@ -36,12 +36,13 @@ render(
 )
 `
 
-const createReducersJS = () =>
-`' use strict'
+const createReducersJS = (dirname) => {
+    const relpath = Array(dirname.replace(/\/$/, '').split('/').length).fill('..').join('/')
+    return `' use strict'
 
 import actions from './actions'
 
-const conf = require('../../package.json')
+const conf = require('${relpath}/package.json')
 
 const initialState = {
     title: conf.name,
@@ -75,6 +76,7 @@ export default function reducers(state = initialState, action) {
     }
 }
 `
+}
 
 const createActionsJs = () =>
 `'use strict'
@@ -176,7 +178,7 @@ class ReactReduxGenerator {
         // 一回きりにする
         this.sources.push({
             path: path.join(dirname, 'reducers.js'),
-            text: createReducersJS()
+            text: createReducersJS(dirname)
         })
         this.sources.push({
             path: path.join(dirname, 'actions.js'),

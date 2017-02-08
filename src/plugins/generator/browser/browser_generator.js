@@ -44,11 +44,9 @@ generate JavaScript & HTML for web browser.
 
         this.operator.setProjectDir()
 
-        const opts = {type: 'browser'}
+        const opts2 = {type: 'web'}
 
-
-
-        this.generate(argv[0], opts)
+        this.generate(argv[0], opts2)
     }
 
     generate(name, opts = {}) {
