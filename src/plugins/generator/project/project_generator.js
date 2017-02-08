@@ -40,13 +40,11 @@ create new project.
         this.operator.setProjectDir(projectDir)
         this.operator.setOverwrite(false)
 
-        this.operator.setOpts(opts.opt)
-
         let envs
         if (opts.use.length > 0) {
             envs = opts.use
         } else {
-            envs = ['document', 'js', 'babel', 'webpack', 'power-assert', 'mocha', 'eslint', 'editorconfig', 'git', 'react-redux'].filter(value => !opts.noUse.includes(value))
+            envs = ['document', 'editorconfig', 'git'].filter(value => !opts.noUse.includes(value))
         }
 
         this.operator.setTarget(target)

@@ -31,7 +31,9 @@ class Operator {
         this.target = null
         this.builders = []
         this.isOverwrite = true
-        this.opts = []
+        this.opt = []
+        this.noOpt = []
+        this.noUse = []
 
         this._outputFile = entry => new Promise((resolve, reject) => {
             if (path.dirname(entry.path)) {
@@ -92,16 +94,40 @@ class Operator {
         this.sillyname = config.getLocal('sillyname')
     }
 
-    setOpts(opts) {
-        if (this.opts.length > 0) {
-            this.cliUtils.error('warning: opts is already set.')
+    setOpt(opt) {
+        if (this.opt.length > 0) {
+            this.cliUtils.error('warning: opt is already set.')
         }
 
-        this.opts = opts
+        this.opt = opt
     }
 
-    getOpts(opts) {
-        return this.opts
+    getOpt() {
+        return this.opt
+    }
+
+    setNoOpt(noOpt) {
+        if (this.noOpt.length > 0) {
+            this.cliUtils.error('warning: noOpts is already set.')
+        }
+
+        this.noOpt = noOpt
+    }
+
+    getNoOpt() {
+        return this.noOpt
+    }
+
+    setNoUse(noUse) {
+        if (this.noUse.length > 0) {
+            this.cliUtils.error('warning: noUse is already set.')
+        }
+
+        this.noUse = noUse
+    }
+
+    getNoUse(noUse) {
+        return this.noUse
     }
 
     setOverwrite(isOverwrite) {
@@ -177,17 +203,24 @@ class Operator {
 
         // console.log(Object.keys(this.generators).join(', '))
 
+        // assert target が generators に含まれてない
+
         const outputFiles = []
 
-        // FIXME: process()の中でgetGeneretorされる対策
-        // process()
-        Object.keys(this.generators).forEach(key => {
-            // console.log(key)
-            this.generators[key].process()
-        })
+        const processed = []
+
+        const getNotProcessedKey = () => Object.keys(this.generators).filter(key => !processed.includes(key))
 
         if (this.target) {
             this.target.process()
+        }
+
+        let notProcessed = []
+        while ((notProcessed = getNotProcessedKey()).length > 0) {
+            notProcessed.forEach(key => {
+                this.generators[key].process()
+                processed.push(key)
+            })
         }
 
         // outputs

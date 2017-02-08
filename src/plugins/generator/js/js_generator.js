@@ -42,13 +42,17 @@ class JsGenerator {
         this.addDevPackage('babel-core')
         this.addDevPackage('babel-loader')
 
-        if (this.operator.getOpts().includes('es2015')) {
+        if (this.operator.getOpt().includes('es2015')) {
             this.addDevPackage('babel-preset-es2015')
             this.operator.getGenerator('babel').addPreset('es2015')
         } else {
             this.addDevPackage('babel-preset-es2016')
             this.operator.getGenerator('babel').addPreset('es2016')
         }
+
+        const noUse = this.operator.getNoUse()
+        const defaultUse = ['webpack', 'power-assert', 'mocha', 'eslint']
+        defaultUse.filter(value => !noUse.includes(value)).forEach(value => {this.operator.getGenerator(value)})
     }
 
     output() {

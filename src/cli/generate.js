@@ -63,6 +63,11 @@ class GenerateCli {
             this.operator.message(`set option: [${opts.opt.join(', ')}]`)
         }
 
+        operator.setOpt(opts.opt)
+        operator.setNoOpt(opts.noOpt)
+        operator.setNoUse(opts.noUse)
+
+
         generator.fromCli(argv, opts)
         operator.output()
     }
