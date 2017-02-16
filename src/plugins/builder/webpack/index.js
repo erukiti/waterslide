@@ -24,8 +24,9 @@ class WebpackBuilder {
     }
 
     _createConfig(filename, target) {
-        const { rules } = config.getLocal('webpack')
-        console.dir(rules)
+        const rules = config.getLocal('webpack').rules.map(rule => {
+            return { test: new RegExp(rule.test), use: rule.use }
+        })
         return {
             entry: `./${filename}`,
             output: {
