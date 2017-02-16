@@ -13,11 +13,11 @@ class Plugin {
     }
 
     requireTarget(name) {
-        return require(`./plugins/target/${name}/${name}_target`)
+        return require(`./plugins/target/${name}`)
     }
 
     requireGenerator(name) {
-        return require(`./plugins/generator/${name}/${name}_generator`)
+        return require(`./plugins/generator/${name}`)
     }
 
     findGenerator() {
@@ -25,15 +25,15 @@ class Plugin {
     }
 
     requireFinalizer(name) {
-        return require(`./plugins/finalizer/${name}/${name}_finalizer`)
+        return require(`./plugins/finalizer/${name}`)
     }
 
     requireBuilder(name) {
-        return require(`./plugins/builder/${name}/${name}_builder`)
+        return require(`./plugins/builder/${name}`)
     }
 
     requireTester(name) {
-        return require(`./plugins/tester/${name}/${name}_tester`)
+        return require(`./plugins/tester/${name}`)
     }
 }
 

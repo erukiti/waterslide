@@ -53,6 +53,10 @@ class JsGenerator {
         const noUse = this.operator.getNoUse()
         const defaultUse = ['webpack', 'power-assert', 'mocha', 'eslint']
         defaultUse.filter(value => !noUse.includes(value)).forEach(value => {this.operator.getGenerator(value)})
+    
+        this.operator.getGenerator('webpack').addLoader('\\.jsx?$', [
+            {loader: 'babel-loader', options: {sourceMap: true}}
+        ])
     }
 
     output() {

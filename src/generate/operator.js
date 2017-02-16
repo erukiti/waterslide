@@ -75,6 +75,10 @@ class Operator {
         this.addBuilder('copy')
     }
 
+    getConfig() {
+        return config
+    }
+
     setProjectDir(projectDir = './') {
         this.projectDir = projectDir
         if (projectDir !== './') {

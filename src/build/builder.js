@@ -35,7 +35,7 @@ class Builder {
     }
     warning(details) {
         this.cliUtils.message('compile warning')
-        this.cliUtils.dir(details)
+        this.cliUtils.error(details)
     }
 
     _test() {

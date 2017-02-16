@@ -3,6 +3,10 @@
 const path = require('path')
 const process = require('process')
 
+const { getConfig } = require('../../../waterslider')
+
+const config = getConfig()
+
 class WebpackBuilder {
     constructor(builder) {
         this.builder = builder
@@ -19,7 +23,9 @@ class WebpackBuilder {
         return ['node', 'web', 'electron', 'electron-renderer']
     }
 
-    _createConfig(filename) {
+    _createConfig(filename, target) {
+        const { rules } = config.getLocal('webpack')
+        console.dir(rules)
         return {
             entry: `./${filename}`,
             output: {
@@ -29,15 +35,9 @@ class WebpackBuilder {
             resolve: {
                 extensions: ['.js', '.jsx']
             },
-            module: {
-                loaders: [{
-                    test: /\.jsx?$/,
-                    exclude: /node_modules/,
-                    loader: 'babel-loader?sourceMap'
-                }]
-            },
+            module: { rules },
             devtool: '#source-map',
-            target: 'electron-renderer',
+            target,
 
             plugins: [
                 new this.webpack.DefinePlugin({
@@ -73,7 +73,7 @@ class WebpackBuilder {
     }
 
     _compile(isWatch, entry) {
-        const compiler = this.webpack(this._createConfig(entry.path))
+        const compiler = this.webpack(this._createConfig(entry.path, entry.opts.type))
         if (isWatch) {
             compiler.watch({}, (err, stats) => this._compiled(entry, err, stats))
         } else {
