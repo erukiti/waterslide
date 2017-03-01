@@ -28,6 +28,7 @@ class MochaGenerator {
 
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('mocha')
+        this.operator.addTester('mocha')
     }
     output() {
         return [

@@ -51,7 +51,7 @@ class JsGenerator {
         }
 
         const noUse = this.operator.getNoUse()
-        const defaultUse = ['webpack', 'power-assert', 'mocha', 'eslint']
+        const defaultUse = ['webpack', 'power-assert', 'ava', 'eslint']
         defaultUse.filter(value => !noUse.includes(value)).forEach(value => {this.operator.getGenerator(value)})
     
         this.operator.getGenerator('webpack').addLoader('\\.jsx?$', [

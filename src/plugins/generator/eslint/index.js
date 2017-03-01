@@ -64,6 +64,7 @@ class eslintGenerator {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('eslint')
         jsGenerator.addDevPackage('babel-eslint')
+        this.operator.addTester('eslint')
     }
     output() {
         return [

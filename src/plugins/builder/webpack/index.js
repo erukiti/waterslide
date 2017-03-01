@@ -11,8 +11,6 @@ class WebpackBuilder {
     constructor(builder) {
         this.builder = builder
 
-        this.flags = {}
-
         this.isCompiled = false
 
         const webpackPath = path.join(process.cwd(), 'node_modules', 'webpack')
@@ -44,33 +42,31 @@ class WebpackBuilder {
                 new this.webpack.DefinePlugin({
                     'process.env.NODE_ENV': JSON.stringify('production')
                 })
-            ]
+            ],
+
+            stats: {
+                warnings: true,
+                errors: true,
+                errorDetails: true,
+            }
+
         }
     }
 
-    _compiled(entry, err, stats) {
+    _compiled(err, stats) {
         if (err) {
             this.builder.error(err)
             return
         }
 
-        if (stats.hasWarnings()) {
-            stats.compilation.warnings.forEach(warning => {
-                this.builder.warning(warning.details)
-            })
-        }
+        // see. https://webpack.js.org/api/node/#error-handling
+        console.log(stats.toString({colors: true}))
         if (stats.hasErrors()) {
-            stats.compilation.errors.forEach(error => {
-                this.builder.compileError(error.error)
-            })
             return
         }
 
-        this.flags[entry.path] = false
-        if (Object.keys(this.flags).filter(key => this.flags[key]).length === 0) {
-            this.isCompiled = true
-            this.builder.compiled()
-        }
+        this.isCompiled = true
+        this.builder.compiled()
     }
 
     _compile(isWatch, entry) {
@@ -90,12 +86,13 @@ class WebpackBuilder {
     }
 
     run(entries) {
-        entries.forEach(entry => {
+        const conf = entries.map(entry => {
             this.builder.verbose(`webpack: ${entry.path} (${entry.opts.type})`)
-
-            this.flags[entry.path] = true
-            this._compile(false, entry)
+            return this._createConfig(entry.path, entry.opts.type)
         })
+
+        const compiler = this.webpack(conf)
+        compiler.run((err, stats) => this._compiled(err, stats))
     }
 
 }

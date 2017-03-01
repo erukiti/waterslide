@@ -30,6 +30,7 @@
     "sillyname": "^0.1.0"
   },
   "devDependencies": {
+    "ava": "^0.18.2",
     "mocha": "^3.2.0"
   }
 }

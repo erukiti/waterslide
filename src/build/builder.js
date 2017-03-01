@@ -93,7 +93,7 @@ class Builder {
         this.isTest = opts.isTest
         this.isWatch = opts.isWatch
 
-        const testers = ['mocha', 'eslint'] // FIXME
+        const testers = config.getLocal('testers') || []
 
         testers.forEach(name => {
             const klass = this.plugin.requireTester(name)

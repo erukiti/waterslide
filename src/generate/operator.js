@@ -30,6 +30,7 @@ class Operator {
         this.entries = []
         this.target = null
         this.builders = []
+        this.testers = []
         this.isOverwrite = true
         this.opt = []
         this.noOpt = []
@@ -95,6 +96,7 @@ class Operator {
         })
         this.finalizer = config.getLocal('finalizer')
         this.builders = config.getLocal('builders') || ['copy']
+        this.testers = config.getLocal('testers') || []
         this.sillyname = config.getLocal('sillyname')
         this.opt = config.getLocal('opt') || []
     }
@@ -203,6 +205,10 @@ class Operator {
         this.builders.push(name)
     }
 
+    addTester(name) {
+        this.testers.push(name)
+    }
+
     output() {
         // if (!this.projectDir)
 
@@ -266,6 +272,7 @@ class Operator {
         config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {return {path: entry.path, opts: entry.opts}}))
         config.writeLocal('finalizer', this.finalizer)
         config.writeLocal('builders', this.builders)
+        config.writeLocal('testers', this.testers)
         config.writeLocal('opt', this.opt)
         config.writeLocal('use', Object.keys(this.generators))
         if (this.sillyname) {
