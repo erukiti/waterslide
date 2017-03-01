@@ -1,0 +1,9 @@
+{
+  "presets": [
+    "es2016",
+    "stage-3"
+  ],
+  "plugins": [
+    "babel-plugin-espower"
+  ]
+}

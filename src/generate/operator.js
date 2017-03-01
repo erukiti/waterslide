@@ -6,24 +6,16 @@ const fs = require('fs')
 const mkdirp = require('mkdirp')
 const childProcess = require('child_process')
 
-
 const {getConfig, Plugin} = require('../waterslider')
 const config = getConfig()
-
-/**
- * creator()が生成するPromiseを非同期かつ直列的に実行する
- * var creator  Promiseを返すコールバック
- * return       creatorが生成したPromise
- */
-
-let p = Promise.resolve()
-const doSerial = creator => p = p.then(creator)
+const Fsio = require('./fsio')
 
 class Operator {
     constructor(cliUtils) {
         this.plugin = new Plugin()
+        this.fsio = new Fsio(fs)
         this.cliUtils = cliUtils
-        this.commands = []
+        this.commands = [[], [], [], [], [], [], [], [], [], []]
         this.projectDir = null
         this.directories = []
         this.generators = {}
@@ -35,27 +27,6 @@ class Operator {
         this.opt = []
         this.noOpt = []
         this.noUse = []
-
-        this._outputFile = entry => new Promise((resolve, reject) => {
-            if (path.dirname(entry.path)) {
-                mkdirp.sync(path.dirname(entry.path))
-            }
-
-            const opts = {}
-            if (entry.mode) {
-                opts.mode = entry.mode
-            }
-            opts.flag = this.isOverwrite ? 'w' : 'wx'
-
-            fs.writeFile(entry.path, entry.text, opts, err => {
-                if (err) {
-                    reject(err)
-                } else {
-                    this.cliUtils.verbose(`file wrote: ${entry.path}`)
-                    resolve()
-                }
-            })
-        })
 
         this._command = command => new Promise((resolve, reject) => {
             this.cliUtils.verbose(command)
@@ -147,10 +118,6 @@ class Operator {
     }
 
     addCommand(priority, command) {
-        if (this.commands[priority] === undefined) {
-            this.commands[priority] = []
-        }
-
         this.commands[priority].push(command)
     }
 
@@ -209,14 +176,13 @@ class Operator {
         this.testers.push(name)
     }
 
-    output() {
+    async output() {
         // if (!this.projectDir)
 
         // console.log(Object.keys(this.generators).join(', '))
 
         // assert target が generators に含まれてない
 
-        const outputFiles = []
 
         const processed = []
 
@@ -236,35 +202,33 @@ class Operator {
 
         // outputs
         Object.keys(this.generators).forEach(key => {
-            this.generators[key].output().forEach(file => {
-                this.entries.push(file)
+            this.generators[key].output().forEach(entry => {
+                this.entries.push(entry)
             })
         })
 
         if (this.target) {
-            this.target.output().forEach(file => {
-                this.entries.push(file)
+            this.target.output().forEach(entry => {
+                this.entries.push(entry)
             })
         }
 
-        this.entries.forEach(entry => {
-            if (entry.text) {
-                outputFiles.push(this._outputFile(entry))
+        const outputFiles = this.entries.map(async entry => {
+            await this.fsio.writeFile(entry.path, entry.text)
+            this.cliUtils.verbose(`wrote ${entry.path}`)
+        })
+
+        await Promise.all(outputFiles)
+
+        for (let commands of this.commands) {
+            for (let command of commands) {
+                await this._command(command)
             }
-        })
+        }
 
-        doSerial(() => Promise.all(outputFiles))
-
-        this.commands.forEach(commands => {
-            commands.forEach(command => {
-                doSerial(() => this._command(command))
-            })
-        })
-        doSerial(() => {
-            this.cliUtils.message()
-            this.cliUtils.message(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
-            this.cliUtils.message(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
-        }).catch(err => console.error(err))
+        this.cliUtils.message()
+        this.cliUtils.message(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
+        this.cliUtils.message(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
 
         // console.log(JSON.stringify(config.localConfig, null, '  ')+'\n')
 

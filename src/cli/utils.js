@@ -28,8 +28,9 @@ class CliUtils {
     verbose(mesg = '', depth = 0) {
         if (this.isVerbose) {
             let header = ''
-            if (this.isDebug) {
-                header = `verbose ${path.basename(this._getCaller(depth + 1))}`
+            const caller = this._getCaller(depth + 1)
+            if (this.isDebug && caller) {
+                header = `verbose ${path.basename(caller)}`
             } else {
                 header = 'verbose'
             }
