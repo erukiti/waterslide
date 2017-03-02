@@ -37,25 +37,22 @@ class WebpackBuilder {
             module: { rules },
             devtool: '#source-map',
             target,
-
             plugins: [
                 new this.webpack.DefinePlugin({
                     'process.env.NODE_ENV': JSON.stringify('production')
                 })
             ],
-
             stats: {
                 warnings: true,
                 errors: true,
                 errorDetails: true,
             }
-
         }
     }
 
     _compiled(err, stats) {
         if (err) {
-            this.builder.error(err)
+            console.dir(err)
             return
         }
 
@@ -72,15 +69,14 @@ class WebpackBuilder {
     _compile(isWatch, entry) {
         const compiler = this.webpack(this._createConfig(entry.path, entry.opts.type))
         if (isWatch) {
-            compiler.watch({}, (err, stats) => this._compiled(entry, err, stats))
+            compiler.watch({}, (err, stats) => this._compiled(err, stats))
         } else {
-            compiler.run((err, stats) => this._compiled(entry, err, stats))
+            compiler.run((err, stats) => this._compiled(err, stats))
         }
     }
 
     watch(entries) {
         entries.forEach(entry => {
-            this.flags[entry.path] = true
             this._compile(true, entry)
         })
     }

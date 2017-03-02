@@ -14,9 +14,8 @@ class ElectronFinalizer {
     run() {
         if (!this.electron) {
             const plugin = new Plugin()
-            this.electron = plugin.requireLocal('electron-connect').server.create({path: './build'})
-            this.electron.start()
-            this.electron.on('quit', () => process.exit(0))
+            this.electron = plugin.requireLocal('electron-connect').server.create({path: './build', stopOnClose: true})
+            this.electron.start(state => state === 'stopped' && process.exit(0))
         } else {
             this.electron.restart()
         }

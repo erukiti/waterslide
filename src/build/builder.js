@@ -74,15 +74,16 @@ class Builder {
                 return
             }
 
-            const klass = this.plugin.requireFinalizer(config.getLocal('finalizer'))
-            const finalizer = new klass(this)
-
+            if (!this.finalizer) {
+                const klass = this.plugin.requireFinalizer(config.getLocal('finalizer'))
+                this.finalizer = new klass(this)
+            }
             // assertFalse(this.isBuild && this.isRun)
 
             if (this.isBuild) {
-                finalizer.build()
+                this.finalizer.build()
             } else if (this.isRun) {
-                finalizer.run()
+                this.finalizer.run()
             }
         }
     }
@@ -92,6 +93,9 @@ class Builder {
         this.isRun = opts.isRun
         this.isTest = opts.isTest
         this.isWatch = opts.isWatch
+        this.env = opts.env || 'development'
+
+        console.log(this.env)
 
         const testers = config.getLocal('testers') || []
 

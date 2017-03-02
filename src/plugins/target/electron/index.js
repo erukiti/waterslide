@@ -24,9 +24,6 @@ app.on('ready', () => {
     try {
         const client = require('electron-connect').client
         let cl = client.create(win)
-        app.on('quit', () => {
-            cl.sendMessage('quit')
-        })
     } catch (err) {
         // console.dir(err)
         // nice catch !!!!!!

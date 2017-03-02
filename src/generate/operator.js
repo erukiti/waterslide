@@ -200,16 +200,6 @@ class Operator {
             this.cliUtils.verbose(`wrote ${entry.path}`)
         })
 
-        await Promise.all(outputFiles)
-
-        await this.command.execAll(command => this.cliUtils.verbose(command))
-
-        this.cliUtils.message()
-        this.cliUtils.message(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
-        this.cliUtils.message(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
-
-        // console.log(JSON.stringify(config.localConfig, null, '  ')+'\n')
-
         config.writeLocal('directories', this.directories)
         config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {return {path: entry.path, opts: entry.opts}}))
         config.writeLocal('finalizer', this.finalizer)
@@ -220,6 +210,17 @@ class Operator {
         if (this.sillyname) {
             config.writeLocal('sillyname', this.sillyname)
         }
+
+        await Promise.all(outputFiles)
+
+        await this.command.execAll(command => this.cliUtils.verbose(command))
+
+        this.cliUtils.message()
+        this.cliUtils.message(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
+        this.cliUtils.message(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
+
+        // console.log(JSON.stringify(config.localConfig, null, '  ')+'\n')
+
     }
 
     setSillyname(sillyname) {
