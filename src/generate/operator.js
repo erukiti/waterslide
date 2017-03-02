@@ -1,21 +1,19 @@
 'use strict'
 
 const process = require('process')
-const path = require('path')
 const fs = require('fs')
-const mkdirp = require('mkdirp')
-const childProcess = require('child_process')
 
 const {getConfig, Plugin} = require('../waterslider')
 const config = getConfig()
 const Fsio = require('./fsio')
+const Command = require('./command')
 
 class Operator {
     constructor(cliUtils) {
         this.plugin = new Plugin()
-        this.fsio = new Fsio(fs)
+        this.fsio = new Fsio()
         this.cliUtils = cliUtils
-        this.commands = [[], [], [], [], [], [], [], [], [], []]
+        this.command = new Command(require('child_process'))
         this.projectDir = null
         this.directories = []
         this.generators = {}
@@ -27,22 +25,6 @@ class Operator {
         this.opt = []
         this.noOpt = []
         this.noUse = []
-
-        this._command = command => new Promise((resolve, reject) => {
-            this.cliUtils.verbose(command)
-            const child = childProcess.exec(command)
-            child.on('error', err => reject(err))
-            child.on('exit', (code, signal) => {
-                if (code) {
-                    child.stdout.pipe(process.stdout)
-                    child.stderr.pipe(process.stdout)
-
-                    reject(`error '${command}' is failed. ${code}`)
-                } else {
-                    resolve()
-                }
-            })
-        })
 
         this.addBuilder('copy')
     }
@@ -118,14 +100,14 @@ class Operator {
     }
 
     addCommand(priority, command) {
-        this.commands[priority].push(command)
+        this.command.addCommand(priority, command)
     }
 
-    setDirectory(path, purpose, description) {
+    setDirectory(directory, purpose, description) {
         const documentGenerator = this.getGenerator('document')
-        documentGenerator.setDirectory(path, description)
+        documentGenerator.setDirectory(directory, description)
         if (purpose) {
-            this.directories.push({path, purpose})
+            this.directories.push({directory, purpose})
         }
     }
 
@@ -220,11 +202,7 @@ class Operator {
 
         await Promise.all(outputFiles)
 
-        for (let commands of this.commands) {
-            for (let command of commands) {
-                await this._command(command)
-            }
-        }
+        await this.command.execAll(command => this.cliUtils.verbose(command))
 
         this.cliUtils.message()
         this.cliUtils.message(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
