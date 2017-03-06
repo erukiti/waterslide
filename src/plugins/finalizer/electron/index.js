@@ -28,6 +28,11 @@ class ElectronFinalizer {
 
         const packageInfo = JSON.parse(fs.readFileSync('./package.json'))
 
+        const chlildProcess = require('child_process')
+        const result = chlildProcess.execSync('npm info electron')
+        const reVer = /version: '(\d+\.\d+\.\d+)',/
+        const electronVersion = reVer.exec(result.toString())[1]
+
         const packagerConfDarwin = {
             dir: 'build',
             out: 'release/',
@@ -35,7 +40,7 @@ class ElectronFinalizer {
             arch: ['x64'],
             asar: true,
             platform: 'darwin',
-            electronVersion: packageInfo.dependencies['electron'],
+            electronVersion,
             // icon: 'src/app.icns',
             overwrite: true
         }

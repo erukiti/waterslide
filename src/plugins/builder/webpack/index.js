@@ -66,28 +66,22 @@ class WebpackBuilder {
         this.builder.compiled()
     }
 
-    _compile(isWatch, entry) {
-        const compiler = this.webpack(this._createConfig(entry.path, entry.opts.type))
-        if (isWatch) {
-            compiler.watch({}, (err, stats) => this._compiled(err, stats))
-        } else {
-            compiler.run((err, stats) => this._compiled(err, stats))
-        }
-    }
-
-    watch(entries) {
-        entries.forEach(entry => {
-            this._compile(true, entry)
-        })
-    }
-
-    run(entries) {
+    _getCompiler(entries) {
         const conf = entries.map(entry => {
             this.builder.verbose(`webpack: ${entry.path} (${entry.opts.type})`)
             return this._createConfig(entry.path, entry.opts.type)
         })
 
-        const compiler = this.webpack(conf)
+        return this.webpack(conf)
+    }
+
+    watch(entries) {
+        const compiler = this._getCompiler(entries)
+        compiler.watch((err, stats) => this._compiled(err, stats))
+    }
+
+    run(entries) {
+        const compiler = this._getCompiler(entries)
         compiler.run((err, stats) => this._compiled(err, stats))
     }
 

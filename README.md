@@ -1,29 +1,32 @@
 # waterslider
 
-*TODO: 全部英語で書く*
+Waterslider is a CLI tool that easily sets up a modern JavaScript project and takes care of troublesome compilation (webpack, babel...).
 
-watersliderはモダンなJavaScriptのプロジェクト作成と面倒なコンパイル(webpack, babel...)を肩代わりしてくれるツールです。
-
-## insatll
+## Insatll
 
 ```sh
 $ npm install -g waterslider
 ```
 
-## use
+## Use
+
+How to create project:
 
 ```sh
 $ waterslider new <target> [projectDir]
+```
+
+`target` is the environment name you want to create like `electron` and `node`.
+
+If you omit `projectDir` specification, created a project directory with random name. Even if you do not consider the name of the project, you can easily create a project and experiment.
+
+How to excute project:
+
+```sh
 $ cd projectDir
 $ npm start
 ```
 
-`target`は、作成したいターゲットとなる環境名です。`electron`や`node`などを指定可能です。
-
-`projectDir`を省略した場合、ランダムな名前のプロジェクトディレクトリが作成されます。実験的にコードを書きたいときに、いちいちプロジェクトの名前を考えるのは面倒な時でも、この機能で簡単にプロジェクトを作成して実験が可能です。
-
-`waterslider new`が完了した後は一通り完了しているので、そのディレクトリに移って`npm start`すればアプリケーションが起動します。ターゲット環境が`electron`ならばElectronアプリが起動します。いわゆるwatchモードなので、ソースコードを変更したら即座に反映されます。
-
 ## License
 
-waterslide自体のライセンスはApache-2.0とします。watersliderによる生成物のライセンスは特に規定しません。
+The license of the waterslider itself is Apache-2.0. Software license created using Waterslider can be set freely.
