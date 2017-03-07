@@ -35,10 +35,6 @@ class Operator {
         this.projectDir = name
     }
 
-    getConfig() {
-        return config
-    }
-
     setOpt(opt) {
         if (this.opt.length > 0) {
             this.cliUtils.error('warning: opt is already set.')

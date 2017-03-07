@@ -1,5 +1,7 @@
 'use strict'
 
+const { getConfig } = require('../../../waterslider')
+
 class WebpackGenerator {
     constructor(operator) {
         this.operator = operator
@@ -17,7 +19,7 @@ class WebpackGenerator {
         jsGenerator.addDevPackage('babel-loader')
 
         this.operator.postInstall(() => {
-            this.operator.getConfig().writeLocal('webpack', { rules: this.rules })
+            getConfig().writeLocal('webpack', { rules: this.rules })
         })
     }
 }
