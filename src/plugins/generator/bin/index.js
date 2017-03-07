@@ -22,7 +22,6 @@ class BinGenerator {
             process.exit(1)
         }
 
-        this.operator.setProjectDir()
         this.generate(argv[0])
     }
 
@@ -33,12 +32,12 @@ class BinGenerator {
         jsGenerator.addBin(`bin/${name}`)
     }
 
-    process() {
-
-    }
-
-    output() {
-        return this.sources
+    async install() {
+        this.operator.postInstall(async () => {
+            await Promise.all(this.sources.map(source => {
+                this.operator.writeFile(source.path, source.txt, source.opts)
+            }))
+        })
     }
 
 }

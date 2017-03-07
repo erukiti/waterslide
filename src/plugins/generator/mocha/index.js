@@ -23,18 +23,16 @@ class MochaGenerator {
         this.operator = operator
     }
 
-    process() {
+    async install() {
         this.operator.getGenerator('power-assert')
 
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('mocha')
         this.operator.addTester('mocha')
-    }
-    output() {
-        return [
-            {path: 'test/mocha.opts', text: mochaOptsText},
-            {path: 'test/test-helper.js', text: testHelperJs},
-            {path: 'test/test.js', text: testJs}
+
+        await this.operator.writeFile('test/mocha.opts', mochaOptsText)
+        await this.operator.writeFile('test/test-helper.js', testHelperJs)
+        await this.operator.writeFile('test/test.js', testJs)
         ]
     }
 }

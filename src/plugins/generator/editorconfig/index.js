@@ -18,13 +18,8 @@ class EditorconfigGenerator {
         this.operator = operator
     }
 
-    process() {
-
-    }
-    output() {
-        return [
-            {path: '.editorconfig', text: editorconfigText}
-        ]
+    async install() {
+        await this.operator.writeFile('.editorconfig', editorconfigText)
     }
 }
 

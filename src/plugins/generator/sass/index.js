@@ -5,7 +5,7 @@ class SassGenerator {
         this.operator = operator
     }
 
-    process() {
+    async install() {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('css-loader')
         jsGenerator.addDevPackage('sass-loader')
@@ -58,10 +58,6 @@ class SassGenerator {
             }
           }
         ])
-    }
-
-    output() {
-        return []
     }
 }
 

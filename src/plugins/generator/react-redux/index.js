@@ -206,6 +206,9 @@ class ReactReduxGenerator {
             return
         }
 */
+    }
+
+    async install() {
         const babelGenerator = this.operator.getGenerator('babel')
         babelGenerator.addPreset('react')
         babelGenerator.addPlugin('babel-plugin-syntax-jsx')
@@ -217,9 +220,12 @@ class ReactReduxGenerator {
         jsGenerator.addPackage('react-dom')
         jsGenerator.addPackage('react-redux')
         jsGenerator.addPackage('redux')
-    }
-    output() {
-        return this.sources
+
+        this.operator.postInstall(() => {
+            await Promise.all(this.sources.map(source => {
+                return this.operator.writeFile(source.path, source.txt, source.opts)
+            }))
+        })
     }
 }
 

@@ -6,25 +6,21 @@ const indexJsText =
 console.log('Hello, Node.js World.')
 `
 
-class ElectronTarget {
+class NodeProject {
     constructor(operator) {
         this.operator = operator
         operator.setFinalizer('node')
     }
 
-    process() {
+    async install() {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.setMain('lib/index.js')
 
         this.operator.setDirectory('src', 'source', 'source code directory')
         this.operator.setDirectory('lib', 'destination', 'build directory')
-    }
 
-    output() {
-        return [
-            {path: 'src/index.js', text: indexJsText, opts: {type: 'node'}}
-        ]
+        await this.operator.writeFile('src/index.js', indexJsText, {type: 'node'})
     }
 }
 
-module.exports = ElectronTarget
+module.exports = NodeProject

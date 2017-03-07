@@ -36,7 +36,7 @@ class JsGenerator {
         this.main = name
     }
 
-    process() {
+    async install() {
         this.operator.getGenerator('babel')
 
         this.addDevPackage('babel-core')
@@ -57,9 +57,7 @@ class JsGenerator {
         this.operator.getGenerator('webpack').addLoader('\\.jsx?$', [
             {loader: 'babel-loader', options: {sourceMap: true}}
         ])
-    }
 
-    output() {
         const getProjectName = () => this.operator.getProjectDir()
         // FIXME: project dir -> project name
 
@@ -84,18 +82,17 @@ class JsGenerator {
             this.values.bin = this.bin
         }
 
-        this.packages.forEach(name => {
-            this.operator.addCommand(0, `npm install ${name} -S`)
-        })
+        this.operator.postInstall(async () => {
+            this.packages.forEach(name => {
+                this.operator.addCommand(0, `npm install ${name} -S`)
+            })
 
-        this.devPackages.forEach(name => {
-            this.operator.addCommand(0, `npm install ${name} -D`)
-        })
+            this.devPackages.forEach(name => {
+                this.operator.addCommand(0, `npm install ${name} -D`)
+            })
 
-        return [{
-            path: 'package.json',
-            text: JSON.stringify(this.values, null, '  ') + '\n'
-        }]
+            await this.operator.writeFile('package.json', JSON.stringify(this.values, null, '  ') + '\n')
+        })
     }
 }
 

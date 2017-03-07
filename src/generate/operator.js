@@ -3,7 +3,7 @@
 const process = require('process')
 const fs = require('fs')
 
-const {getConfig, Plugin} = require('../waterslider')
+const { getConfig, Plugin } = require('../waterslider')
 const config = getConfig()
 const Fsio = require('./fsio')
 const Command = require('./command')
@@ -14,44 +14,29 @@ class Operator {
         this.fsio = new Fsio()
         this.cliUtils = cliUtils
         this.command = new Command(require('child_process'))
-        this.projectDir = null
-        this.directories = []
+        this.projectDir = null // FIXME
         this.generators = {}
-        this.entries = []
-        this.target = null
-        this.builders = []
-        this.testers = []
-        this.isOverwrite = true
-        this.opt = []
         this.noOpt = []
         this.noUse = []
+
+        this.postInstalls = []
+
+        this.directories = config.getLocal('directories') || []
+        this.entries = config.getLocal('entries') || []
+        this.finalizer = config.getLocal('finalizer')
+        this.builders = config.getLocal('builders') || []
+        this.testers = config.getLocal('testers') || []
+        this.opt = config.getLocal('opt') || []
 
         this.addBuilder('copy')
     }
 
-    getConfig() {
-        return config
+    setProjectDir(name) {
+        this.projectDir = name
     }
 
-    setProjectDir(projectDir = './') {
-        this.projectDir = projectDir
-        if (projectDir !== './') {
-            fs.mkdirSync(projectDir)
-            process.chdir(projectDir)
-        }
-        config.startLocal()
-
-        // FIXME?
-        this.directories = config.getLocal('directories') || []
-        const entries = config.getLocal('entries') || []
-        entries.forEach(entry => {
-            this.entries.push(entry)
-        })
-        this.finalizer = config.getLocal('finalizer')
-        this.builders = config.getLocal('builders') || ['copy']
-        this.testers = config.getLocal('testers') || []
-        this.sillyname = config.getLocal('sillyname')
-        this.opt = config.getLocal('opt') || []
+    getConfig() {
+        return config
     }
 
     setOpt(opt) {
@@ -88,10 +73,6 @@ class Operator {
 
     getNoUse(noUse) {
         return this.noUse
-    }
-
-    setOverwrite(isOverwrite) {
-        this.isOverwrite = isOverwrite
     }
 
     getProjectDir() {
@@ -139,13 +120,6 @@ class Operator {
         return this.generators[name]
     }
 
-    setTarget(name) {
-        const klass = this.plugin.requireTarget(name)
-        this.target = new klass(this)
-
-        // FIXME 二回目以後はエラー
-    }
-
     setFinalizer(name) {
         this.finalizer = name
     }
@@ -158,47 +132,34 @@ class Operator {
         this.testers.push(name)
     }
 
-    async output() {
-        // if (!this.projectDir)
+    readFile(name) {
+        return this.fsio.readFile(name)
+    }
 
-        // console.log(Object.keys(this.generators).join(', '))
+    writeFile(name, content, opts = {}) {
+        this.entries.push({path: name, text: content, opts})
 
-        // assert target が generators に含まれてない
+        return this.fsio.writeFile(name, content, opts).then(() => {
+            this.verbose(`wrote ${name}`)
+        })
+    }
 
+    postInstall(cb) {
+        this.postInstalls.push(cb)
+    }
 
-        const processed = []
+    async install() {
+        let processed = []
 
         const getNotProcessedKey = () => Object.keys(this.generators).filter(key => !processed.includes(key))
 
-        if (this.target) {
-            this.target.process()
-        }
-
-        let notProcessed = []
+        let notProcessed
         while ((notProcessed = getNotProcessedKey()).length > 0) {
-            notProcessed.forEach(key => {
-                this.generators[key].process()
-                processed.push(key)
-            })
+            await Promise.all(notProcessed.map(key => this.generators[key].install()))
+            processed = processed.concat(notProcessed)
         }
 
-        // outputs
-        Object.keys(this.generators).forEach(key => {
-            this.generators[key].output().forEach(entry => {
-                this.entries.push(entry)
-            })
-        })
-
-        if (this.target) {
-            this.target.output().forEach(entry => {
-                this.entries.push(entry)
-            })
-        }
-
-        const outputFiles = this.entries.map(async entry => {
-            await this.fsio.writeFile(entry.path, entry.text)
-            this.cliUtils.verbose(`wrote ${entry.path}`)
-        })
+        await Promise.all(this.postInstalls.map(cb => cb()))
 
         config.writeLocal('directories', this.directories)
         config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {return {path: entry.path, opts: entry.opts}}))
@@ -206,25 +167,8 @@ class Operator {
         config.writeLocal('builders', this.builders)
         config.writeLocal('testers', this.testers)
         config.writeLocal('opt', this.opt)
-        config.writeLocal('use', Object.keys(this.generators))
-        if (this.sillyname) {
-            config.writeLocal('sillyname', this.sillyname)
-        }
-
-        await Promise.all(outputFiles)
 
         await this.command.execAll(command => this.cliUtils.verbose(command))
-
-        this.cliUtils.message()
-        this.cliUtils.message(`  project \x1b[32m${this.projectDir}\x1b[m was created.`)
-        this.cliUtils.message(`  see. \x1b[36m${this.projectDir}/README.md\x1b[m`)
-
-        // console.log(JSON.stringify(config.localConfig, null, '  ')+'\n')
-
-    }
-
-    setSillyname(sillyname) {
-        this.sillyname = sillyname
     }
 
     verbose(message) {

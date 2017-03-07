@@ -42,8 +42,6 @@ generate JavaScript & HTML for web browser.
             process.exit(1)
         }
 
-        this.operator.setProjectDir()
-
         const opts2 = {type: 'web'}
 
         this.generate(argv[0], opts2)
@@ -65,11 +63,12 @@ generate JavaScript & HTML for web browser.
         })
     }
 
-    process() {
-
-    }
-    output() {
-        return this.sources
+    async install() {
+        this.operator.postInstall(async () => {
+            await Promise.all(this.sources.map(source => {
+                this.operator.writeFile(source.path, source.text, source.opts)
+            }))
+        })
     }
 }
 

@@ -2,9 +2,10 @@ const process = require('process')
 
 const CliUtils = require('./utils')
 
-const GenerateCli = require('./generate')
 const ConfigCli = require('./config')
 const BuildCli = require('./build')
+
+const setupProject = require('../generate/project')
 
 const cliUtils = new CliUtils({verbose: true, debug: true})
 
@@ -14,13 +15,12 @@ if (process.argv.length <= 2) {
 }
 
 if (process.argv[2] === 'new') {
-    const generate = new GenerateCli(cliUtils)
-    generate.run(['project'].concat(process.argv.slice(3)))
+    setupProject(cliUtils, process.argv.slice(3))
 }
 
 if (process.argv[2] === 'generate') {
-    const generate = new GenerateCli(cliUtils)
-    generate.run(process.argv.slice(3))
+    // const generate = new GenerateCli(cliUtils)
+    // generate.run(process.argv.slice(3))
 }
 
 if (process.argv[2] === 'config') {

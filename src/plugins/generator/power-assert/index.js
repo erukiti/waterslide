@@ -5,7 +5,7 @@ class PowerAssertGenerator {
         this.operator = operator
     }
 
-    process() {
+    async install() {
         const babelGenerator = this.operator.getGenerator('babel')
         babelGenerator.addPlugin('babel-plugin-espower')
 
@@ -13,9 +13,6 @@ class PowerAssertGenerator {
         jsGenerator.addDevPackage('babel-plugin-espower')
         jsGenerator.addDevPackage('espower-babel')
         jsGenerator.addDevPackage('power-assert')
-    }
-    output() {
-        return []
     }
 }
 

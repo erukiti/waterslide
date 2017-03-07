@@ -31,13 +31,13 @@ app.on('ready', () => {
 })
 `
 
-class ElectronTarget {
+class ElectronProject {
     constructor(operator) {
         this.operator = operator
         operator.setFinalizer('electron')
     }
 
-    process() {
+    async install() {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('electron')
         jsGenerator.addDevPackage('electron-connect')
@@ -52,14 +52,10 @@ class ElectronTarget {
         this.operator.setDirectory('src/renderer', null, 'source code directory (Electron Renderer Process)')
         this.operator.setDirectory('build', 'destination', 'build directory')
         this.operator.setDirectory('release', null, 'release directory')
-    }
 
-    output() {
-        return [
-            {path: 'src/browser/app.js', text: appJsText, opts: {type: 'copy'}},
-            {path: 'src/package.json', text: JSON.stringify({'main': 'browser/app.js'}, null, '  ') + '\n', opts: {type: 'copy'}}
-        ]
+        await this.operator.writeFile('src/browser/app.js', appJsText, {type: 'copy'})
+        await this.operator.writeFile('src/package.json', JSON.stringify({'main': 'browser/app.js'}, null, '  ') + '\n', {type: 'copy'})
     }
 }
 
-module.exports = ElectronTarget
+module.exports = ElectronProject

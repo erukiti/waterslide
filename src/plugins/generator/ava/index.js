@@ -14,15 +14,11 @@ class MochaGenerator {
         this.operator = operator
     }
 
-    process() {
+    async install() {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('ava')
         this.operator.addTester('ava')
-    }
-    output() {
-        return [
-            {path: 'src/hoge.test.js', text: testJs}
-        ]
+        await this.operator.writeFile('src/hoge.test.js', testJs)
     }
 }
 

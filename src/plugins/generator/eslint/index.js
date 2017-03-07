@@ -60,17 +60,14 @@ class eslintGenerator {
         this.operator = operator
     }
 
-    process() {
+    async install() {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('eslint')
         jsGenerator.addDevPackage('babel-eslint')
         this.operator.addTester('eslint')
-    }
-    output() {
-        return [
-            {path: '.eslintignore', text: eslintIgnoreText},
-            {path: '.eslintrc', text: JSON.stringify(eslintrc, null, '  ') + '\n'}
-        ]
+
+        await this.operator.writeFile('.eslintignore', eslintIgnoreText)
+        await this.operator.writeFile('.eslintrc', JSON.stringify(eslintrc, null, '  ') + '\n')
     }
 }
 

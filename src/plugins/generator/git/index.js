@@ -39,7 +39,7 @@ class GitGenerator {
         return this.githubUsername
     }
 
-    process() {
+    async install() {
         if (this.githubUser) {
             // FIXME: 制御の流れを考える。たとえばoutputsを全部Promise化
             this.githubUser.createRepo({
@@ -52,12 +52,8 @@ class GitGenerator {
         this.operator.addCommand(9, 'git init')
         this.operator.addCommand(9, 'git add .')
         this.operator.addCommand(9, "git commit -m 'first commited by waterslider. see. http://github.com/erukiti/waterslider/'")
-    }
-    output() {
-        return [{
-            path: '.gitignore',
-            text: this.ignoreFiles.join('\n')
-        }]
+
+        await this.operator.writeFile('.gitignore', this.ignoreFiles.join('\n'))
     }
 }
 

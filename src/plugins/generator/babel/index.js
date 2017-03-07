@@ -2,6 +2,7 @@
 
 class BabelGenerator {
     constructor(operator) {
+        this.operator = operator
         this.presets = []
         this.plugins = []
     }
@@ -13,18 +14,15 @@ class BabelGenerator {
         this.plugins.push(name)
     }
 
-    process() {
-
-    }
-    output() {
+    async install() {
         const values = {
             presets: this.presets,
             plugins: this.plugins
         }
-        return [{
-            path: '.babelrc',
-            text: JSON.stringify(values, null, '  ')
-        }]
+
+        this.operator.postInstall(async () => {
+            await this.operator.writeFile('.babelrc', JSON.stringify(values, null, '  '))
+        })
     }
 }
 

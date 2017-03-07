@@ -12,8 +12,8 @@ class Plugin {
         return require(`${process.cwd()}/node_modules/${name}`)
     }
 
-    requireTarget(name) {
-        return require(`./plugins/target/${name}`)
+    requireProject(name) {
+        return require(`./plugins/project/${name}`)
     }
 
     requireGenerator(name) {

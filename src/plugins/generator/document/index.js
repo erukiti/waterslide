@@ -28,15 +28,9 @@ class DocumentGenerator {
         return text
     }
 
-    process() {
-
-    }
-
-    output() {
+    async install() {
         const text = createReadme(this.operator.getProjectDir(), this._getDirectoriesText())
-        return [
-            {path: 'README.md', text}
-        ]
+        await this.operator.writeFile('README.md', text)
     }
 }
 
