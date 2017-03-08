@@ -21,7 +21,7 @@ class Plugin {
     }
 
     findGenerator() {
-        return ['project', 'browser']
+        return ['browser']
     }
 
     requireFinalizer(name) {

@@ -6,7 +6,10 @@ class WebpackGenerator {
     constructor(operator) {
         this.operator = operator
         this.rules = []
-        operator.addBuilder('webpack')
+    }
+
+    static getInstaller(operator) {
+        return new this(operator)
     }
 
     addLoader(test, use) {
@@ -14,6 +17,7 @@ class WebpackGenerator {
     }
 
     async install() {
+        this.operator.addBuilder('webpack')
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('webpack')
         jsGenerator.addDevPackage('babel-loader')

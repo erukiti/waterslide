@@ -27,6 +27,7 @@ class Operator {
         this.builders = config.getLocal('builders') || []
         this.testers = config.getLocal('testers') || []
         this.opt = config.getLocal('opt') || []
+        this.info = config.getLocal('info') || []
 
         this.addBuilder('copy')
     }
@@ -96,21 +97,25 @@ class Operator {
         if (!this.generators[name]) {
             const klass = this.plugin.requireGenerator(name)
 
+            const generator = klass.getInstaller(this)
+
             this.cliUtils.verbose(`generator: ${name}`, 1)
 
-            if (klass.replace) {
-                this.cliUtils.verbose(`generator: ${name} -> ${klass.replace()}`, 1)
-                name = klass.replace()
-            }
+            // if (klass.replace) {
+            //     this.cliUtils.verbose(`generator: ${name} -> ${klass.replace()}`, 1)
+            //     name = klass.replace()
+            // }
 
-            if (this.generators[name]) {
-                this.cliUtils.error(`${src} is already loaded.`)
-                process.exit(1)
-            }
+            // if (this.generators[name]) {
+            //     this.cliUtils.error(`${src} is already loaded.`)
+            //     process.exit(1)
+            // }
 
             // if (!klass) の処理を書く
 
-            this.generators[name] = new klass(this)
+            this.generators[name] = generator
+
+            // this.generators[name] = new klass(this)
         }
 
         return this.generators[name]
@@ -144,6 +149,10 @@ class Operator {
         this.postInstalls.push(cb)
     }
 
+    setInfo(title, message) {
+        this.info.push({title, message})
+    }
+
     async install() {
         let processed = []
 
@@ -163,6 +172,7 @@ class Operator {
         config.writeLocal('builders', this.builders)
         config.writeLocal('testers', this.testers)
         config.writeLocal('opt', this.opt)
+        config.writeLocal('info', this.info)
 
         await this.command.execAll(command => this.cliUtils.verbose(command))
     }

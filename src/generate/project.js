@@ -35,6 +35,7 @@ const setupProject = async (cliUtils, argv) => {
         projectName = generateName()
         projectDir = projectName.toLowerCase().replace(' ', '-')
         fs.mkdirSync(projectDir)
+        cliUtils.message(`directory \x1b[32m${projectDir}\x1b[m was created.`)
         process.chdir(projectDir)
         config.startLocal()
         config.writeLocal('sillyname', projectDir)
@@ -58,7 +59,7 @@ const setupProject = async (cliUtils, argv) => {
 
     envs.forEach(env => operator.getGenerator(env))
 
-    await operator.install()
+    await operator.install().catch(e => console.dir(e))
 
     cliUtils.message()
     cliUtils.message(`  project \x1b[32m${projectDir}\x1b[m was created.`)

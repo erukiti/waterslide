@@ -27,7 +27,8 @@
     "mkdirp": "^0.5.1",
     "open": "0.0.5",
     "read": "^1.0.7",
-    "sillyname": "^0.1.0"
+    "sillyname": "^0.1.0",
+    "yargs": "^7.0.1"
   },
   "devDependencies": {
     "ava": "^0.18.2",

@@ -154,6 +154,10 @@ class ReactReduxGenerator {
         this.isGenerated = false
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     static replace() {
         return 'browser'
     }

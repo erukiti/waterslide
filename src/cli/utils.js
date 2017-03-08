@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const process = require('process')
 
 class CliUtils {
     constructor(opts = {}) {
@@ -8,6 +9,9 @@ class CliUtils {
         this.isDebug = opts.debug
         this.isMessage = true
         this.isError = true
+
+        this.rotateIndex = 0
+        this.latestLength = 0
     }
 
     _getCaller(depth) {
@@ -26,15 +30,24 @@ class CliUtils {
     }
 
     verbose(mesg = '', depth = 0) {
+        let header = ''
+        const caller = this._getCaller(depth + 1)
+        if (this.isDebug && caller) {
+            header = `verbose ${path.basename(caller)}`
+        } else {
+            header = 'verbose'
+        }
+
         if (this.isVerbose) {
-            let header = ''
-            const caller = this._getCaller(depth + 1)
-            if (this.isDebug && caller) {
-                header = `verbose ${path.basename(caller)}`
-            } else {
-                header = 'verbose'
-            }
             console.log(`\x1b[33m${header}:\x1b[m ${mesg}`)
+        } else {
+            const indicator = '|/-\\'.substr(this.rotateIndex, 1)
+            if (++this.rotateIndex >= 4) {
+                this.rotateIndex = 0
+            }
+            
+            process.stdout.write(`${' '.repeat(this.latestLength + 2)}\r${indicator} ${mesg}\r`)
+            this.latestLength = mesg.length
         }
     }
 

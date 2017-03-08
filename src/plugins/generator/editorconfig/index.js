@@ -18,6 +18,10 @@ class EditorconfigGenerator {
         this.operator = operator
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     async install() {
         await this.operator.writeFile('.editorconfig', editorconfigText)
     }

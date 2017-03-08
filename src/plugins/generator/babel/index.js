@@ -6,6 +6,11 @@ class BabelGenerator {
         this.presets = []
         this.plugins = []
     }
+
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     addPreset(name) {
         // こいつがpackage.jsonにpluginを追加すべきかどうか？
         this.presets.push(name)

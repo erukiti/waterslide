@@ -23,6 +23,10 @@ class GitGenerator {
         // }
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     addIgnore(path) {
         this.ignoreFiles.push(path)
     }

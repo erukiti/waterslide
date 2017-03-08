@@ -30,6 +30,10 @@ class BrowserGenerator {
         this.sources = []
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     static getUsage() {
         return `
 generate JavaScript & HTML for web browser.

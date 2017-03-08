@@ -60,6 +60,10 @@ class eslintGenerator {
         this.operator = operator
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     async install() {
         const jsGenerator = this.operator.getGenerator('js')
         jsGenerator.addDevPackage('eslint')

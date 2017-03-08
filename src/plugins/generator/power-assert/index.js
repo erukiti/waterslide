@@ -5,6 +5,10 @@ class PowerAssertGenerator {
         this.operator = operator
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     async install() {
         const babelGenerator = this.operator.getGenerator('babel')
         babelGenerator.addPlugin('babel-plugin-espower')

@@ -23,6 +23,10 @@ class MochaGenerator {
         this.operator = operator
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     async install() {
         this.operator.getGenerator('power-assert')
 

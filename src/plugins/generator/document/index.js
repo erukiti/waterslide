@@ -15,6 +15,10 @@ class DocumentGenerator {
         this.directories = []
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     setDirectory(path, description) {
         this.directories.push({path, description})
     }

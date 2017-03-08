@@ -12,6 +12,10 @@ class BinGenerator {
         this.sources = []
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     static getPurpose() {
         return 'generate bin file at node.js'
     }

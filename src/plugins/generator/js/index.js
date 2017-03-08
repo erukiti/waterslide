@@ -20,6 +20,10 @@ class JsGenerator {
         this.bin = {}
     }
 
+    static getInstaller(operator) {
+        return new this(operator)
+    }
+
     addPackage(name) {
         this.packages.push(name)
     }
