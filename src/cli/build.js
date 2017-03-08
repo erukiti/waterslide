@@ -9,8 +9,8 @@ class BuildCli {
 
     _config(args) {
         const opts = {isWatch: false, isBuild: false, isRun: false, isTest: false}
-        if (args[0] === '--env' && args.length >= 2) {
-            opts.env = args[1]
+        if (args.env) {
+            opts.env = args.env
         }
         return opts
     }
@@ -53,4 +53,22 @@ class BuildCli {
     }
 }
 
-module.exports = BuildCli
+const buildCommand = (cliUtils, type) => {
+    return {
+        command: `${type} [options]`,
+        describe: `${type} application`,
+        builder: yargs => {
+            yargs
+                .option('env', {
+                    describe: 'environment',
+                    type: 'string'
+                })
+        },
+        handler: argv => {
+            const buildCli = new BuildCli(cliUtils)
+            buildCli[type](argv)
+        }
+    }
+}
+
+module.exports = buildCommand

@@ -16,7 +16,7 @@ class Fsio {
             }
 
             if (this.cache[filename] && this.cache[filename].equals(content)) {
-                resolve()
+                resolve(false)
                 return
             } else {
                 this.cache[filename] = content
@@ -30,13 +30,13 @@ class Fsio {
             if (opts.mode) {
                 options.mode = opts.mode
             }
-            options.flag = 'wx'
+            options.flag = opts.isRewritable ? 'w' : 'wx'
 
             fs.writeFile(filename, content, options, err => {
                 if (err) {
                     reject(err)
                 } else {
-                    resolve()
+                    resolve(true)
                 }
             })
         })
@@ -53,6 +53,16 @@ class Fsio {
                 }
             })
         })
+    }
+
+    readFileSync(filename) {
+        try {
+            const content = fs.readFileSync(filename)
+            this.cache[filename] = content
+            return content
+        } catch(e) {
+            return null
+        }
     }
 
     checkExists(filename) {

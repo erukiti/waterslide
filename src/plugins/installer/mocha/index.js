@@ -1,5 +1,7 @@
 'use strict'
 
+const { utils } = require('../../../waterslider')
+
 const mochaOptsText =
 `--compilers js:espower-babel/guess
 --ui bdd
@@ -23,14 +25,20 @@ class MochaGenerator {
         this.operator = operator
     }
 
-    static getInstaller(operator) {
+    static async getInstaller(operator) {
+        if (utils.checkExistsNpm('mocha')
+            || await this.operator.checkExists('test/mocha.opts')
+            || await this.operator.checkExists('test/test-helper.js')
+            || await this.operator.checkExists('test/test.js')
+        )
+
         return new this(operator)
     }
 
     async install() {
-        this.operator.getGenerator('power-assert')
+        this.operator.getInstaller('power-assert')
 
-        const jsGenerator = this.operator.getGenerator('js')
+        const jsGenerator = await this.operator.getInstaller('js')
         jsGenerator.addDevPackage('mocha')
         this.operator.addTester('mocha')
 

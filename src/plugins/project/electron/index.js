@@ -38,14 +38,14 @@ class ElectronProject {
     }
 
     async install() {
-        const jsGenerator = this.operator.getGenerator('js')
+        const jsGenerator = await this.operator.getInstaller('js')
         jsGenerator.addDevPackage('electron')
         jsGenerator.addDevPackage('electron-connect')
         jsGenerator.addDevPackage('electron-packager')
         jsGenerator.addDevPackage('node-7z')
         jsGenerator.setMain('src/browser/app.js')
 
-        this.operator.getGenerator('browser').generate('src/renderer/index.js', {type: 'electron-renderer'})
+        // this.operator.getInstaller('browser').generate('src/renderer/index.js', {type: 'electron-renderer'})
 
         this.operator.setDirectory('src', 'source', 'source code directory')
         this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')

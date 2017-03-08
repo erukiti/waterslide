@@ -1,5 +1,7 @@
 'use strict'
 
+const yargs = require('yargs')
+
 const binText = 
 `#! /usr/bin/env node
 
@@ -12,27 +14,17 @@ class BinGenerator {
         this.sources = []
     }
 
-    static getInstaller(operator) {
-        return new this(operator)
-    }
+    static fromCli(operator, argv) {
+        console.dir(argv)
 
-    static getPurpose() {
-        return 'generate bin file at node.js'
-    }
-
-    fromCli(argv) {
-        if (argv.length < 1) {
-            this.operator.message('Usage: waterslider generate bin <name>')
-            process.exit(1)
-        }
-
-        this.generate(argv[0])
+        const g = new this(operator)
+        g.generate(argv.args[0])
     }
 
     generate(name, opts = {}) {
         this.sources.push({path: `bin/${name}`, text: binText, mode: 0o755})
 
-        const jsGenerator = this.operator.getGenerator('js')
+        const jsGenerator = this.operator.getInstaller('js')
         jsGenerator.addBin(`bin/${name}`)
     }
 

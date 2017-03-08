@@ -7,8 +7,8 @@ class BrowserProject {
     }
 
     async install() {
-        this.operator.getGenerator('js')
-        this.operator.getGenerator('browser').generate('src/index.js', {type: 'web'})
+        this.operator.getInstaller('js')
+        this.operator.getInstaller('browser').generate('src/index.js', {type: 'web'})
 
         this.operator.setDirectory('src', 'source', 'source code directory')
         this.operator.setDirectory('build', 'destination', 'build directory')

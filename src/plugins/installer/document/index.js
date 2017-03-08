@@ -15,7 +15,11 @@ class DocumentGenerator {
         this.directories = []
     }
 
-    static getInstaller(operator) {
+    static async getInstaller(operator) {
+        if (await operator.checkExists('README.md')) {
+            return null
+        }
+
         return new this(operator)
     }
 
@@ -33,8 +37,10 @@ class DocumentGenerator {
     }
 
     async install() {
-        const text = createReadme(this.operator.getProjectDir(), this._getDirectoriesText())
-        await this.operator.writeFile('README.md', text)
+        this.operator.postInstall(async () => {
+            const text = createReadme(this.operator.getProjectDir(), this._getDirectoriesText())
+            await this.operator.writeFile('README.md', text)
+        })
     }
 }
 

@@ -15,7 +15,8 @@ class Operator {
         this.cliUtils = cliUtils
         this.command = new Command(require('child_process'))
         this.projectDir = null // FIXME
-        this.generators = {}
+        this.installers = {}
+        this.generator = null
         this.noOpt = []
         this.noUse = []
 
@@ -30,6 +31,7 @@ class Operator {
         this.info = config.getLocal('info') || []
 
         this.addBuilder('copy')
+
     }
 
     setProjectDir(name) {
@@ -81,8 +83,8 @@ class Operator {
         this.command.addCommand(priority, command)
     }
 
-    setDirectory(directory, purpose, description) {
-        const documentGenerator = this.getGenerator('document')
+    async setDirectory(directory, purpose, description) {
+        const documentGenerator = await this.getInstaller('document')
         documentGenerator.setDirectory(directory, description)
         if (purpose) {
             this.directories.push({directory, purpose})
@@ -93,32 +95,39 @@ class Operator {
         return this.directories
     }
 
-    getGenerator(name) {
-        if (!this.generators[name]) {
-            const klass = this.plugin.requireGenerator(name)
+    async setGenerator(name, argv) {
+        const Generator = this.plugin.requireGenerator(name)
+        this.generator = Generator.fromCli(this, argv)
 
-            const generator = klass.getInstaller(this)
-
-            this.cliUtils.verbose(`generator: ${name}`, 1)
+        await this.generator.install()
 
             // if (klass.replace) {
             //     this.cliUtils.verbose(`generator: ${name} -> ${klass.replace()}`, 1)
             //     name = klass.replace()
             // }
 
-            // if (this.generators[name]) {
+            // if (this.installers[name]) {
             //     this.cliUtils.error(`${src} is already loaded.`)
             //     process.exit(1)
             // }
 
             // if (!klass) の処理を書く
+    }
 
-            this.generators[name] = generator
+    async getInstaller(name) {
+        if (!this.installers[name]) {
+            const klass = this.plugin.requireInstaller(name)
+            const generator = await klass.getInstaller(this)
+            if (!generator) {
+                this.cliUtils.warning(`installer ${name} is ignored.`)
+                return null
+            }
 
-            // this.generators[name] = new klass(this)
+            this.cliUtils.verbose(`installer: ${name}`, 1)
+            this.installers[name] = generator
         }
 
-        return this.generators[name]
+        return this.installers[name]
     }
 
     setFinalizer(name) {
@@ -126,10 +135,17 @@ class Operator {
     }
 
     addBuilder(name) {
+        if (this.builders.includes(name)) {
+            return
+        }
         this.builders.push(name)
     }
 
     addTester(name) {
+        if (this.builders.includes(name)) {
+            return
+        }
+
         this.testers.push(name)
     }
 
@@ -137,11 +153,21 @@ class Operator {
         return this.fsio.readFile(name)
     }
 
+    readFileSync(name) {
+        return this.fsio.readFileSync(name)
+    }
+
+    checkExists(name) {
+        return this.fsio.checkExists(name)
+    }
+
     writeFile(name, content, opts = {}) {
         this.entries.push({path: name, text: content, opts})
 
-        return this.fsio.writeFile(name, content, opts).then(() => {
-            this.verbose(`wrote ${name}`)
+        return this.fsio.writeFile(name, content, opts).then(isWrote => {
+            if (isWrote) {
+                this.verbose(`wrote ${name}`)
+            }
         })
     }
 
@@ -156,11 +182,11 @@ class Operator {
     async install() {
         let processed = []
 
-        const getNotProcessedKey = () => Object.keys(this.generators).filter(key => !processed.includes(key))
+        const getNotProcessedKey = () => Object.keys(this.installers).filter(key => !processed.includes(key))
 
         let notProcessed
         while ((notProcessed = getNotProcessedKey()).length > 0) {
-            await Promise.all(notProcessed.map(key => this.generators[key].install()))
+            await Promise.all(notProcessed.map(key => this.installers[key].install()))
             processed = processed.concat(notProcessed)
         }
 

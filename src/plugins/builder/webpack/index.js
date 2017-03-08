@@ -51,6 +51,7 @@ class WebpackBuilder {
     }
 
     _compiled(err, stats) {
+        console.log(2)
         if (err) {
             console.dir(err)
             return
@@ -77,7 +78,7 @@ class WebpackBuilder {
 
     watch(entries) {
         const compiler = this._getCompiler(entries)
-        compiler.watch((err, stats) => this._compiled(err, stats))
+        compiler.watch({}, (err, stats) => this._compiled(err, stats))
     }
 
     run(entries) {

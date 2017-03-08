@@ -1,28 +1,30 @@
 'use strict'
 
+const { utils } = require('../../../waterslider')
+
 class SassGenerator {
     constructor(operator) {
         this.operator = operator
     }
 
     static getInstaller(operator) {
+        if (utils.checkExistsNpm('css-loader')) {
+            return null
+        }
         return new this(operator)
     }
 
     async install() {
-        const jsGenerator = this.operator.getGenerator('js')
+        const jsGenerator = await this.operator.getInstaller('js')
         jsGenerator.addDevPackage('css-loader')
-        jsGenerator.addDevPackage('sass-loader')
         jsGenerator.addDevPackage('style-loader')
-        jsGenerator.addDevPackage('node-sass')
         jsGenerator.addDevPackage('url-loader')
         jsGenerator.addDevPackage('file-loader')
 
-        const webpackGenerator = this.operator.getGenerator('webpack')
-        webpackGenerator.addLoader('\\.scss$', [
+        const webpackGenerator = await this.operator.getInstaller('webpack')
+        webpackGenerator.addLoader('\\.css$', [
             { loader: 'style-loader' },
             { loader: 'css-loader' },
-            { loader: 'sass-loader' },
         ])
         webpackGenerator.addLoader('\\.woff2?(\\?v=\\d+\\.\\d+\\.\\d+)?$', [
           {

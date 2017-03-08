@@ -213,11 +213,11 @@ class ReactReduxGenerator {
     }
 
     async install() {
-        const babelGenerator = this.operator.getGenerator('babel')
+        const babelGenerator = await this.operator.getInstaller('babel')
         babelGenerator.addPreset('react')
         babelGenerator.addPlugin('babel-plugin-syntax-jsx')
 
-        const jsGenerator = this.operator.getGenerator('js')
+        const jsGenerator = await this.operator.getInstaller('js')
         jsGenerator.addDevPackage('babel-preset-react')
         jsGenerator.addDevPackage('babel-plugin-syntax-jsx')
         jsGenerator.addPackage('react')

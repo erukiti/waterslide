@@ -1,5 +1,6 @@
 'use strict'
 
+const generateName = require('sillyname')
 const process = require('process')
 const path = require('path')
 const fs = require('fs')
@@ -8,7 +9,7 @@ const Operator = require('../generate/operator')
 const Plugin = require('../plugin')
 const config = require('../config')
 
-const generate = async (cliUtils, argv) => {
+const install = async (cliUtils, argv) => {
     config.startLocal()
 
     const operator = new Operator(cliUtils)
@@ -26,15 +27,17 @@ const generate = async (cliUtils, argv) => {
     operator.setOpt(parseOpt('opt'))
     operator.setNoOpt(parseOpt('noOpt'))
 
-    operator.setGenerator(argv.generatorName, argv)
+    for (let name of argv.pluginNames) {
+        await operator.getInstaller(name)
+    }
 
     await operator.install().catch(e => console.dir(e))
 }
 
-const generateCommand = cliUtils => {
+const installCommand = cliUtils => {
     return {
-        command: 'generate [options] <generatorName> <args...>',
-        describe: 'generate file',
+        command: 'install [options] <pluginNames...>',
+        describe: 'install to project',
         builder: yargs => {
             yargs
                 .option('opt', {
@@ -47,9 +50,9 @@ const generateCommand = cliUtils => {
                 })
         },
         handler: argv => {
-            generate(cliUtils, argv).catch(e => console.dir(e))
+            install(cliUtils, argv).catch(e => console.dir(e))
         }
     }
 }
 
-module.exports = generateCommand
+module.exports = installCommand

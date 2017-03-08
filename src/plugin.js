@@ -16,12 +16,16 @@ class Plugin {
         return require(`./plugins/project/${name}`)
     }
 
+    requireInstaller(name) {
+        return require(`./plugins/installer/${name}`)
+    }
+
     requireGenerator(name) {
         return require(`./plugins/generator/${name}`)
     }
 
     findGenerator() {
-        return ['browser']
+        return ['browser', 'bin']
     }
 
     requireFinalizer(name) {

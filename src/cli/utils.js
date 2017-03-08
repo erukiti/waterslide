@@ -9,6 +9,7 @@ class CliUtils {
         this.isDebug = opts.debug
         this.isMessage = true
         this.isError = true
+        this.isWarning = true
 
         this.rotateIndex = 0
         this.latestLength = 0
@@ -66,6 +67,18 @@ class CliUtils {
             } else {
                 console.log(mesg)
             }
+        }
+    }
+
+    warning(mesg = '', depth = 0) {
+        if (this.isWarning) {
+            let header = ''
+            if (this.isDebug) {
+                header = `warning ${path.basename(this._getCaller(depth + 1))}`
+            } else {
+                header = 'warning'
+            }
+            console.log(`\x1b[33m${header}:\x1b[m ${mesg}`)
         }
     }
 

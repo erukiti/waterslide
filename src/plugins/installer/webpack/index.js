@@ -1,11 +1,12 @@
 'use strict'
 
-const { getConfig } = require('../../../waterslider')
+const { utils, getConfig } = require('../../../waterslider')
+const config = getConfig()
 
 class WebpackGenerator {
     constructor(operator) {
         this.operator = operator
-        this.rules = []
+        this.values = config.getLocal('webpack') || { rules: [] }
     }
 
     static getInstaller(operator) {
@@ -13,17 +14,20 @@ class WebpackGenerator {
     }
 
     addLoader(test, use) {
-        this.rules.push({test, use})
+        if (this.values.rules.find(value => value.test === test)) {
+            return
+        }
+        this.values.rules.push({test, use})
     }
 
     async install() {
         this.operator.addBuilder('webpack')
-        const jsGenerator = this.operator.getGenerator('js')
+        const jsGenerator = await this.operator.getInstaller('js')
         jsGenerator.addDevPackage('webpack')
         jsGenerator.addDevPackage('babel-loader')
 
         this.operator.postInstall(() => {
-            getConfig().writeLocal('webpack', { rules: this.rules })
+            getConfig().writeLocal('webpack', this.values)
         })
     }
 }

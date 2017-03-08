@@ -1,15 +1,18 @@
 'use strict'
 
-const child_process = require('child_process')
+const childProcess = require('child_process')
+const fs = require('fs')
 
 const waitStream = stream => new Promise(resolve => {
     stream.on('end', () => resolve())
 })
 
+let cachePackageJson = null
+
 const utils = {
     execSync: cmd => {
         try {
-            const stdout = child_process.execSync(cmd).toString('utf-8')
+            const stdout = childProcess.execSync(cmd).toString('utf-8')
             return {isError: false, stdout}
         } catch (e) {
             const stdout = e.stdout.toString('utf-8')
@@ -18,7 +21,7 @@ const utils = {
         }
     },
     exec: cmd => new Promise((resolve, reject) => {
-        const child = child_process.exec(cmd)
+        const child = childProcess.exec(cmd)
 
         let stdout = ''
         let stderr = ''
@@ -35,15 +38,37 @@ const utils = {
             reject(err)
         })
         child.on('exit', async (code, signal) => {
-            await waitStream(child.stdout)
-            await waitStream(child.stderr)
+            // await waitStream(child.stdout)
+            // await waitStream(child.stderr)
             resolve({code, stdout, stderr})
         })
     }),
     readNpmVersion: name => {
-        const result = chlildProcess.execSync('npm info electron')
-        const reVer = /version: '(\d+\.\d+\.\d+)',/
-        return reVer.exec(result.toString())[1]
+        const result = childProcess.execSync(`npm list --depth=0`).toString()
+        const ind = result.indexOf(`${name}@`)
+        if (ind !== -1) {
+            return result.substr(ind + name.length + 1)
+        } else {
+            return null
+        }
+    },
+    checkExistsNpm: name => {
+        if (!cachePackageJson) {
+            try {
+                cachePackageJson = JSON.parse(fs.readFileSync('package.json'))
+            } catch(e) {
+                return false
+            }
+        }
+
+        if (cachePackageJson.dependencies && cachePackageJson.dependencies[name]) {
+            return true
+        }
+
+        if (cachePackageJson.devDependencies && cachePackageJson.devDependencies[name]) {
+            return true
+        }
+        return false
     }
 }
 

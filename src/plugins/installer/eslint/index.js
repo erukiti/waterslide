@@ -1,5 +1,7 @@
 'use strict'
 
+const { utils } = require('../../../waterslider')
+
 const eslintIgnoreText =
 `node_modules/
 build/
@@ -60,12 +62,19 @@ class eslintGenerator {
         this.operator = operator
     }
 
-    static getInstaller(operator) {
+    static async getInstaller(operator) {
+        if (utils.checkExistsNpm('eslint')
+            || await operator.checkExists('.eslintignore')
+            || await operator.checkExists('.eslintrc')
+        ) {
+            return null
+        }
+
         return new this(operator)
     }
 
     async install() {
-        const jsGenerator = this.operator.getGenerator('js')
+        const jsGenerator = await this.operator.getInstaller('js')
         jsGenerator.addDevPackage('eslint')
         jsGenerator.addDevPackage('babel-eslint')
         this.operator.addTester('eslint')

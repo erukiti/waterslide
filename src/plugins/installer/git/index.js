@@ -2,7 +2,7 @@
 
 const GithubApi = require('github-api')
 
-const {getConfig} = require('../../../waterslider')
+const { utils, getConfig } = require('../../../waterslider')
 
 class GitGenerator {
     constructor(operator) {
@@ -23,7 +23,12 @@ class GitGenerator {
         // }
     }
 
-    static getInstaller(operator) {
+    static async getInstaller(operator) {
+        const { code, stdout, stderr } = await utils.exec('git status').catch(e => console.dir(e))
+        if (stderr.indexOf('fatal: Not a git repository') === -1) {
+            return null
+        }
+
         return new this(operator)
     }
 

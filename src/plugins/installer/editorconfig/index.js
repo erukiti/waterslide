@@ -18,7 +18,10 @@ class EditorconfigGenerator {
         this.operator = operator
     }
 
-    static getInstaller(operator) {
+    static async getInstaller(operator) {
+        if (await operator.checkExists('.editorconfig')) {
+            return null
+        }
         return new this(operator)
     }
 

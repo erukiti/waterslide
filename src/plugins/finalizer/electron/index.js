@@ -3,7 +3,7 @@
 const fs = require('fs')
 const process = require('process')
 
-const { Plugin } = require('../../../waterslider')
+const { utils, Plugin } = require('../../../waterslider')
 
 class ElectronFinalizer {
     constructor(builder) {
@@ -28,10 +28,7 @@ class ElectronFinalizer {
 
         const packageInfo = JSON.parse(fs.readFileSync('./package.json'))
 
-        const chlildProcess = require('child_process')
-        const result = chlildProcess.execSync('npm info electron')
-        const reVer = /version: '(\d+\.\d+\.\d+)',/
-        const electronVersion = reVer.exec(result.toString())[1]
+        const electronVersion = utils.readNpmVersion('electron')
 
         const packagerConfDarwin = {
             dir: 'build',
