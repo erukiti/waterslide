@@ -1,6 +1,7 @@
 'use strict'
 
 const Builder = require('../build/builder')
+const CliUtils = require('./utils')
 
 class BuildCli {
     constructor(cliUtils) {
@@ -53,7 +54,7 @@ class BuildCli {
     }
 }
 
-const buildCommand = (cliUtils, type) => {
+const buildCommand = type => {
     return {
         command: `${type} [options]`,
         describe: `${type} application`,
@@ -65,6 +66,8 @@ const buildCommand = (cliUtils, type) => {
                 })
         },
         handler: argv => {
+            const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
+
             const buildCli = new BuildCli(cliUtils)
             buildCli[type](argv)
         }

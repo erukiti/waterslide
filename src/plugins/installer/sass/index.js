@@ -2,7 +2,7 @@
 
 const { utils } = require('../../../waterslider')
 
-class SassGenerator {
+class SassInstaller {
     constructor(operator) {
         this.operator = operator
     }
@@ -17,12 +17,12 @@ class SassGenerator {
     async install() {
         await this.operator.getInstaller('css')
 
-        const jsGenerator = await this.operator.getInstaller('js')
-        jsGenerator.addDevPackage('sass-loader')
-        jsGenerator.addDevPackage('node-sass')
+        const jsInstaller = await this.operator.getInstaller('js')
+        jsInstaller.addDevPackage('sass-loader')
+        jsInstaller.addDevPackage('node-sass')
 
-        const webpackGenerator = await this.operator.getInstaller('webpack')
-        webpackGenerator.addLoader('\\.scss$', [
+        const webpackInstaller = await this.operator.getInstaller('webpack')
+        webpackInstaller.addLoader('\\.scss$', [
             { loader: 'style-loader' },
             { loader: 'css-loader' },
             { loader: 'sass-loader' },
@@ -30,4 +30,4 @@ class SassGenerator {
     }
 }
 
-module.exports = SassGenerator
+module.exports = SassInstaller

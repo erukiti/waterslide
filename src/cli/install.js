@@ -8,6 +8,7 @@ const fs = require('fs')
 const Operator = require('../generate/operator')
 const Plugin = require('../plugin')
 const config = require('../config')
+const CliUtils = require('./utils')
 
 const install = async (cliUtils, argv) => {
     config.startLocal()
@@ -34,7 +35,7 @@ const install = async (cliUtils, argv) => {
     await operator.install().catch(e => console.dir(e))
 }
 
-const installCommand = cliUtils => {
+const installCommand = () => {
     return {
         command: 'install [options] <pluginNames...>',
         describe: 'install to project',
@@ -50,6 +51,7 @@ const installCommand = cliUtils => {
                 })
         },
         handler: argv => {
+            const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
             install(cliUtils, argv).catch(e => console.dir(e))
         }
     }

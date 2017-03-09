@@ -13,11 +13,11 @@ class NodeProject {
     }
 
     async install() {
-        const jsGenerator = await this.operator.getInstaller('js')
-        jsGenerator.setMain('lib/index.js')
+        const jsInstaller = await this.operator.getInstaller('js')
+        jsInstaller.setMain('lib/index.js')
 
-        this.operator.setDirectory('src', 'source', 'source code directory')
-        this.operator.setDirectory('lib', 'destination', 'build directory')
+        await this.operator.setDirectory('src', 'source', 'source code directory')
+        await this.operator.setDirectory('lib', 'destination', 'build directory')
 
         await this.operator.writeFile('src/index.js', indexJsText, {type: 'node'})
     }

@@ -1,19 +1,34 @@
-const process = require('process')
-const yargs = require('yargs')
+'use strict'
 
-const CliUtils = require('./utils')
-const cliUtils = new CliUtils({verbose: true, debug: true})
+require('babel-register')
+
+const process = require('process')
+
 const buildCommand = require('./build')
+
+const yargs = require('yargs')
 
 yargs
     .detectLocale(false)
-    .command(require('./new')(cliUtils))
-    .command(require('./install')(cliUtils))
-    .command(require('./generate')(cliUtils))
-    .command(buildCommand(cliUtils, 'run'))
-    .command(buildCommand(cliUtils, 'build'))
-    .command(buildCommand(cliUtils, 'watch'))
-    .command(buildCommand(cliUtils, 'test'))
+    .version()
+    .help()
+    .usage('Usage: ws [options...] <subcommand> [args...]')
+    .option('verbose', {
+        default: false,
+        type: 'boolean',
+    })
+    .option('debug', {
+        default: false,
+        type: 'boolean',
+    })
+    .command(require('./new')())
+    .command(require('./install')())
+    .command(require('./generate')())
+    .command(buildCommand('run'))
+    .command(buildCommand('build'))
+    .command(buildCommand('watch'))
+    .command(buildCommand('test'))
+    .demandCommand(1, 'Need subcommand.')
     .argv
 
 // if (process.argv[2] === 'config') {

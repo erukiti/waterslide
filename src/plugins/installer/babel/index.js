@@ -1,6 +1,6 @@
 'use strict'
 
-class BabelGenerator {
+class BabelInstaller {
     constructor(operator) {
         this.operator = operator
 
@@ -34,4 +34,4 @@ class BabelGenerator {
     }
 }
 
-module.exports = BabelGenerator
+module.exports = BabelInstaller

@@ -8,10 +8,11 @@ class BrowserProject {
 
     async install() {
         this.operator.getInstaller('js')
-        this.operator.getInstaller('browser').generate('src/index.js', {type: 'web'})
+        const g = this.operator.getGenerator('browser')
+        await g.generate('src/index.js', {type: 'web'})
 
-        this.operator.setDirectory('src', 'source', 'source code directory')
-        this.operator.setDirectory('build', 'destination', 'build directory')
+        await this.operator.setDirectory('src', 'source', 'source code directory')
+        await this.operator.setDirectory('build', 'destination', 'build directory')
     }
 }
 

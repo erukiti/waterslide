@@ -3,7 +3,7 @@
 const { utils, getConfig } = require('../../../waterslider')
 const config = getConfig()
 
-class WebpackGenerator {
+class WebpackInstaller {
     constructor(operator) {
         this.operator = operator
         this.values = config.getLocal('webpack') || { rules: [] }
@@ -22,9 +22,9 @@ class WebpackGenerator {
 
     async install() {
         this.operator.addBuilder('webpack')
-        const jsGenerator = await this.operator.getInstaller('js')
-        jsGenerator.addDevPackage('webpack')
-        jsGenerator.addDevPackage('babel-loader')
+        const jsInstaller = await this.operator.getInstaller('js')
+        jsInstaller.addDevPackage('webpack')
+        jsInstaller.addDevPackage('babel-loader')
 
         this.operator.postInstall(() => {
             getConfig().writeLocal('webpack', this.values)
@@ -32,4 +32,4 @@ class WebpackGenerator {
     }
 }
 
-module.exports = WebpackGenerator
+module.exports = WebpackInstaller

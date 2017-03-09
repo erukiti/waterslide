@@ -2,7 +2,7 @@
 
 const { utils } = require('../../../waterslider')
 
-class PowerAssertGenerator {
+class PowerAssertInstaller {
     constructor(operator) {
         this.operator = operator
     }
@@ -15,14 +15,14 @@ class PowerAssertGenerator {
     }
 
     async install() {
-        const babelGenerator = await this.operator.getInstaller('babel')
-        babelGenerator.addPlugin('babel-plugin-espower')
+        const babelInstaller = await this.operator.getInstaller('babel')
+        babelInstaller.addPlugin('babel-plugin-espower')
 
-        const jsGenerator = await this.operator.getInstaller('js')
-        jsGenerator.addDevPackage('babel-plugin-espower')
-        jsGenerator.addDevPackage('espower-babel')
-        jsGenerator.addDevPackage('power-assert')
+        const jsInstaller = await this.operator.getInstaller('js')
+        jsInstaller.addDevPackage('babel-plugin-espower')
+        jsInstaller.addDevPackage('espower-babel')
+        jsInstaller.addDevPackage('power-assert')
     }
 }
 
-module.exports = PowerAssertGenerator
+module.exports = PowerAssertInstaller

@@ -1,19 +1,8 @@
 'use strict'
 
-const editorconfigText = `root = true
+const fs = require('fs')
 
-[*]
-end_of_line = lf
-charset = utf-8
-trim_trailing_whitespace = true
-
-[*.{md,js,jsx,json}]
-indent_style = space
-indent_size = 4
-insert_final_newline = true
-`
-
-class EditorconfigGenerator {
+class EditorconfigInstaller {
     constructor(operator) {
         this.operator = operator
     }
@@ -26,8 +15,9 @@ class EditorconfigGenerator {
     }
 
     async install() {
-        await this.operator.writeFile('.editorconfig', editorconfigText)
+        const config = fs.readFileSync(require.resolve('./.editorconfig'))
+        await this.operator.writeFile('.editorconfig', config)
     }
 }
 
-module.exports = EditorconfigGenerator
+module.exports = EditorconfigInstaller

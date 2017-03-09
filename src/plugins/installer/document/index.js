@@ -9,7 +9,7 @@ ${directoriesText}
 
 `
 
-class DocumentGenerator {
+class DocumentInstaller {
     constructor(operator) {
         this.operator = operator
         this.directories = []
@@ -44,4 +44,4 @@ class DocumentGenerator {
     }
 }
 
-module.exports = DocumentGenerator
+module.exports = DocumentInstaller

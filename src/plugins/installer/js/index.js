@@ -4,7 +4,7 @@ const { utils, getConfig } = require('../../../waterslider')
 const path = require('path')
 const fs = require('fs')
 
-class JsGenerator {
+class JsInstaller {
     constructor(operator) {
         this.operator = operator
 
@@ -79,10 +79,10 @@ class JsGenerator {
         // FIXME: project dir -> project name
 
         const scripts = {
-            start: 'waterslider run',
-            build: 'waterslider build',
-            watch: 'waterslider watch',
-            test: 'waterslider test'
+            start: 'ws run',
+            build: 'ws build',
+            watch: 'ws watch',
+            test: 'ws test'
         }
 
         const config = getConfig()
@@ -113,4 +113,4 @@ class JsGenerator {
     }
 }
 
-module.exports = JsGenerator
+module.exports = JsInstaller

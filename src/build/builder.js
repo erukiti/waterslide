@@ -95,8 +95,6 @@ class Builder {
         this.isWatch = opts.isWatch
         this.env = opts.env || 'development'
 
-        console.log(this.env)
-
         const testers = config.getLocal('testers') || []
 
         testers.forEach(name => {

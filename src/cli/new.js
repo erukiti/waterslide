@@ -8,9 +8,12 @@ const fs = require('fs')
 const Operator = require('../generate/operator')
 const Plugin = require('../plugin')
 const config = require('../config')
+const CliUtils = require('./utils')
 
 const setupProject = async (cliUtils, argv) => {
     const projectType = argv.projectType
+
+    cliUtils.message(`create a new project of ${projectType}`)
 
     let projectDir = null
     let projectName = null
@@ -80,7 +83,7 @@ const setupProject = async (cliUtils, argv) => {
 
 }
 
-const newCommand = cliUtils => {
+const newCommand = () => {
     return {
         command: 'new <projectType> [options] [projectDir]',
         describe: 'create a new project',
@@ -104,6 +107,7 @@ const newCommand = cliUtils => {
                 })
         },
         handler: argv => {
+            const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
             setupProject(cliUtils, argv).catch(e => console.dir(e))
         }
     }

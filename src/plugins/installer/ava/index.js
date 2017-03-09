@@ -2,16 +2,9 @@
 
 const { utils } = require('../../../waterslider')
 
-const testJs =
-`const test = require('ava')
-const a = 1
-const b = 2
-const c = 3
+const fs = require('fs')
 
-test('foo', t => t.true(a + b === c))
-`
-
-class AvaGenerator {
+class AvaInstaller {
     constructor(operator) {
         this.operator = operator
     }
@@ -27,11 +20,14 @@ class AvaGenerator {
     }
 
     async install() {
-        const jsGenerator = await this.operator.getInstaller('js')
-        jsGenerator.addDevPackage('ava')
+        const testJs = fs.readFileSync(require.resolve('./sample.test.js'))
+
+
+        const jsInstaller = await this.operator.getInstaller('js')
+        jsInstaller.addDevPackage('ava')
         this.operator.addTester('ava')
-        await this.operator.writeFile('src/hoge.test.js', testJs)
+        await this.operator.writeFile('src/sample.test.js', testJs)
     }
 }
 
-module.exports = AvaGenerator
+module.exports = AvaInstaller

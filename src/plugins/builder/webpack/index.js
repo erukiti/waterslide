@@ -51,7 +51,6 @@ class WebpackBuilder {
     }
 
     _compiled(err, stats) {
-        console.log(2)
         if (err) {
             console.dir(err)
             return

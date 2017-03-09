@@ -1,26 +1,10 @@
 'use strict'
 
+const fs = require('fs')
+
 const { utils } = require('../../../waterslider')
 
-const mochaOptsText =
-`--compilers js:espower-babel/guess
---ui bdd
---reporter dot
---timeout 5000
---recursive
-`
-
-const testHelperJs = "global.assert = require('power-assert')\n"
-
-const testJs =
-`describe('test', () => {
-    it('hoge', () => {
-        assert(1 + 1 === 2)
-    })
-})
-`
-
-class MochaGenerator {
+class MochaInstaller {
     constructor(operator) {
         this.operator = operator
     }
@@ -30,23 +14,27 @@ class MochaGenerator {
             || await this.operator.checkExists('test/mocha.opts')
             || await this.operator.checkExists('test/test-helper.js')
             || await this.operator.checkExists('test/test.js')
-        )
+        ) {
+            return null
+        }
 
         return new this(operator)
     }
 
     async install() {
+        const mochaOptsText = fs.readFileSync(require.resolve('./mocha.opts'))
+        const testJs = fs.readFileSync(require.resolve('./sample.js'))
+
         this.operator.getInstaller('power-assert')
 
-        const jsGenerator = await this.operator.getInstaller('js')
-        jsGenerator.addDevPackage('mocha')
+        const jsInstaller = await this.operator.getInstaller('js')
+        jsInstaller.addDevPackage('mocha')
         this.operator.addTester('mocha')
 
         await this.operator.writeFile('test/mocha.opts', mochaOptsText)
-        await this.operator.writeFile('test/test-helper.js', testHelperJs)
         await this.operator.writeFile('test/test.js', testJs)
         ]
     }
 }
 
-module.exports = MochaGenerator
+module.exports = MochaInstaller

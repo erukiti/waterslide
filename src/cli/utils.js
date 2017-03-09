@@ -5,7 +5,7 @@ const process = require('process')
 
 class CliUtils {
     constructor(opts = {}) {
-        this.isVerbose = opts.verbose
+        this.isVerbose = opts.verbose || opts.debug
         this.isDebug = opts.debug
         this.isMessage = true
         this.isError = true

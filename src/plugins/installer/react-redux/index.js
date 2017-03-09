@@ -147,7 +147,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(App)
 `
 
 
-class ReactReduxGenerator {
+class ReactReduxInstaller {
     constructor(operator) {
         this.operator = operator
         this.sources = []
@@ -233,4 +233,4 @@ class ReactReduxGenerator {
     }
 }
 
-module.exports = ReactReduxGenerator
+module.exports = ReactReduxInstaller

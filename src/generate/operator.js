@@ -16,7 +16,7 @@ class Operator {
         this.command = new Command(require('child_process'))
         this.projectDir = null // FIXME
         this.installers = {}
-        this.generator = null
+        this.generators = {}
         this.noOpt = []
         this.noUse = []
 
@@ -84,8 +84,8 @@ class Operator {
     }
 
     async setDirectory(directory, purpose, description) {
-        const documentGenerator = await this.getInstaller('document')
-        documentGenerator.setDirectory(directory, description)
+        const documentInstaller = await this.getInstaller('document')
+        documentInstaller.setDirectory(directory, description)
         if (purpose) {
             this.directories.push({directory, purpose})
         }
@@ -95,11 +95,13 @@ class Operator {
         return this.directories
     }
 
-    async setGenerator(name, argv) {
-        const Generator = this.plugin.requireGenerator(name)
-        this.generator = Generator.fromCli(this, argv)
-
-        await this.generator.install()
+    getGenerator(name) {
+        if (!this.generators[name]) {
+            const Generator = this.plugin.requireGenerator(name)
+            this.generators[name] = new Generator(this)
+        }
+        return this.generators[name]
+    }
 
             // if (klass.replace) {
             //     this.cliUtils.verbose(`generator: ${name} -> ${klass.replace()}`, 1)
@@ -112,7 +114,6 @@ class Operator {
             // }
 
             // if (!klass) の処理を書く
-    }
 
     async getInstaller(name) {
         if (!this.installers[name]) {
@@ -188,6 +189,10 @@ class Operator {
         while ((notProcessed = getNotProcessedKey()).length > 0) {
             await Promise.all(notProcessed.map(key => this.installers[key].install()))
             processed = processed.concat(notProcessed)
+        }
+
+        if (this.generator) {
+            this.generator.install()
         }
 
         await Promise.all(this.postInstalls.map(cb => cb()))

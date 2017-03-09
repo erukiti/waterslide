@@ -13,7 +13,7 @@ $ npm install -g waterslider
 How to create project:
 
 ```sh
-$ waterslider new <target> [projectDir]
+$ ws new <target> [projectDir]
 ```
 
 `target` is the environment name you want to create like `electron` and `node`.

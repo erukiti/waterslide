@@ -7,6 +7,7 @@ const fs = require('fs')
 const Operator = require('../generate/operator')
 const Plugin = require('../plugin')
 const config = require('../config')
+const CliUtils = require('./utils')
 
 const generate = async (cliUtils, argv) => {
     config.startLocal()
@@ -26,12 +27,12 @@ const generate = async (cliUtils, argv) => {
     operator.setOpt(parseOpt('opt'))
     operator.setNoOpt(parseOpt('noOpt'))
 
-    operator.setGenerator(argv.generatorName, argv)
+    await operator.getGenerator(argv.generatorName).generate(argv.args[0])
 
     await operator.install().catch(e => console.dir(e))
 }
 
-const generateCommand = cliUtils => {
+const generateCommand = () => {
     return {
         command: 'generate [options] <generatorName> <args...>',
         describe: 'generate file',
@@ -47,6 +48,7 @@ const generateCommand = cliUtils => {
                 })
         },
         handler: argv => {
+            const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
             generate(cliUtils, argv).catch(e => console.dir(e))
         }
     }
