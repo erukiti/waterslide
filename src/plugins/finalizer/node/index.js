@@ -5,10 +5,11 @@ const childProcess = require('child_process')
 class NodeFinalizer {
     constructor(builder) {
         this.builder = builder
+        this.dest = this.builder.getDirectory('destination')
     }
 
     run() {
-        const child = childProcess.exec('node build/index.js')
+        const child = childProcess.exec(`node ${this.dest}/index.js`)
         child.stdout.pipe(process.stdout)
         child.stderr.pipe(process.stderr)
 
@@ -27,7 +28,7 @@ class NodeFinalizer {
     }
 
     build() {
-        this.builder.verbose('NodeFinalizer#build is nop.')
+        this.builder.message('build complete.')
     }
 
 }

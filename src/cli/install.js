@@ -5,7 +5,7 @@ const process = require('process')
 const path = require('path')
 const fs = require('fs')
 
-const Operator = require('../generate/operator')
+const Setup = require('../setup')
 const Plugin = require('../plugin')
 const config = require('../config')
 const CliUtils = require('./utils')
@@ -13,7 +13,7 @@ const CliUtils = require('./utils')
 const install = async (cliUtils, argv) => {
     config.startLocal()
 
-    const operator = new Operator(cliUtils)
+    const setup = new Setup(cliUtils)
 
     const parseOpt = name => {
         if (!argv[name]) {
@@ -25,14 +25,14 @@ const install = async (cliUtils, argv) => {
         }
     }
 
-    operator.setOpt(parseOpt('opt'))
-    operator.setNoOpt(parseOpt('noOpt'))
+    setup.setOpt(parseOpt('opt'))
+    setup.setNoOpt(parseOpt('noOpt'))
 
     for (let name of argv.pluginNames) {
-        await operator.getInstaller(name)
+        await setup.operator.getInstaller(name)
     }
 
-    await operator.install().catch(e => console.dir(e))
+    await setup.install().catch(e => console.dir(e))
 }
 
 const installCommand = () => {

@@ -1,6 +1,6 @@
 'use strict'
 
-const Builder = require('../build/builder')
+const Build = require('../build')
 const CliUtils = require('./utils')
 
 const buildCommand = type => {
@@ -26,14 +26,8 @@ const buildCommand = type => {
         handler: argv => {
             const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
 
-            const builder = new Builder(cliUtils)
-            const opts = { isWatch: argv.watch, isRun: argv.run, isBuild: argv.build, isTest: argv.test }
-            if (argv.env) {
-                opts.env = argv.env
-            }
-
-            // assertFalse(opts.isBuild && opts.isRun)
-            builder.run(opts)
+            const build = new Build(cliUtils, argv)
+            build.process()
         }
     }
 }

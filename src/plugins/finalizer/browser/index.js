@@ -5,15 +5,16 @@ const path = require('path')
 class BrowserFinalizer {
     constructor(builder) {
         this.builder = builder
+        this.dest = this.builder.getDirectory('destination')
     }
 
     run() {
         // FIXME: 一度openしたら再度openしなくていいのでは？
-        open(`file:///${path.resolve('./build/index.html')}`)
+        open(`file:///${path.resolve('./${this.dest}/index.html')}`)
     }
 
     build() {
-        this.builder.verbose('BrowserFinalizer#build is nop.')
+        this.builder.message('build complete.')
     }
 }
 

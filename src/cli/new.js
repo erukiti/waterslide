@@ -5,7 +5,7 @@ const process = require('process')
 const path = require('path')
 const fs = require('fs')
 
-const Operator = require('../generate/operator')
+const Setup = require('../setup')
 const Plugin = require('../plugin')
 const config = require('../config')
 const CliUtils = require('./utils')
@@ -39,8 +39,8 @@ const setupProject = async (cliUtils, argv) => {
         config.writeLocal('sillyname', projectDir)
     }
 
-    const operator = new Operator(cliUtils)
-    operator.setProjectDir(projectDir)
+    const setup = new Setup(cliUtils)
+    setup.setProjectDir(projectDir)
 
     const parseOpt = name => {
         if (!argv[name]) {
@@ -53,14 +53,14 @@ const setupProject = async (cliUtils, argv) => {
     }
 
     const noUse = parseOpt('noUse')
-    operator.setNoUse(noUse)
+    setup.setNoUse(noUse)
 
-    operator.setOpt(parseOpt('opt'))
-    operator.setNoOpt(parseOpt('noOpt'))
+    setup.setOpt(parseOpt('opt'))
+    setup.setNoOpt(parseOpt('noOpt'))
 
     const envs = parseOpt('use').filter(v => !noUse.includes(v))
 
-    if (!operator.getNoOpt().includes('recommend')) {
+    if (!setup.operator.getNoOpt().includes('recommend')) {
         ['editorconfig', 'git'].filter(v => !noUse.includes(v)).forEach(v =>{
             envs.push(v)
         })
@@ -68,14 +68,14 @@ const setupProject = async (cliUtils, argv) => {
 
     const plugin = new Plugin()
     const klass = plugin.requireProject(projectType)
-    const obj = new klass(operator)
+    const obj = new klass(setup.operator)
     await obj.install()
 
     for (let name of envs) {
-        await operator.getInstaller(name)
+        await setup.operator.getInstaller(name)
     }
 
-    await operator.install().catch(e => console.dir(e))
+    await setup.install().catch(e => console.dir(e))
 
     cliUtils.message()
     cliUtils.message(`  project \x1b[32m${projectDir}\x1b[m was created.`)

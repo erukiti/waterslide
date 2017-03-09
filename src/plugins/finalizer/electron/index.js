@@ -9,12 +9,13 @@ class ElectronFinalizer {
     constructor(builder) {
         this.builder = builder
         this.electron = null
+        this.dest = this.builder.getDirectory('destination')
     }
 
     run() {
         if (!this.electron) {
             const plugin = new Plugin()
-            this.electron = plugin.requireLocal('electron-connect').server.create({path: './build', stopOnClose: true})
+            this.electron = plugin.requireLocal('electron-connect').server.create({path: `./${this.dest}`, stopOnClose: true})
             this.electron.start(state => state === 'stopped' && process.exit(0))
         } else {
             this.electron.restart()
@@ -31,7 +32,7 @@ class ElectronFinalizer {
         const electronVersion = utils.readNpmVersion('electron')
 
         const packagerConfDarwin = {
-            dir: 'build',
+            dir: this.dest,
             out: 'release/',
             name: packageInfo.name,
             arch: ['x64'],

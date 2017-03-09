@@ -7,7 +7,8 @@ const path = require('path')
 class CopyBuilder {
     constructor(builder) {
         this.builder = builder
-        this.dest = './build'
+        this.src = builder.getDirectory('source')
+        this.dest = builder.getDirectory('destination')
         this.isCompiled = false
     }
 
@@ -16,7 +17,9 @@ class CopyBuilder {
     }
 
     _copy(src) {
-        const dest = src.replace(/^src\//, 'build/')
+        const reSrc = new RegExp(`^${this.src}/`)
+
+        const dest = src.replace(reSrc, `${this.dest}/`)
 
         this.builder.debug(`copy: ${src} -> ${dest}`)
 

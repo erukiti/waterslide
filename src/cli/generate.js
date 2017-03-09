@@ -4,7 +4,7 @@ const process = require('process')
 const path = require('path')
 const fs = require('fs')
 
-const Operator = require('../generate/operator')
+const Setup = require('../setup')
 const Plugin = require('../plugin')
 const config = require('../config')
 const CliUtils = require('./utils')
@@ -12,7 +12,7 @@ const CliUtils = require('./utils')
 const generate = async (cliUtils, argv) => {
     config.startLocal()
 
-    const operator = new Operator(cliUtils)
+    const setup = new Setup(cliUtils)
 
     const parseOpt = name => {
         if (!argv[name]) {
@@ -24,12 +24,12 @@ const generate = async (cliUtils, argv) => {
         }
     }
 
-    operator.setOpt(parseOpt('opt'))
-    operator.setNoOpt(parseOpt('noOpt'))
+    setup.setOpt(parseOpt('opt'))
+    setup.setNoOpt(parseOpt('noOpt'))
 
-    await operator.getGenerator(argv.generatorName).generate(argv.args[0])
+    await setup.operator.getGenerator(argv.generatorName).generate(argv.args[0])
 
-    await operator.install().catch(e => console.dir(e))
+    await setup.install().catch(e => console.dir(e))
 }
 
 const generateCommand = () => {

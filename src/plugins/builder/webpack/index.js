@@ -10,6 +10,8 @@ const config = getConfig()
 class WebpackBuilder {
     constructor(builder) {
         this.builder = builder
+        this.src = builder.getDirectory('source')
+        this.dest = builder.getDirectory('destination')
 
         this.isCompiled = false
 
@@ -25,10 +27,13 @@ class WebpackBuilder {
         const rules = config.getLocal('webpack').rules.map(rule => {
             return { test: new RegExp(rule.test), use: rule.use }
         })
+
+        const reSrc = new RegExp(`^${this.src}/`)
+
         return {
             entry: `./${filename}`,
             output: {
-                path: path.dirname(filename.replace(/^src\//, './build/')),
+                path: path.dirname(filename.replace(reSrc, `./${this.dest}/`)),
                 filename: path.basename(filename.replace(/\.[a-z]+$/, '.js'))
             },
             resolve: {
