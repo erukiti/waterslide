@@ -19,10 +19,7 @@ class NodeFinalizer {
         })
 
         child.on('exit', (code, signal) => {
-            this.builder.verbose(`exit ${code}`)
-            if (code) {
-                process.exit(code)
-            }
+            this.builder.message(`exit ${code}`)
         })
 
     }

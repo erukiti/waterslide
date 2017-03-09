@@ -32,42 +32,44 @@ class CliUtils {
     _hook() {
         const stdoutWrite = process.stdout.write
         const stderrWrite = process.stderr.write
-
-        this._write = (...args) => {
-            stdoutWrite.apply(process.stdout, args)
-        }
-
-        const _clear = () => {
-            if (this.latestLength > 0) {
-                this._write(`${' '.repeat(this.latestLength)}\r`)
-                this.latestLength = 0
-            }
-        }
+        const exit = process.exit
 
         let rotateIndex = 0
+
+        // Fixme: it can not be stopped while using hooks because it uses setInterval.
         let timer = setInterval(() => {
             const indicator = '|/-\\'.substr(rotateIndex, 1)
             if (++rotateIndex >= 4) {
                 rotateIndex = 0
             }
 
-            this._write(`${indicator}\r`)
+            stdoutWrite.apply(process.stdout, [`${indicator}\r`])
         }, 50)
 
-        process.stdout.write = (...args) => {
-            _clear()
+        const _reset = () => {
+            clearInterval(timer)
             process.stdout.write = stdoutWrite
             process.stderr.write = stderrWrite
+            process.exit = exit
+            if (this.latestLength > 0) {
+                process.stdout.write(`${' '.repeat(this.latestLength)}\r`)
+                this.latestLength = 0
+            }
+        }
+
+        process.exit = (...args) => {
+            _reset()
+            process.exit(...args)
+        }
+
+        process.stdout.write = (...args) => {
+            _reset()
             process.stdout.write(...args)
-            clearInterval(timer)
         }
 
         process.stderr.write = (...args) => {
-            _clear()
-            process.stdout.write = stdoutWrite
-            process.stderr.write = stderrWrite
+            _reset()
             process.stderr.write(...args)
-            clearInterval(timer)
         }
     }
 

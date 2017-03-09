@@ -29,6 +29,7 @@ class Build {
 
     _createBuilder() {
         this.builder = {}
+        this.builder.message = mesg => this.cliUtils.message(mesg, 1)
         this.builder.verbose = mesg => this.cliUtils.verbose(mesg, 1)
         this.builder.debug = mesg => this.cliUtils.debug(mesg, 1)
         this.builder.error = err => this.cliUtils.error(err, 1)
