@@ -1,0 +1,11 @@
+'use strict'
+
+const createActions = actions => {
+    const obj = {}
+    actions.forEach(action => obj[action] = action)
+    return obj
+}
+
+export default createActions([
+    'ADD_COUNT'
+])

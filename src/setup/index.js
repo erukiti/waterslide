@@ -49,6 +49,7 @@ class Setup {
                 this.directories[type] = directory
             }
         }
+
         this.operator.getGenerator = name => {
             if (!this.generators[name]) {
                 const Generator = plugin.requireGenerator(name)
@@ -57,17 +58,25 @@ class Setup {
             return this.generators[name]
         }
 
+        this.operator.replaceGenerator = (name, generator) => {
+            if (this.generators[name]) {
+                this.operator.error(`${name} generator is already used.`)
+            } else {
+                this.generators[name] = generator
+            }
+        }
+
         this.operator.getInstaller = async name => {
             if (!this.installers[name]) {
                 const klass = plugin.requireInstaller(name)
-                const generator = await klass.getInstaller(this.operator)
-                if (!generator) {
+                const installer = await klass.getInstaller(this.operator)
+                if (!installer) {
                     this.cliUtils.warning(`installer ${name} is ignored.`)
                     return null
                 }
 
                 this.cliUtils.verbose(`installer: ${name}`, 1)
-                this.installers[name] = generator
+                this.installers[name] = installer
             }
 
             return this.installers[name]
@@ -98,7 +107,7 @@ class Setup {
 
             return this.fsio.writeFile(name, content, opts).then(isWrote => {
                 if (isWrote) {
-                    this.operator.verbose(`wrote ${name}`)
+                    this.cliUtils.verbose(`wrote ${name}`, 1)
                 }
             })
         }
@@ -107,6 +116,7 @@ class Setup {
         this.operator.setInfo = (title, message) => this.info.push({title, message})
         this.operator.verbose = message => this.cliUtils.verbose(message, 1)
         this.operator.message = message => this.cliUtils.message(message, 1)
+        this.operator.error = message => this.cliUtils.error(message, 1)
     }
 
     setProjectDir(name) {
@@ -144,12 +154,10 @@ class Setup {
 
         let notProcessed
         while ((notProcessed = getNotProcessedKey()).length > 0) {
-            await Promise.all(notProcessed.map(key => this.installers[key].install()))
+            for (let key of notProcessed) {
+                await this.installers[key].install()
+            }
             processed = processed.concat(notProcessed)
-        }
-
-        if (this.generator) {
-            this.generator.install()
         }
 
         await Promise.all(this.postInstalls.map(cb => cb()))

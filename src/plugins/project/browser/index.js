@@ -7,7 +7,7 @@ class BrowserProject {
     }
 
     async install() {
-        this.operator.getInstaller('js')
+        await this.operator.getInstaller('js')
         const g = this.operator.getGenerator('browser')
         await g.generate('src/index.js', {type: 'web'})
 

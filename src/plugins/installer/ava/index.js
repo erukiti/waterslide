@@ -22,7 +22,6 @@ class AvaInstaller {
     async install() {
         const testJs = fs.readFileSync(require.resolve('./sample.test.js'))
 
-
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('ava')
         this.operator.addTester('ava')

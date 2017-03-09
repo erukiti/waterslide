@@ -1,0 +1,13 @@
+'use strict'
+
+import actions from '../actions'
+
+export default class {{action}} {
+    constructor(dispatch) {
+        this.dispatch = dispatch
+    }
+
+    add() {
+        this.dispatch({ type: actions.ADD_COUNT })
+    }
+}

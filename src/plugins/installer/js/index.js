@@ -68,7 +68,7 @@ class JsInstaller {
 
         const noUse = this.operator.getNoUse()
         const defaultUse = ['power-assert', 'ava', 'eslint']
-        defaultUse.filter(value => !noUse.includes(value)).forEach(value => {this.operator.getInstaller(value)})
+        await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))
     
         const webpackInstaller = await this.operator.getInstaller('webpack')
         webpackInstaller.addLoader('\\.jsx?$', [

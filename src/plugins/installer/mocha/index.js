@@ -25,7 +25,7 @@ class MochaInstaller {
         const mochaOptsText = fs.readFileSync(require.resolve('./mocha.opts'))
         const testJs = fs.readFileSync(require.resolve('./sample.js'))
 
-        this.operator.getInstaller('power-assert')
+        await this.operator.getInstaller('power-assert')
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('mocha')

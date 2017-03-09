@@ -78,12 +78,12 @@ class Build {
                 const result = tester.test()
                 const className = tester.constructor.name
                 if (result.isError) {
-                    this.error(className)
+                    this.builder.error(className)
                     if (result.stdout) {
-                        this.error(result.stdout)
+                        this.builder.error(result.stdout)
                     }
                     if (result.stderr) {
-                        this.error(result.stderr)
+                        this.builder.error(result.stderr)
                     }
                 } else {
                     this.builder.verbose(`${className}: no error`)

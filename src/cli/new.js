@@ -69,11 +69,12 @@ const setupProject = async (cliUtils, argv) => {
     const plugin = new Plugin()
     const klass = plugin.requireProject(projectType)
     const obj = new klass(setup.operator)
-    await obj.install()
 
     for (let name of envs) {
         await setup.operator.getInstaller(name)
     }
+
+    await obj.install()
 
     await setup.install().catch(e => console.dir(e))
 
@@ -90,11 +91,11 @@ const newCommand = () => {
         builder: yargs => {
             yargs
                 .option('use', {
-                    describe: 'use plugin',
+                    describe: 'use install plugin',
                     type: 'string'
                 })
                 .option('no-use', {
-                    describe: 'disable plugin',
+                    describe: 'disable install plugin',
                     type: 'string'                    
                 })
                 .option('opt', {

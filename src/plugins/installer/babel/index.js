@@ -29,7 +29,7 @@ class BabelInstaller {
 
     async install() {
         this.operator.postInstall(async () => {
-            await this.operator.writeFile('.babelrc', JSON.stringify(this.values, null, '  '), { isRewritable: true})
+            await this.operator.writeFile('.babelrc', JSON.stringify(this.values, null, '  ') + '\n', { isRewritable: true})
         })
     }
 }
