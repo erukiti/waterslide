@@ -3,73 +3,37 @@
 const Builder = require('../build/builder')
 const CliUtils = require('./utils')
 
-class BuildCli {
-    constructor(cliUtils) {
-        this.cliUtils = cliUtils
-    }
-
-    _config(args) {
-        const opts = {isWatch: false, isBuild: false, isRun: false, isTest: false}
-        if (args.env) {
-            opts.env = args.env
-        }
-        return opts
-    }
-
-    _run(opts) {
-        const builder = new Builder(this.cliUtils)
-
-        // assertFalse(opts.isBuild && opts.isRun)
-
-        builder.run(opts)
-    }
-
-    build(args) {
-        const opts = this._config(args)
-        opts.isBuild = true
-        opts.isTest = true
-        this._run(opts)
-    }
-
-    watch(args) {
-        const opts = this._config(args)
-        opts.isWatch = true
-        opts.isRun = true
-        opts.isTest = true
-        this._run(opts)
-    }
-
-    run(args) {
-        const opts = this._config(args)
-        opts.isRun = true
-        opts.isTest = true
-        this._run(opts)
-
-    }
-
-    test(args) {
-        const opts = this._config(args)
-        opts.isTest = true
-        this._run(opts)
-    }
-}
-
 const buildCommand = type => {
+    const defaults = {
+        test: {watch: false, build: false, run: false, test: true},
+        run: {watch: false, build: false, run: true, test: true},
+        build: {watch: false, build: true, run: false, test: true},
+        watch: {watch: true, build: false, run: true, test: true},
+    }
+
     return {
         command: `${type} [options]`,
         describe: `${type} application`,
         builder: yargs => {
-            yargs
-                .option('env', {
-                    describe: 'environment',
-                    type: 'string'
-                })
+            yargs.options({
+                'env': { type: 'string', describe: 'environment' },
+                'watch': { type: 'boolean', default: defaults[type].watch},
+                'run': { type: 'boolean', default: defaults[type].run},
+                'build': { type: 'boolean', default: defaults[type].build},
+                'test': { type: 'boolean', default: defaults[type].test},
+            })
         },
         handler: argv => {
             const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
 
-            const buildCli = new BuildCli(cliUtils)
-            buildCli[type](argv)
+            const builder = new Builder(cliUtils)
+            const opts = { isWatch: argv.watch, isRun: argv.run, isBuild: argv.build, isTest: argv.test }
+            if (argv.env) {
+                opts.env = argv.env
+            }
+
+            // assertFalse(opts.isBuild && opts.isRun)
+            builder.run(opts)
         }
     }
 }

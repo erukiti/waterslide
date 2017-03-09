@@ -39,7 +39,6 @@ class Builder {
     }
 
     _test() {
-        // FIXME: 何回も呼ばれる問題?
         if (this.isTest && this.testers.length > 0) {
             this.testers.forEach(tester => {
                 const result = tester.test()
@@ -95,16 +94,23 @@ class Builder {
         this.isWatch = opts.isWatch
         this.env = opts.env || 'development'
 
-        const testers = config.getLocal('testers') || []
+        if (this.isTest) {
+            const testers = config.getLocal('testers') || []
 
-        testers.forEach(name => {
-            const klass = this.plugin.requireTester(name)
-            this.testers.push(new klass(this))
-        })
+            testers.forEach(name => {
+                const klass = this.plugin.requireTester(name)
+                const tester = new klass(this)
+                // if (this.isWatch) {
+                //     tester.watch()
+                // } else {
+                    this.testers.push(tester)
+                // }
+            })
 
-        if (!this.isRun && !this.isBuild) {
-            this._test()
-            return
+            if (!this.isRun && !this.isBuild) {
+                this._test()
+                return
+            }
         }
 
         const builders = opts.builders || config.getLocal('builders')
