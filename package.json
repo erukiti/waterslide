@@ -1,27 +1,27 @@
 {
-  "name": "waterslider",
-  "bin": "bin/waterslider",
+  "name": "waterslide",
+  "bin": "bin/waterslide",
   "version": "0.8.0",
-  "description": "waterslider is easy setting method for JavaScript.",
-  "main": "src/waterslider.js",
+  "description": "waterslide is easy setting method for JavaScript.",
+  "main": "src/waterslide.js",
   "scripts": {
     "test": "ava"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/erukiti/waterslider.git"
+    "url": "git+https://github.com/erukiti/waterslide.git"
   },
   "keywords": [
-    "waterslider",
+    "waterslide",
     "webpack",
     "boilerplate"
   ],
   "author": "erukiti - SASAKI Shunsuke <erukiti+github@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/erukiti/waterslider/issues"
+    "url": "https://github.com/erukiti/waterslide/issues"
   },
-  "homepage": "https://github.com/erukiti/waterslider#readme",
+  "homepage": "https://github.com/erukiti/waterslide#readme",
   "dependencies": {
     "babel-preset-power-assert": "^1.0.0",
     "github-api": "^3.0.0",

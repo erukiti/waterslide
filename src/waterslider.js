@@ -1,9 +1,9 @@
 'use strict'
 
-const waterslider = {
+const waterslide = {
     getConfig: () => require('./config'),
     utils: require('./utils'),
     Plugin: require('./plugin'),
 }
 
-module.exports = waterslider
+module.exports = waterslide

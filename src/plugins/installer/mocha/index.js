@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 
-const {utils} = require('../../../waterslider')
+const {utils} = require('../../../waterslide')
 
 class MochaInstaller {
     constructor(operator) {

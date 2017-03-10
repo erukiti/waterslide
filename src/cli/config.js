@@ -27,7 +27,7 @@ class Config {
                 console.log('setting is done.')
                 console.log('')
                 console.log('[usage]')
-                console.log('  waterslider setting')
+                console.log('  waterslide setting')
             })
     }
 

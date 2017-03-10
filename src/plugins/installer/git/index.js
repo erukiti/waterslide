@@ -2,7 +2,7 @@
 
 const GithubApi = require('github-api')
 
-const {utils, getConfig} = require('../../../waterslider')
+const {utils, getConfig} = require('../../../waterslide')
 
 class GitInstaller {
     constructor(operator) {
@@ -48,7 +48,7 @@ class GitInstaller {
 
         this.operator.addCommand(9, 'git init')
         this.operator.addCommand(9, 'git add .')
-        this.operator.addCommand(9, 'git commit -m \'first commited by waterslider. see. http://github.com/erukiti/waterslider/\'')
+        this.operator.addCommand(9, 'git commit -m \'first commited by waterslide. see. http://github.com/erukiti/waterslide/\'')
 
         await this.operator.writeFile('.gitignore', this.ignoreFiles.join('\n'))
     }

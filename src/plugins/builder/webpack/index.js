@@ -3,7 +3,7 @@
 const path = require('path')
 const process = require('process')
 
-const {getConfig} = require('../../../waterslider')
+const {getConfig} = require('../../../waterslide')
 
 const config = getConfig()
 

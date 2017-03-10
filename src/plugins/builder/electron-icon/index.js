@@ -4,7 +4,7 @@ const fs = require('fs')
 const mkdirp = require('mkdirp')
 const path = require('path')
 
-const {Plugin} = require('../../../waterslider')
+const {Plugin} = require('../../../waterslide')
 const plugin = new Plugin()
 const icongen = plugin.requireLocal('icon-gen')
 const Jimp = plugin.requireLocal('jimp')

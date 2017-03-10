@@ -1,11 +1,11 @@
-# waterslider
+# waterslide
 
-Waterslider is a CLI tool that easily sets up a modern JavaScript project and takes care of troublesome compilation (webpack, babel...).
+waterslide is a CLI tool that easily sets up a modern JavaScript project and takes care of troublesome compilation (webpack, babel...).
 
 ## Insatll
 
 ```sh
-$ npm install -g waterslider
+$ npm install -g waterslide
 ```
 
 ## Use
@@ -29,4 +29,4 @@ $ npm start
 
 ## License
 
-The license of the waterslider itself is Apache-2.0. Software license created using Waterslider can be set freely.
+The license of the waterslide itself is Apache-2.0. Software license created using waterslide can be set freely.

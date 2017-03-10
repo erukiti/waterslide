@@ -3,7 +3,7 @@
 const process = require('process')
 const fs = require('fs')
 
-const {getConfig, Plugin} = require('../waterslider')
+const {getConfig, Plugin} = require('../waterslide')
 const config = getConfig()
 const plugin = new Plugin()
 const Fsio = require('./fsio')

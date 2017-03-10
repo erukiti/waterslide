@@ -4,7 +4,7 @@ const fs = require('fs')
 const process = require('process')
 const path = require('path')
 
-const {utils, Plugin} = require('../../../waterslider')
+const {utils, Plugin} = require('../../../waterslide')
 
 
 class ElectronFinalizer {

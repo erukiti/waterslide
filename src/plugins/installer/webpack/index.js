@@ -1,6 +1,6 @@
 'use strict'
 
-const {utils, getConfig} = require('../../../waterslider')
+const {utils, getConfig} = require('../../../waterslide')
 const config = getConfig()
 
 class WebpackInstaller {

@@ -1,11 +1,11 @@
-# waterslider
+# waterslide
 
-watersliderはモダンなJavaScriptのプロジェクト作成と面倒なコンパイル(webpack, babel...)を肩代わりしてくれるツールです。
+waterslideはモダンなJavaScriptのプロジェクト作成と面倒なコンパイル(webpack, babel...)を肩代わりしてくれるツールです。
 
 ## insatll
 
 ```sh
-$ npm install -g waterslider
+$ npm install -g waterslide
 ```
 
 ## use
@@ -24,4 +24,4 @@ $ npm start
 
 ## License
 
-waterslide自体のライセンスはApache-2.0とします。watersliderによる生成物のライセンスは特に規定しません。
+waterslide自体のライセンスはApache-2.0とします。waterslideによる生成物のライセンスは特に規定しません。

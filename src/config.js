@@ -7,13 +7,13 @@ const fs = require('fs')
 
 class Config {
     constructor() {
-        this.globalConfigPath = path.join(os.homedir(), '.waterslider.json')
+        this.globalConfigPath = path.join(os.homedir(), '.waterslide.json')
         this.globalConfig = this._configRead(this.globalConfigPath)
         this.localConfig = {}
     }
 
     startLocal() {
-        this.localConfigPath = path.join(process.cwd(), '.waterslider.json')
+        this.localConfigPath = path.join(process.cwd(), '.waterslide.json')
         this.localConfig = this._configRead(this.localConfigPath)
     }
 
