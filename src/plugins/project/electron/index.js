@@ -9,7 +9,11 @@ class ElectronProject {
     }
 
     async install() {
-        const appJsText = fs.readFileSync(require.resolve('./app.js'))
+        await this.operator.setDirectory('src', 'source', 'source code directory')
+        await this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')
+        await this.operator.setDirectory('src/renderer', null, 'source code directory (Electron Renderer Process)')
+        await this.operator.setDirectory('build', 'destination', 'build directory')
+        await this.operator.setDirectory('release', null, 'release directory')
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('electron')
@@ -18,15 +22,13 @@ class ElectronProject {
         jsInstaller.addDevPackage('node-7z')
         jsInstaller.setMain('src/browser/app.js')
 
-        const g = this.operator.getGenerator('browser')
-        await g.generate('src/renderer/index.js', {type: 'electron-renderer'})
+        const browserGenerator = this.operator.getGenerator('browser')
+        await browserGenerator.generate('src/renderer/index.js', {type: 'electron-renderer'})
 
-        await this.operator.setDirectory('src', 'source', 'source code directory')
-        await this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')
-        await this.operator.setDirectory('src/renderer', null, 'source code directory (Electron Renderer Process)')
-        await this.operator.setDirectory('build', 'destination', 'build directory')
-        await this.operator.setDirectory('release', null, 'release directory')
+        const iconGenerator = this.operator.getGenerator('electron-icon')
+        await iconGenerator.generate('src/app.png')
 
+        const appJsText = fs.readFileSync(require.resolve('./app.js'))
         await this.operator.writeFile('src/browser/app.js', appJsText, {type: 'copy'})
         await this.operator.writeFile('src/package.json', JSON.stringify({'main': 'browser/app.js'}, null, '  ') + '\n', {type: 'copy'})
     }

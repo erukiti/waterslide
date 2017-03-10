@@ -47,7 +47,7 @@ const utils = {
         const result = childProcess.execSync(`npm list --depth=0`).toString()
         const ind = result.indexOf(`${name}@`)
         if (ind !== -1) {
-            return result.substr(ind + name.length + 1)
+            return result.substr(ind + name.length + 1).split('\n')[0]
         } else {
             return null
         }

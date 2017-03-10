@@ -2,6 +2,7 @@
 
 const fs = require('fs')
 const process = require('process')
+const path = require('path')
 
 const { utils, Plugin } = require('../../../waterslider')
 
@@ -23,23 +24,24 @@ class ElectronFinalizer {
     }
 
     build() {
+        this.builder.verbose('build electron')
         const plugin = new Plugin()
         const packager = plugin.requireLocal('electron-packager')
         const Zip = plugin.requireLocal('node-7z')
 
         const packageInfo = JSON.parse(fs.readFileSync('./package.json'))
-
         const electronVersion = utils.readNpmVersion('electron')
 
         const packagerConfDarwin = {
             dir: this.dest,
             out: 'release/',
             name: packageInfo.name,
+            appVersion: packageInfo.version,
             arch: ['x64'],
             asar: true,
             platform: 'darwin',
             electronVersion,
-            // icon: 'src/app.icns',
+            icon: path.join(this.dest, 'app.icns'),
             overwrite: true
         }
 
@@ -57,22 +59,23 @@ class ElectronFinalizer {
             }).catch(err3 => console.error(err3))
         })
 
-/*
         const packagerConfWin32 = {
-            dir: 'build',
+            dir: this.dest,
             out: 'release/',
             name: packageInfo.name,
+            appVersion: packageInfo.version,
             arch: ['ia32', 'x64'],
             asar: true,
             platform: 'win32',
-            electronVersion: packageInfo.dependencies['electron'],
-            // icon: 'tmp/app.ico',
+            electronVersion,
+            icon: path.join(this.dest, 'app.ico'),
             overwrite: true
         }
 
         packager(packagerConfWin32, (err2, pathes) => {
+
             console.dir(err2)
-            console.dir(pathes)
+            console.log(pathes)
             pathes.forEach((path) => {
                 const a = path.split('-')
                 const platform = a[1]
@@ -89,7 +92,6 @@ class ElectronFinalizer {
             })
 
         })
-*/
     }
 }
 
