@@ -49,7 +49,12 @@ class ElectronFinalizer {
             packagerConfDarwin['sign'] = process.env.ELECTRON_SIGN_DARWIN
         }
 
-        packager(packagerConfDarwin, (err2, path) => {
+        packager(packagerConfDarwin, (err, path) => {
+            if (err) {
+                this.builder.error(err)
+                return
+            }
+
             let archive = new Zip()
             archive.add(`release/${packageInfo.name}-darwin-${packageInfo.version}.7z`, `release/${packageInfo.name}-darwin-x64/`, {
                 m0: '=BCJ',
@@ -72,14 +77,15 @@ class ElectronFinalizer {
             overwrite: true
         }
 
-        packager(packagerConfWin32, (err2, pathes) => {
+        packager(packagerConfWin32, (err, pathes) => {
+            if (err) {
+                this.builder.error(err)
+            }
 
-            console.dir(err2)
-            console.log(pathes)
             pathes.forEach((path) => {
                 const a = path.split('-')
-                const platform = a[1]
-                const arch = a[2]
+                const platform = a[a.length - 2]
+                const arch = a[a.length - 1]
 
                 let archive = new Zip()
                 archive.add(`release/${packageInfo.name}-${platform}-${arch}-${packageInfo.version}.7z`, path, {
