@@ -11,28 +11,31 @@ class Fsio {
 
     writeFile(filename, content, opts = {}) {
         return new Promise((resolve, reject) => {
-            if (typeof content === 'string') {
-                content = new Buffer(content)
+            let buf
+            if (typeof buf === 'string') {
+                buf = new Buffer(content)
+            } else {
+                buf = content
             }
 
-            if (this.cache[filename] && this.cache[filename].equals(content)) {
+            if (this.cache[filename] && this.cache[filename].equals(buf)) {
                 resolve(false)
                 return
             } else {
-                this.cache[filename] = content
+                this.cache[filename] = buf
             }
 
             if (path.dirname(filename) !== '.') {
                 mkdirp.sync(path.dirname(filename))
             }
-            
+
             const options = {}
             if (opts.mode) {
                 options.mode = opts.mode
             }
             options.flag = opts.isRewritable ? 'w' : 'wx'
 
-            fs.writeFile(filename, content, options, err => {
+            fs.writeFile(filename, buf, options, err => {
                 if (err) {
                     reject(err)
                 } else {
@@ -60,7 +63,7 @@ class Fsio {
             const content = fs.readFileSync(filename)
             this.cache[filename] = content
             return content
-        } catch(e) {
+        } catch (e) {
             return null
         }
     }

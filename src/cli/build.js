@@ -16,11 +16,11 @@ const buildCommand = type => {
         describe: `${type} application`,
         builder: yargs => {
             yargs.options({
-                'env': { type: 'string', describe: 'environment' },
-                'watch': { type: 'boolean', default: defaults[type].watch},
-                'run': { type: 'boolean', default: defaults[type].run},
-                'build': { type: 'boolean', default: defaults[type].build},
-                'test': { type: 'boolean', default: defaults[type].test},
+                'env': {type: 'string', describe: 'environment'},
+                'watch': {type: 'boolean', default: defaults[type].watch},
+                'run': {type: 'boolean', default: defaults[type].run},
+                'build': {type: 'boolean', default: defaults[type].build},
+                'test': {type: 'boolean', default: defaults[type].test},
             })
         },
         handler: argv => {

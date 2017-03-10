@@ -20,13 +20,13 @@ class Config {
     _configRead(filePath) {
         try {
             return JSON.parse(fs.readFileSync(filePath))
-        } catch(e) {
+        } catch (e) {
             return {}
         }
     }
 
     _configWrite(filePath, config) {
-        fs.writeFileSync(filePath, JSON.stringify(config, null, '  ') + '\n')
+        fs.writeFileSync(filePath, `${JSON.stringify(config, null, '  ')}\n`)
     }
 
     get(key) {

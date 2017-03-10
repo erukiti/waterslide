@@ -1,6 +1,6 @@
 'use strict'
 
-const { utils } = require('../../../waterslider')
+const {utils} = require('../../../waterslider')
 
 const fs = require('fs')
 
@@ -8,14 +8,14 @@ class CssInstaller {
     constructor(operator) {
         this.operator = operator
     }
-    
+
     static getInstaller(operator) {
         if (utils.checkExistsNpm('css-loader')) {
             return null
         }
         return new this(operator)
     }
-    
+
     async install() {
         const helpText = fs.readFileSync(require.resolve('./help.txt'))
         this.operator.setInfo('css', helpText)
@@ -25,11 +25,11 @@ class CssInstaller {
         jsInstaller.addDevPackage('style-loader')
         jsInstaller.addDevPackage('url-loader')
         jsInstaller.addDevPackage('file-loader')
-        
+
         const webpackInstaller = await this.operator.getInstaller('webpack')
         webpackInstaller.addLoader('\\.css$', [
-            { loader: 'style-loader' },
-            { loader: 'css-loader' },
+            {loader: 'style-loader'},
+            {loader: 'css-loader'},
         ])
         webpackInstaller.addLoader('\\.woff2?(\\?v=\\d+\\.\\d+\\.\\d+)?$', [
             {

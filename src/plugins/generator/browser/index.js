@@ -15,11 +15,11 @@ class BrowserGenerator {
         const prefix = path.basename(name, '.js')
 
         const templateHtml = fs.readFileSync(require.resolve('./sample.html.mst')).toString()
-        const html = Mustache.render(templateHtml, { prefix })
+        const html = Mustache.render(templateHtml, {prefix})
 
         const sampleJs = fs.readFileSync(require.resolve('./sample.js'))
 
-        this.operator.writeFile(path.join(dirname, `${prefix}.html`), html, { type: 'copy'})
+        this.operator.writeFile(path.join(dirname, `${prefix}.html`), html, {type: 'copy'})
         this.operator.writeFile(path.join(dirname, `${prefix}.js`), sampleJs, opts)
     }
 }

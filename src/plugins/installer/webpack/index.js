@@ -1,12 +1,12 @@
 'use strict'
 
-const { utils, getConfig } = require('../../../waterslider')
+const {utils, getConfig} = require('../../../waterslider')
 const config = getConfig()
 
 class WebpackInstaller {
     constructor(operator) {
         this.operator = operator
-        this.values = config.getLocal('webpack') || { rules: [] }
+        this.values = config.getLocal('webpack') || {rules: []}
     }
 
     static getInstaller(operator) {

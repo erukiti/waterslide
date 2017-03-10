@@ -15,14 +15,14 @@ class MockChildProcess {
         this.child = {
             on: (event, listener) => {
                 switch (event) {
-                    case 'error': {
-                        this.onError = listener
-                        break
-                    }
-                    case 'exit': {
-                        this.onExit = listener
-                        break
-                    }
+                case 'error': {
+                    this.onError = listener
+                    break
+                }
+                case 'exit': {
+                    this.onExit = listener
+                    break
+                }
                 }
             },
             stdout: {pipe: (dest) => this.onStdoutPipe(dest)},
@@ -77,11 +77,15 @@ test('child failed exit', async t => {
     const command = new Command(mockChildProcess.getChildProcess())
     const p = command.exec('hoge').catch(e => {
         isThrow = true
-        t.true(e.toString() === `error 'hoge' is failed. 1`)
+        t.true(e.toString() === 'error \'hoge\' is failed. 1')
     })
 
-    mockChildProcess.onStdoutPipe = () => isStdout = true
-    mockChildProcess.onStderrPipe = () => isStderr = true
+    mockChildProcess.onStdoutPipe = () => {
+        isStdout = true
+    }
+    mockChildProcess.onStderrPipe = () => {
+        isStderr = true
+    }
 
     t.true(mockChildProcess.command === 'hoge')
     mockChildProcess.onExit(1)

@@ -4,9 +4,6 @@ const config = require('../config')
 const readPrompt = require('read')
 
 class Config {
-    constructor() {
-    }
-
     getPromptCreator(prompt, key) {
         return new Promise((resolve, reject) => {
             if (config.getGlobal(key)) {
@@ -45,11 +42,11 @@ class Config {
             if (validKeys.includes(argv[0])) {
                 config.writeGlobal(argv[0], value)
             } else {
-                switch(argv[0]) {
-                    case 'license': {
+                switch (argv[0]) {
+                case 'license': {
                         // FIXME: SPDX license list にないものは警告をだす？
-                        config.writeGlobal(argv[0], value)
-                    }
+                    config.writeGlobal(argv[0], value)
+                }
                 }
             }
         }

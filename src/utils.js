@@ -44,7 +44,7 @@ const utils = {
         })
     }),
     readNpmVersion: name => {
-        const result = childProcess.execSync(`npm list --depth=0`).toString()
+        const result = childProcess.execSync('npm list --depth=0').toString()
         const ind = result.indexOf(`${name}@`)
         if (ind !== -1) {
             return result.substr(ind + name.length + 1).split('\n')[0]
@@ -56,7 +56,7 @@ const utils = {
         if (!cachePackageJson) {
             try {
                 cachePackageJson = JSON.parse(fs.readFileSync('package.json'))
-            } catch(e) {
+            } catch (e) {
                 return false
             }
         }

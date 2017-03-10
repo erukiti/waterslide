@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 
-const { utils } = require('../../../waterslider')
+const {utils} = require('../../../waterslider')
 
 class MochaInstaller {
     constructor(operator) {
@@ -33,7 +33,6 @@ class MochaInstaller {
 
         await this.operator.writeFile('test/mocha.opts', mochaOptsText)
         await this.operator.writeFile('test/test.js', testJs)
-        ]
     }
 }
 

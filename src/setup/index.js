@@ -3,7 +3,7 @@
 const process = require('process')
 const fs = require('fs')
 
-const { getConfig, Plugin } = require('../waterslider')
+const {getConfig, Plugin} = require('../waterslider')
 const config = getConfig()
 const plugin = new Plugin()
 const Fsio = require('./fsio')
@@ -82,7 +82,9 @@ class Setup {
             return this.installers[name]
         }
 
-        this.operator.setFinalizer = name => this.finalizer = name
+        this.operator.setFinalizer = name => {
+            this.finalizer = name
+        }
 
         this.operator.addBuilder = name => {
             if (this.builders.includes(name)) {
@@ -101,7 +103,7 @@ class Setup {
 
         this.operator.readFile = name => this.fsio.readFile(name)
         this.operator.readFileSync = name => this.fsio.readFileSync(name)
-        this.operator.checkExists = name =>  this.fsio.checkExists(name)
+        this.operator.checkExists = name => this.fsio.checkExists(name)
         this.operator.writeFile = (name, content, opts = {}) => {
             this.entries.push({path: name, text: content, opts})
 
@@ -163,7 +165,9 @@ class Setup {
         await Promise.all(this.postInstalls.map(cb => cb()))
 
         config.writeLocal('directories', this.directories)
-        config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {return {path: entry.path, opts: entry.opts}}))
+        config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {
+            return {path: entry.path, opts: entry.opts}
+        }))
         config.writeLocal('finalizer', this.finalizer)
         config.writeLocal('builders', this.builders)
         config.writeLocal('testers', this.testers)

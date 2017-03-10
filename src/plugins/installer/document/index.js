@@ -29,7 +29,7 @@ class DocumentInstaller {
 
     _getDirectoriesText() {
         let text = '| directory | description |\n'
-        text +=    '| --------- | ----------- |\n'
+        text += '| --------- | ----------- |\n'
         this.directories.forEach(directory => {
             text += `| ${directory.path} | ${directory.description} |\n`
         })

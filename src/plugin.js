@@ -4,10 +4,6 @@ const process = require('process')
 const fs = require('fs')
 
 class Plugin {
-    constructor() {
-
-    }
-
     requireLocal(name) {
         return require(`${process.cwd()}/node_modules/${name}`)
     }

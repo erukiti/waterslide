@@ -31,7 +31,7 @@ test.serial('new file with cache', async t => {
     fsio.cache['test'] = new Buffer('hoge')
     await fsio.writeFile('test', 'hoge')
 
-    t.throws(() => fs.readFileSync('test'), `ENOENT: no such file or directory, open 'test'`)
+    t.throws(() => fs.readFileSync('test'), 'ENOENT: no such file or directory, open \'test\'')
 })
 
 
@@ -46,7 +46,7 @@ test.serial('new file with already exists', t => {
     fs.writeFileSync('test', 'foo')
 
     const fsio = new Fsio()
-    t.throws(fsio.writeFile('test', 'hoge'), `EEXIST: file already exists, open 'test'`)
+    t.throws(fsio.writeFile('test', 'hoge'), 'EEXIST: file already exists, open \'test\'')
     t.true(fs.readFileSync('test').toString() === 'foo')
 })
 
@@ -76,7 +76,7 @@ test.serial('read file', async t => {
 
 test.serial('read file with error', async t => {
     const fsio = new Fsio()
-    t.throws(fsio.readFile('test'), `ENOENT: no such file or directory, open 'test'`)
+    t.throws(fsio.readFile('test'), 'ENOENT: no such file or directory, open \'test\'')
 })
 
 test.serial('cheek file, not exists', async t => {

@@ -4,7 +4,8 @@ const fs = require('fs')
 const process = require('process')
 const path = require('path')
 
-const { utils, Plugin } = require('../../../waterslider')
+const {utils, Plugin} = require('../../../waterslider')
+
 
 class ElectronFinalizer {
     constructor(builder) {
@@ -49,7 +50,7 @@ class ElectronFinalizer {
             packagerConfDarwin['sign'] = process.env.ELECTRON_SIGN_DARWIN
         }
 
-        packager(packagerConfDarwin, (err, path) => {
+        packager(packagerConfDarwin, (err, name) => {
             if (err) {
                 this.builder.error(err)
                 return
@@ -82,13 +83,13 @@ class ElectronFinalizer {
                 this.builder.error(err)
             }
 
-            pathes.forEach((path) => {
-                const a = path.split('-')
+            pathes.forEach((name) => {
+                const a = name.split('-')
                 const platform = a[a.length - 2]
                 const arch = a[a.length - 1]
 
                 let archive = new Zip()
-                archive.add(`release/${packageInfo.name}-${platform}-${arch}-${packageInfo.version}.7z`, path, {
+                archive.add(`release/${packageInfo.name}-${platform}-${arch}-${packageInfo.version}.7z`, name, {
                     m0: '=BCJ',
                     m1: '=LZMA:d=21'
                 }).then(() => {

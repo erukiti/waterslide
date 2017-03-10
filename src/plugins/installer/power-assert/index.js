@@ -1,6 +1,6 @@
 'use strict'
 
-const { utils } = require('../../../waterslider')
+const {utils} = require('../../../waterslider')
 
 class PowerAssertInstaller {
     constructor(operator) {
@@ -16,11 +16,10 @@ class PowerAssertInstaller {
 
     async install() {
         const babelInstaller = await this.operator.getInstaller('babel')
-        babelInstaller.addPlugin('babel-plugin-espower')
+        babelInstaller.addPreset('babel-preset-power-assert')
 
         const jsInstaller = await this.operator.getInstaller('js')
-        jsInstaller.addDevPackage('babel-plugin-espower')
-        jsInstaller.addDevPackage('espower-babel')
+        jsInstaller.addDevPackage('babel-preset-power-assert')
         jsInstaller.addDevPackage('power-assert')
     }
 }

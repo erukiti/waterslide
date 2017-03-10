@@ -30,7 +30,7 @@ class ElectronProject {
 
         const appJsText = fs.readFileSync(require.resolve('./app.js'))
         await this.operator.writeFile('src/browser/app.js', appJsText, {type: 'copy'})
-        await this.operator.writeFile('src/package.json', JSON.stringify({'main': 'browser/app.js'}, null, '  ') + '\n', {type: 'copy'})
+        await this.operator.writeFile('src/package.json', `${JSON.stringify({'main': 'browser/app.js'}, null, '  ')}\n`, {type: 'copy'})
     }
 }
 

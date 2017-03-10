@@ -13,7 +13,7 @@ class ReactReduxInstaller {
         const generator = {
             generate: async (name, opts = {}) => {
                 const prefix = path.basename(name, '.js')
-                const obj = { prefix }
+                const obj = {prefix}
                 const render = async (inFile, outFile, opts2 = {}) => {
                     const fn = path.join(thisDir, `${inFile}.mst`)
                     const templ = fs.readFileSync(fn).toString()
@@ -23,9 +23,9 @@ class ReactReduxInstaller {
 
                 const dir = path.dirname(name)
                 await render('actions.js', `${dir}/actions.js`)
-                await render(`index.html`, `${dir}/${prefix}.html`, { type: 'copy'})
-                await render(`index.jsx`, `${dir}/${prefix}.jsx`, opts)
-                await render(`reducers.js`, `${dir}/reducers.js`)
+                await render('index.html', `${dir}/${prefix}.html`, {type: 'copy'})
+                await render('index.jsx', `${dir}/${prefix}.jsx`, opts)
+                await render('reducers.js', `${dir}/reducers.js`)
 
                 await this.operator.getGenerator('react-redux').generate(`${dir}/app`)
             }

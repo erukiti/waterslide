@@ -1,6 +1,6 @@
 'use strict'
 
-const { utils } = require('../../../waterslider')
+const {utils} = require('../../../waterslider')
 
 class SassInstaller {
     constructor(operator) {
@@ -23,9 +23,9 @@ class SassInstaller {
 
         const webpackInstaller = await this.operator.getInstaller('webpack')
         webpackInstaller.addLoader('\\.scss$', [
-            { loader: 'style-loader' },
-            { loader: 'css-loader' },
-            { loader: 'sass-loader' },
+            {loader: 'style-loader'},
+            {loader: 'css-loader'},
+            {loader: 'sass-loader'},
         ])
     }
 }

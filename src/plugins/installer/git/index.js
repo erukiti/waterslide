@@ -2,7 +2,7 @@
 
 const GithubApi = require('github-api')
 
-const { utils, getConfig } = require('../../../waterslider')
+const {utils, getConfig} = require('../../../waterslider')
 
 class GitInstaller {
     constructor(operator) {
@@ -14,7 +14,7 @@ class GitInstaller {
     }
 
     static async getInstaller(operator) {
-        const { code, stdout, stderr } = await utils.exec('git status').catch(e => console.dir(e))
+        const {code, stdout, stderr} = await utils.exec('git status').catch(e => console.dir(e))
         if (stderr.indexOf('fatal: Not a git repository') === -1) {
             return null
         }
@@ -48,7 +48,7 @@ class GitInstaller {
 
         this.operator.addCommand(9, 'git init')
         this.operator.addCommand(9, 'git add .')
-        this.operator.addCommand(9, "git commit -m 'first commited by waterslider. see. http://github.com/erukiti/waterslider/'")
+        this.operator.addCommand(9, 'git commit -m \'first commited by waterslider. see. http://github.com/erukiti/waterslider/\'')
 
         await this.operator.writeFile('.gitignore', this.ignoreFiles.join('\n'))
     }

@@ -22,8 +22,8 @@ class Build {
         this.entries = config.getLocal('entries')
         this.testers = []
         this.builders = config.getLocal('builders').map(name => {
-            const klass = plugin.requireBuilder(name)
-            return new klass(this.builder)
+            const Klass = plugin.requireBuilder(name)
+            return new Klass(this.builder)
         })
     }
 
@@ -58,8 +58,8 @@ class Build {
                 }
 
                 if (!this.finalizer) {
-                    const klass = plugin.requireFinalizer(config.getLocal('finalizer'))
-                    this.finalizer = new klass(this.builder)
+                    const Klass = plugin.requireFinalizer(config.getLocal('finalizer'))
+                    this.finalizer = new Klass(this.builder)
                 }
                 // assertFalse(this.isBuild && this.isRun)
 
@@ -98,12 +98,12 @@ class Build {
             const testers = config.getLocal('testers') || []
 
             testers.forEach(name => {
-                const klass = plugin.requireTester(name)
-                const tester = new klass(this.builder)
+                const Klass = plugin.requireTester(name)
+                const tester = new Klass(this.builder)
                 // if (this.isWatch) {
                 //     tester.watch()
                 // } else {
-                    this.testers.push(tester)
+                this.testers.push(tester)
                 // }
             })
 

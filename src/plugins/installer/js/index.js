@@ -1,6 +1,6 @@
 'use strict'
 
-const { utils, getConfig } = require('../../../waterslider')
+const {utils, getConfig} = require('../../../waterslider')
 const path = require('path')
 const fs = require('fs')
 
@@ -15,7 +15,7 @@ class JsInstaller {
             } else {
                 this.values = JSON.parse(json)
             }
-        } catch(e) {
+        } catch (e) {
             this.values = {}
         }
 
@@ -37,7 +37,7 @@ class JsInstaller {
         this.packages.push(name)
     }
 
-    addDevPackage(name){
+    addDevPackage(name) {
         if (utils.checkExistsNpm(name)) {
             return
         }
@@ -69,7 +69,7 @@ class JsInstaller {
         const noUse = this.operator.getNoUse()
         const defaultUse = ['power-assert', 'ava', 'eslint']
         await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))
-    
+
         const webpackInstaller = await this.operator.getInstaller('webpack')
         webpackInstaller.addLoader('\\.jsx?$', [
             {loader: 'babel-loader', options: {sourceMap: true}}
@@ -108,7 +108,7 @@ class JsInstaller {
                 this.operator.addCommand(0, `npm install ${name} -D`)
             })
 
-            await this.operator.writeFile('package.json', JSON.stringify(this.values, null, '  ') + '\n', { isRewritable: true })
+            await this.operator.writeFile('package.json', `${JSON.stringify(this.values, null, '  ')}\n`, {isRewritable: true})
         })
     }
 }

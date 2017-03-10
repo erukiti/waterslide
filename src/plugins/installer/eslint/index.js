@@ -12,7 +12,7 @@ class EslintInstaller {
     static async getInstaller(operator) {
         if (utils.checkExistsNpm('eslint')
             || await operator.checkExists('.eslintignore')
-            || await operator.checkExists('.eslintrc')
+            || await operator.checkExists('.eslintrc.json')
         ) {
             return null
         }
@@ -22,7 +22,7 @@ class EslintInstaller {
 
     async install() {
         const eslintignore = fs.readFileSync(require.resolve('./.eslintignore'))
-        const eslintrc = fs.readFileSync(require.resolve('./.eslintrc'))
+        const eslintrc = fs.readFileSync(require.resolve('./.eslintrc.json'))
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('eslint')
@@ -30,7 +30,7 @@ class EslintInstaller {
         this.operator.addTester('eslint')
 
         await this.operator.writeFile('.eslintignore', eslintignore)
-        await this.operator.writeFile('.eslintrc', eslintrc)
+        await this.operator.writeFile('.eslintrc.json', eslintrc)
     }
 }
 

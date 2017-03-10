@@ -11,7 +11,7 @@ class ElectronIconGenerator {
         await this.operator.getInstaller('electron-icon')
 
         const src = fs.readFileSync(require.resolve('./sample.png'))
-        await this.operator.writeFile(name, src, { type: 'electron-icon' })
+        await this.operator.writeFile(name, src, {type: 'electron-icon'})
     }
 }
 

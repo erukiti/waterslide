@@ -19,7 +19,7 @@ class Command {
                     child.stdout.pipe(process.stdout)
                     child.stderr.pipe(process.stdout)
 
-                    reject(`error '${command}' is failed. ${code}`)
+                    reject(new Error(`error '${command}' is failed. ${code}`))
                 } else {
                     resolve()
                 }

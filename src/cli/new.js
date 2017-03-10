@@ -61,14 +61,14 @@ const setupProject = async (cliUtils, argv) => {
     const envs = parseOpt('use').filter(v => !noUse.includes(v))
 
     if (!setup.operator.getNoOpt().includes('recommend')) {
-        ['editorconfig', 'git'].filter(v => !noUse.includes(v)).forEach(v =>{
+        ['editorconfig', 'git'].filter(v => !noUse.includes(v)).forEach(v => {
             envs.push(v)
         })
     }
 
     const plugin = new Plugin()
-    const klass = plugin.requireProject(projectType)
-    const obj = new klass(setup.operator)
+    const Klass = plugin.requireProject(projectType)
+    const obj = new Klass(setup.operator)
 
     for (let name of envs) {
         await setup.operator.getInstaller(name)
@@ -96,7 +96,7 @@ const newCommand = () => {
                 })
                 .option('no-use', {
                     describe: 'disable install plugin',
-                    type: 'string'                    
+                    type: 'string'
                 })
                 .option('opt', {
                     describe: 'set option',

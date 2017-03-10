@@ -3,7 +3,7 @@
 const path = require('path')
 const process = require('process')
 
-const { getConfig } = require('../../../waterslider')
+const {getConfig} = require('../../../waterslider')
 
 const config = getConfig()
 
@@ -25,7 +25,7 @@ class WebpackBuilder {
 
     _createConfig(filename, target) {
         const rules = config.getLocal('webpack').rules.map(rule => {
-            return { test: new RegExp(rule.test), use: rule.use }
+            return {test: new RegExp(rule.test), use: rule.use}
         })
 
         const reSrc = new RegExp(`^${this.src}/`)
@@ -39,7 +39,7 @@ class WebpackBuilder {
             resolve: {
                 extensions: ['.js', '.jsx']
             },
-            module: { rules },
+            module: {rules},
             devtool: '#source-map',
             target,
             plugins: [

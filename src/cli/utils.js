@@ -17,12 +17,12 @@ class CliUtils {
     _getCaller(depth) {
         const reStackTrace = /at .+ \(([^:]+:[0-9]+:[0-9]+)\)/g
 
-        depth += 2
+        let n = depth + 2
 
-        const { stack }  = new Error()
+        const {stack} = new Error()
         let result
         while ((result = reStackTrace.exec(stack)) !== null) {
-            if (--depth <= 0) {
+            if (--n <= 0) {
                 return path.join(path.basename(path.dirname(result[1])), path.basename(result[1]))
             }
         }
