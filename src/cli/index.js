@@ -22,6 +22,7 @@ const cli = () => {
         .command(require('./new')())
         .command(require('./install')())
         .command(require('./generate')())
+        .command(require('./config')())
         .command(buildCommand('run'))
         .command(buildCommand('build'))
         .command(buildCommand('watch'))

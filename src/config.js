@@ -29,14 +29,6 @@ class Config {
         fs.writeFileSync(filePath, `${JSON.stringify(config, null, '  ')}\n`)
     }
 
-    get(key) {
-        if (this.localConfig[key]) {
-            return this.localConfig[key]
-        } else {
-            return this.globalConfig[key]
-        }
-    }
-
     getLocal(key) {
         return this.localConfig[key]
     }

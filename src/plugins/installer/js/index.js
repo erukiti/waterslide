@@ -91,8 +91,8 @@ class JsInstaller {
         this.values.name = this.values.name || getProjectName()
         this.values.version = this.values.version || '1.0.0'
         this.values.description = this.values.description || ''
-        this.values.author = this.values.author || config.get('author')
-        this.values.license = this.values.license || config.get('license')
+        this.values.author = this.values.author || config.getGlobal('author')
+        this.values.license = this.values.license || config.getGlobal('license')
         this.values.keywords = this.values.keywords || []
         this.values.scripts = this.values.scripts || scripts
         if (!this.values.bin || Object.keys(this.values.bin).length === 0) {
