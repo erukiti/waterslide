@@ -1,6 +1,6 @@
 'use strict'
 
-const { utils } = require('../../../waterslide')
+const {utils} = require('../../../waterslide')
 
 const fs = require('fs')
 

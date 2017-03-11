@@ -47,6 +47,7 @@ class Setup {
             documentInstaller.setDirectory(directory, description)
             if (type) {
                 this.directories[type] = directory
+                config.writeLocal('directories', this.directories)
             }
         }
 
@@ -82,8 +83,11 @@ class Setup {
             return this.installers[name]
         }
 
+        this.operator.isInstalled = name => this.installers[name] !== null
+
         this.operator.setFinalizer = name => {
             this.finalizer = name
+            config.writeLocal('finalizer', this.finalizer)
         }
 
         this.operator.addBuilder = name => {
@@ -91,6 +95,7 @@ class Setup {
                 return
             }
             this.builders.push(name)
+            config.writeLocal('builders', this.builders)
         }
 
         this.operator.addTester = name => {
@@ -99,6 +104,7 @@ class Setup {
             }
 
             this.testers.push(name)
+            config.writeLocal('testers', this.testers)
         }
 
         this.operator.readFile = name => this.fsio.readFile(name)
@@ -106,6 +112,10 @@ class Setup {
         this.operator.checkExists = name => this.fsio.checkExists(name)
         this.operator.writeFile = (name, content, opts = {}) => {
             this.entries.push({path: name, text: content, opts})
+
+            config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {
+                return {path: entry.path, opts: entry.opts}
+            }))
 
             return this.fsio.writeFile(name, content, opts).then(isWrote => {
                 if (isWrote) {
@@ -115,7 +125,10 @@ class Setup {
         }
 
         this.operator.postInstall = cb => this.postInstalls.push(cb)
-        this.operator.setInfo = (title, message) => this.info.push({title, message})
+        this.operator.setInfo = (title, message) => {
+            this.info.push({title, message})
+            config.writeLocal('info', this.info)
+        }
         this.operator.verbose = message => this.cliUtils.verbose(message, 1)
         this.operator.message = message => this.cliUtils.message(message, 1)
         this.operator.error = message => this.cliUtils.error(message, 1)
@@ -131,6 +144,7 @@ class Setup {
         }
 
         this.opt = opt
+        config.writeLocal('opt', this.opt)
     }
 
     setNoOpt(noOpt) {
@@ -163,16 +177,6 @@ class Setup {
         }
 
         await Promise.all(this.postInstalls.map(cb => cb()))
-
-        config.writeLocal('directories', this.directories)
-        config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {
-            return {path: entry.path, opts: entry.opts}
-        }))
-        config.writeLocal('finalizer', this.finalizer)
-        config.writeLocal('builders', this.builders)
-        config.writeLocal('testers', this.testers)
-        config.writeLocal('opt', this.opt)
-        config.writeLocal('info', this.info)
 
         await this.command.execAll(command => this.cliUtils.verbose(command))
     }

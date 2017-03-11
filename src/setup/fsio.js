@@ -12,7 +12,7 @@ class Fsio {
     writeFile(filename, content, opts = {}) {
         return new Promise((resolve, reject) => {
             let buf
-            if (typeof buf === 'string') {
+            if (typeof content === 'string') {
                 buf = new Buffer(content)
             } else {
                 buf = content

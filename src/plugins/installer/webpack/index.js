@@ -18,6 +18,7 @@ class WebpackInstaller {
             return
         }
         this.values.rules.push({test, use})
+        getConfig().writeLocal('webpack', this.values)
     }
 
     async install() {
@@ -25,10 +26,6 @@ class WebpackInstaller {
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('webpack')
         jsInstaller.addDevPackage('babel-loader')
-
-        this.operator.postInstall(() => {
-            getConfig().writeLocal('webpack', this.values)
-        })
     }
 }
 
