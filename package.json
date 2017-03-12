@@ -1,8 +1,8 @@
 {
   "name": "waterslide",
-  "bin": "bin/waterslide",
+  "bin": "bin/ws",
   "version": "0.8.0",
-  "description": "waterslide is easy setting method for JavaScript.",
+  "description": "Waterslide is easy setting method for JavaScript.",
   "main": "src/waterslide.js",
   "scripts": {
     "test": "ava"
@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/erukiti/waterslide/issues"
   },
-  "homepage": "https://github.com/erukiti/waterslide#readme",
+  "homepage": "https://github.com/erukiti/waterslide",
   "dependencies": {
     "babel-preset-power-assert": "^1.0.0",
     "github-api": "^3.0.0",

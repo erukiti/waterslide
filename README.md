@@ -1,12 +1,15 @@
-# waterslide
+# Waterslide
 
-waterslide is a CLI tool that easily sets up a modern JavaScript project and takes care of troublesome compilation (webpack, babel...).
+Waterslide is a CLI tool that easily sets up a modern JavaScript project and takes care of troublesome compilation (webpack, babel...).
 
-## Insatll
+## Install and setup
 
 ```sh
 $ npm install -g waterslide
+$ ws config
 ```
+
+`ws config` is default setting configuration tool.
 
 ## Use
 
@@ -26,6 +29,10 @@ How to excute project:
 $ cd projectDir
 $ npm start
 ```
+
+* `npm start` is run project
+* `npm run build` is build project
+* `npm test` is test project
 
 ## License
 

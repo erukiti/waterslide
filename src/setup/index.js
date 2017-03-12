@@ -72,7 +72,7 @@ class Setup {
                 const klass = plugin.requireInstaller(name)
                 const installer = await klass.getInstaller(this.operator)
                 if (!installer) {
-                    this.cliUtils.warning(`installer ${name} is ignored.`)
+                    this.cliUtils.verbose(`${name} installer is ignored.`)
                     return null
                 }
 

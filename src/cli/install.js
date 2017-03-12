@@ -29,7 +29,10 @@ const install = async (cliUtils, argv) => {
     setup.setNoOpt(parseOpt('noOpt'))
 
     for (let name of argv.pluginNames) {
-        await setup.operator.getInstaller(name)
+        const installer = await setup.operator.getInstaller(name)
+        if (!installer) {
+            cliUtils.error(`${name} is not installed. already installed or installing file is already exists.`)
+        }
     }
 
     await setup.install().catch(e => console.dir(e))
@@ -51,6 +54,11 @@ const installCommand = () => {
                 })
         },
         handler: argv => {
+            if (!config.isExists()) {
+                console.log('If you want to install, you need to setup waterslide')
+                process.exit(1)
+            }
+
             const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
             install(cliUtils, argv).catch(e => console.dir(e))
         }

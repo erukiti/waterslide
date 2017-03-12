@@ -12,6 +12,15 @@ class Config {
         this.localConfig = {}
     }
 
+    isExists() {
+        try {
+            const stat = fs.statSync(path.join(process.cwd(), '.waterslide.json'))
+            return stat && typeof stat !== 'undefined'
+        } catch (e) {
+            return false
+        }
+    }
+
     startLocal() {
         this.localConfigPath = path.join(process.cwd(), '.waterslide.json')
         this.localConfig = this._configRead(this.localConfigPath)
