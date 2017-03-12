@@ -1,9 +1,9 @@
 'use strict'
 
+const fs = require('fs')
 const path = require('path')
 const process = require('process')
 const Mustache = require('mustache')
-const fs = require('fs')
 
 class BrowserGenerator {
     constructor(operator) {
@@ -14,10 +14,10 @@ class BrowserGenerator {
         const dirname = path.dirname(name)
         const prefix = path.basename(name, '.js')
 
-        const templateHtml = fs.readFileSync(require.resolve('./sample.html.mst')).toString()
+        const templateHtml = fs.readFileSync(path.join(__dirname, 'sample.html.mst')).toString()
         const html = Mustache.render(templateHtml, {prefix})
 
-        const sampleJs = fs.readFileSync(require.resolve('./sample.js'))
+        const sampleJs = fs.readFileSync(path.join(__dirname, 'sample.js'))
 
         this.operator.writeFile(path.join(dirname, `${prefix}.html`), html, {type: 'copy'})
         this.operator.writeFile(path.join(dirname, `${prefix}.js`), sampleJs, opts)

@@ -90,6 +90,8 @@ class JsInstaller {
             babelInstaller.addPreset('es2016')
         }
 
+        this.addDevPackage('waterslide')
+
         const noUse = this.operator.getNoUse()
         const defaultUse = ['power-assert', 'ava', 'eslint']
         await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))

@@ -8,14 +8,12 @@ class ReactReduxInstaller {
     constructor(operator) {
         this.operator = operator
 
-        const thisDir = path.dirname(require.resolve('./index.jsx.mst'))
-
         const generator = {
             generate: async (name, opts = {}) => {
                 const prefix = path.basename(name, '.js')
                 const obj = {prefix}
                 const render = async (inFile, outFile, opts2 = {}) => {
-                    const fn = path.join(thisDir, `${inFile}.mst`)
+                    const fn = path.join(__dirname, `${inFile}.mst`)
                     const templ = fs.readFileSync(fn).toString()
                     const content = Mustache.render(templ, obj)
                     await this.operator.writeFile(outFile, content, opts2)

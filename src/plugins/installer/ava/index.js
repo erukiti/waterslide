@@ -1,8 +1,9 @@
 'use strict'
 
-const {utils} = require('../../../waterslide')
-
 const fs = require('fs')
+const path = require('path')
+
+const {utils} = require('../../../waterslide')
 
 class AvaInstaller {
     constructor(operator) {
@@ -20,7 +21,7 @@ class AvaInstaller {
     }
 
     async install() {
-        const testJs = fs.readFileSync(require.resolve('./sample.test.js'))
+        const testJs = fs.readFileSync(path.join(__dirname, 'sample.test.js'))
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('ava')

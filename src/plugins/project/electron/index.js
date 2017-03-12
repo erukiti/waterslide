@@ -1,6 +1,7 @@
 'use strict'
 
 const fs = require('fs')
+const path = require('path')
 
 class ElectronProject {
     constructor(operator) {
@@ -28,9 +29,12 @@ class ElectronProject {
         const iconGenerator = this.operator.getGenerator('electron-icon')
         await iconGenerator.generate('src/app.png')
 
-        const appJsText = fs.readFileSync(require.resolve('./app.js'))
+        const appJsText = fs.readFileSync(path.join(__dirname, 'app.js'))
         await this.operator.writeFile('src/browser/app.js', appJsText, {type: 'copy'})
         await this.operator.writeFile('src/package.json', `${JSON.stringify({'main': 'browser/app.js'}, null, '  ')}\n`, {type: 'copy'})
+
+        const gitInstaller = await this.operator.getInstaller('git')
+        gitInstaller.addIgnore('release/')
     }
 }
 

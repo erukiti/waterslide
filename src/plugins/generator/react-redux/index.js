@@ -1,9 +1,9 @@
 'use strict'
 
+const fs = require('fs')
 const path = require('path')
 const process = require('process')
 const Mustache = require('mustache')
-const fs = require('fs')
 
 class ReactReduxGenerator {
     constructor(operator) {
@@ -24,7 +24,7 @@ class ReactReduxGenerator {
         }
 
         const render = async (inFile, outFile) => {
-            const templ = fs.readFileSync(require.resolve(`./${inFile}.mst`)).toString()
+            const templ = fs.readFileSync(path.join(__dirname, `${inFile}.mst`)).toString()
             const js = Mustache.render(templ, obj)
             await this.operator.writeFile(path.join(name, `${outFile}`), js)
         }

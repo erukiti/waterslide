@@ -2,7 +2,9 @@
 
 const createActions = actions => {
     const obj = {}
-    actions.forEach(action => obj[action] = action)
+    actions.forEach(action => {
+        obj[action] = action
+    })
     return obj
 }
 

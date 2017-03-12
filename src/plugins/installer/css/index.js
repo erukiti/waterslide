@@ -1,8 +1,9 @@
 'use strict'
 
-const {utils} = require('../../../waterslide')
-
 const fs = require('fs')
+const path = require('path')
+
+const {utils} = require('../../../waterslide')
 
 class CssInstaller {
     constructor(operator) {
@@ -17,7 +18,7 @@ class CssInstaller {
     }
 
     async install() {
-        const helpText = fs.readFileSync(require.resolve('./help.txt'))
+        const helpText = fs.readFileSync(path.join(__dirname, 'help.txt'))
         this.operator.setInfo('css', helpText)
 
         const jsInstaller = await this.operator.getInstaller('js')

@@ -1,7 +1,0 @@
-{
-  "presets": [
-    "es2016",
-    "stage-3",
-    "power-assert"
-  ]
-}

@@ -1,6 +1,7 @@
 'use strict'
 
 const fs = require('fs')
+const path = require('path')
 
 const {utils} = require('../../../waterslide')
 
@@ -22,8 +23,8 @@ class MochaInstaller {
     }
 
     async install() {
-        const mochaOptsText = fs.readFileSync(require.resolve('./mocha.opts'))
-        const testJs = fs.readFileSync(require.resolve('./sample.js'))
+        const mochaOptsText = fs.readFileSync(path.join(__dirname, 'mocha.opts'))
+        const testJs = fs.readFileSync(path.join(__dirname, 'sample.js'))
 
         await this.operator.getInstaller('power-assert')
 

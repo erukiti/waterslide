@@ -29,11 +29,6 @@ const cli = () => {
         .command(buildCommand('test'))
         .demandCommand(1, 'Need subcommand.')
         .argv
-
-    // if (process.argv[2] === 'config') {
-    //     const config = new ConfigCli(cliUtils)
-    //     config.run(process.argv.slice(3))
-    // }
 }
 
 module.exports = cli

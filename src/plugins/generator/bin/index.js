@@ -1,8 +1,7 @@
 'use strict'
 
-const yargs = require('yargs')
-
 const fs = require('fs')
+const path = require('path')
 
 class BinGenerator {
     constructor(operator) {
@@ -10,7 +9,7 @@ class BinGenerator {
     }
 
     async generate(name, opts = {}) {
-        const binText = fs.readFileSync(require.resolve('./bin.js'))
+        const binText = fs.readFileSync(path.join(__dirname, 'bin.js'))
         this.operator.writeFile(`bin/${name}`, binText, {mode: 0o755})
 
         const jsInstaller = await this.operator.getInstaller('js')

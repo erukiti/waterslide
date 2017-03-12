@@ -1,6 +1,6 @@
 'use strict'
 
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
 import {{action}} from './action'
 import {{component}} from './component'
@@ -12,7 +12,7 @@ function mapStateToProps(state) {
 }
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
-    const { dispatch } = dispatchProps
+    const {dispatch} = dispatchProps
 
     const action = new {{action}}(dispatch)
 

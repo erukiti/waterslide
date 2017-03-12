@@ -11,9 +11,7 @@ $ ws config
 
 `ws config` is default setting configuration tool.
 
-## Use
-
-How to create project:
+## Create project
 
 ```sh
 $ ws new <target> [projectDir]
@@ -23,7 +21,7 @@ $ ws new <target> [projectDir]
 
 If you omit `projectDir` specification, created a project directory with random name. Even if you do not consider the name of the project, you can easily create a project and experiment.
 
-How to excute project:
+## In project
 
 ```sh
 $ cd projectDir
@@ -33,6 +31,22 @@ $ npm start
 * `npm start` is run project
 * `npm run build` is build project
 * `npm test` is test project
+
+## For example
+
+For example, create React-Redux eletcron project and run the Electron application:
+
+```sh
+$ ws new --use react-redux electron
+$ cd <projectDir>
+$ npm run
+```
+
+Build distribution pacakge of the Electron application:
+
+```sh
+$ npm build
+```
 
 ## License
 

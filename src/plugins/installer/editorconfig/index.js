@@ -1,6 +1,7 @@
 'use strict'
 
 const fs = require('fs')
+const path = require('path')
 
 class EditorconfigInstaller {
     constructor(operator) {
@@ -15,7 +16,7 @@ class EditorconfigInstaller {
     }
 
     async install() {
-        const config = fs.readFileSync(require.resolve('./.editorconfig'))
+        const config = fs.readFileSync(path.join(__dirname, '.editorconfig'))
         await this.operator.writeFile('.editorconfig', config)
     }
 }

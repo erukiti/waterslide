@@ -1,6 +1,7 @@
 'use strict'
 
 const fs = require('fs')
+const path = require('path')
 
 class ElectronIconGenerator {
     constructor(operator) {
@@ -10,7 +11,7 @@ class ElectronIconGenerator {
     async generate(name, opts = {}) {
         await this.operator.getInstaller('electron-icon')
 
-        const src = fs.readFileSync(require.resolve('./sample.png'))
+        const src = fs.readFileSync(path.join(__dirname, 'sample.png'))
         await this.operator.writeFile(name, src, {type: 'electron-icon'})
     }
 }

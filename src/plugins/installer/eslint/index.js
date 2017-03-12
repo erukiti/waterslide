@@ -1,8 +1,9 @@
 'use strict'
 
-const {utils} = require('../../../waterslide')
-
 const fs = require('fs')
+const path = require('path')
+
+const {utils} = require('../../../waterslide')
 
 class EslintInstaller {
     constructor(operator) {
@@ -21,8 +22,8 @@ class EslintInstaller {
     }
 
     async install() {
-        const eslintignore = fs.readFileSync(require.resolve('./.eslintignore'))
-        const eslintrc = fs.readFileSync(require.resolve('./.eslintrc.json'))
+        const eslintignore = fs.readFileSync(path.join(__dirname, '.eslintignore'))
+        const eslintrc = fs.readFileSync(path.join(__dirname, '.eslintrc.json'))
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('eslint')
