@@ -1,7 +1,5 @@
 const test = require('ava')
 
-require('babel-register')
-
 const Command = require('./command')
 
 class MockChildProcess {
@@ -77,7 +75,7 @@ test('child failed exit', async t => {
     const command = new Command(mockChildProcess.getChildProcess())
     const p = command.exec('hoge').catch(e => {
         isThrow = true
-        t.true(e.toString() === 'error \'hoge\' is failed. 1')
+        t.true(e.toString() === 'Error: error \'hoge\' is failed. 1')
     })
 
     mockChildProcess.onStdoutPipe = () => {

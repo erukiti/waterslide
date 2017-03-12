@@ -15,8 +15,12 @@ const charm = createCharm({input: new DummyInput()})
 const prompt = item => {
     return new Promise((resolve, reject) => {
         readPrompt({prompt: item.desc}, (err, result) => {
-            config.writeGlobal(item.name, result)
-            resolve()
+            if (err) {
+                reject(err)
+            } else {
+                config.writeGlobal(item.name, result)
+                resolve()
+            }
         })
     })
 }

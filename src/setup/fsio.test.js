@@ -4,7 +4,6 @@ const test = require('ava')
 const fs = require('fs')
 const path = require('path')
 
-require('babel-register')
 const Fsio = require('./fsio')
 
 let temp = ''

@@ -47,5 +47,10 @@
     "ava": "^0.18.2",
     "eslint": "^3.17.1",
     "webpack": "^2.2.1"
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ]
   }
 }
