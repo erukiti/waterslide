@@ -29,7 +29,9 @@
     "mustache": "^2.3.0",
     "node-sass": "^4.5.0",
     "power-assert": "^1.4.2",
+    "read": "^1.0.7",
     "sillyname": "^0.1.0",
+    "terminal-menu": "^2.1.1",
     "yargs": "^7.0.1"
   },
   "devDependencies": {

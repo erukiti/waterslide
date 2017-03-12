@@ -11,18 +11,40 @@ class JsInstaller {
         try {
             const json = operator.readFileSync('package.json')
             if (!json) {
-                this.values = {}
+                this._init()
             } else {
                 this.values = JSON.parse(json)
             }
         } catch (e) {
-            this.values = {}
+            this._init()
         }
 
         this.packages = []
         this.devPackages = []
-        this.main = ''
-        this.bin = {}
+    }
+
+    _init() {
+        const config = getConfig()
+
+        const getProjectName = () => this.operator.getProjectDir()
+        // FIXME: project dir -> project name
+
+        this.values = {
+            main: '',
+            name: getProjectName(),
+            version: '0.0.1',
+            description: '',
+            author: config.getAuthor(),
+            license: config.getGlobal('license'),
+            keywords: [],
+            scripts: {
+                start: 'ws run',
+                build: 'ws build',
+                watch: 'ws watch',
+                test: 'ws test'
+            },
+            bin: {},
+        }
     }
 
     static getInstaller(operator) {
@@ -35,6 +57,7 @@ class JsInstaller {
         }
 
         this.packages.push(name)
+        this.operator.addCommand(0, `npm install ${name} -S`)
     }
 
     addDevPackage(name) {
@@ -43,14 +66,15 @@ class JsInstaller {
         }
 
         this.devPackages.push(name)
+        this.operator.addCommand(0, `npm install ${name} -D`)
     }
 
     addBin(binPath) {
-        this.bin[path.basename(binPath)] = binPath
+        this.values.bin[path.basename(binPath)] = binPath
     }
 
     setMain(name) {
-        this.main = name
+        this.values.main = name
     }
 
     async install() {
@@ -75,39 +99,7 @@ class JsInstaller {
             {loader: 'babel-loader', options: {sourceMap: true}}
         ])
 
-        const getProjectName = () => this.operator.getProjectDir()
-        // FIXME: project dir -> project name
-
-        const scripts = {
-            start: 'ws run',
-            build: 'ws build',
-            watch: 'ws watch',
-            test: 'ws test'
-        }
-
-        const config = getConfig()
-
-        this.values.main = this.values.main || this.main
-        this.values.name = this.values.name || getProjectName()
-        this.values.version = this.values.version || '1.0.0'
-        this.values.description = this.values.description || ''
-        this.values.author = this.values.author || config.getGlobal('author')
-        this.values.license = this.values.license || config.getGlobal('license')
-        this.values.keywords = this.values.keywords || []
-        this.values.scripts = this.values.scripts || scripts
-        if (!this.values.bin || Object.keys(this.values.bin).length === 0) {
-            this.values.bin = this.bin
-        }
-
         this.operator.postInstall(async () => {
-            this.packages.forEach(name => {
-                this.operator.addCommand(0, `npm install ${name} -S`)
-            })
-
-            this.devPackages.forEach(name => {
-                this.operator.addCommand(0, `npm install ${name} -D`)
-            })
-
             await this.operator.writeFile('package.json', `${JSON.stringify(this.values, null, '  ')}\n`, {isRewritable: true})
         })
     }

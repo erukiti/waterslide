@@ -37,12 +37,23 @@ class Config {
         return this.globalConfig[key]
     }
 
-    getLocalAll() {
-        return this.localConfig
-    }
+    getAuthor() {
+        if (this.globalConfig.author) {
+            return this.globalConfig.author
+        } else {
+            const author = {}
+            if (this.globalConfig.name) {
+                author.name = this.globalConfig.name
+            }
+            if (this.globalConfig.email) {
+                author.email = this.globalConfig.email
+            }
+            if (this.globalConfig.homepage) {
+                author.url = this.globalConfig.homepage
+            }
 
-    getGlobalAll() {
-        return this.globalConfig
+            return author
+        }
     }
 
     writeLocal(key, value) {
