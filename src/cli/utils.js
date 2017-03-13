@@ -73,6 +73,11 @@ class CliUtils {
         }
     }
 
+    /**
+     *
+     * @param {string} [mesg]
+     * @param {number} [depth]
+     */
     verbose(mesg = '', depth = 0) {
         let header = ''
         const caller = this._getCaller(depth + 1)
@@ -91,6 +96,11 @@ class CliUtils {
         }
     }
 
+    /**
+     *
+     * @param {string} [mesg]
+     * @param {number} [depth]
+     */
     debug(mesg = '', depth = 0) {
         if (this.isDebug) {
             const header = `debug ${this._getCaller(depth + 1)}`
@@ -98,6 +108,11 @@ class CliUtils {
         }
     }
 
+    /**
+     *
+     * @param {string} [mesg]
+     * @param {number} [depth]
+     */
     message(mesg = '', depth = 0) {
         if (this.isMessage) {
             let header = ''
@@ -109,6 +124,11 @@ class CliUtils {
         }
     }
 
+    /**
+     *
+     * @param {string} [mesg]
+     * @param {number} [depth]
+     */
     warning(mesg = '', depth = 0) {
         if (this.isWarning) {
             let header = ''

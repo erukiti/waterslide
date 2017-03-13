@@ -81,12 +81,11 @@ const setupProject = async (cliUtils, argv) => {
     cliUtils.message()
     cliUtils.message(`  project \x1b[32m${projectDir}\x1b[m was created.`)
     cliUtils.message(`  see. \x1b[36m${projectDir}/README.md\x1b[m`)
-
 }
 
 const newCommand = () => {
     return {
-        command: 'new <projectType> [options] [projectDir]',
+        command: 'new <projectType> [projectDir]',
         describe: 'create a new project',
         builder: yargs => {
             yargs

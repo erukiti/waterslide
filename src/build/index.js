@@ -6,7 +6,14 @@ const config = require('../config')
 const Plugin = require('../plugin')
 const plugin = new Plugin()
 
+const Builder = require('./builder')
+
 class Build {
+    /**
+     *
+     * @param {CliUtis} cliUtils
+     * @param {*} opts
+     */
     constructor(cliUtils, opts) {
         config.startLocal()
 
@@ -25,52 +32,37 @@ class Build {
             const Klass = plugin.requireBuilder(name)
             return new Klass(this.builder)
         })
+
+        this.builder = new Builder(this)
     }
 
-    _createBuilder() {
-        this.builder = {}
-        this.builder.message = mesg => this.cliUtils.message(mesg, 1)
-        this.builder.verbose = mesg => this.cliUtils.verbose(mesg, 1)
-        this.builder.debug = mesg => this.cliUtils.debug(mesg, 1)
-        this.builder.error = err => this.cliUtils.error(err, 1)
-        this.builder.compileError = details => {
-            this.cliUtils.message('compile error')
-            this.cliUtils.error(details, 1)
+    _compiled() {
+        if (this.builders.find(builder => !builder.isCompiled)) {
+            return
         }
-        this.builder.warning = details => {
-            this.cliUtils.message('compile warning')
-            this.cliUtils.error(details, 1)
-        }
-        this.builder.getDirectory = type => config.getLocal('directories')[type]
-        this.builder.compiled = () => {
-            if (this.builders.find(builder => !builder.isCompiled)) {
+
+        this._test()
+
+        if (this.isBuild || this.isRun) {
+            // assert if (config.getLocal('finalizer')) {
+
+            if (!config.getLocal('finalizer')) {
+                this.cliUtils.error('build complete.')
                 return
             }
 
-            this._test()
+            if (!this.finalizer) {
+                const Klass = plugin.requireFinalizer(config.getLocal('finalizer'))
+                this.finalizer = new Klass(this.builder)
+            }
+            // assertFalse(this.isBuild && this.isRun)
 
-            if (this.isBuild || this.isRun) {
-                // assert if (config.getLocal('finalizer')) {
-
-                if (!config.getLocal('finalizer')) {
-                    this.cliUtils.error('build complete.')
-                    return
-                }
-
-                if (!this.finalizer) {
-                    const Klass = plugin.requireFinalizer(config.getLocal('finalizer'))
-                    this.finalizer = new Klass(this.builder)
-                }
-                // assertFalse(this.isBuild && this.isRun)
-
-                if (this.isBuild) {
-                    this.finalizer.build()
-                } else if (this.isRun) {
-                    this.finalizer.run()
-                }
+            if (this.isBuild) {
+                this.finalizer.build()
+            } else if (this.isRun) {
+                this.finalizer.run()
             }
         }
-
     }
 
     _test() {
