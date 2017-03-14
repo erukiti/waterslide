@@ -25,8 +25,8 @@ class ReactReduxGenerator {
 
         const render = async (inFile, outFile) => {
             const templ = fs.readFileSync(path.join(__dirname, `${inFile}.mst`)).toString()
-            const js = Mustache.render(templ, obj)
-            await this.operator.writeFile(path.join(name, `${outFile}`), js)
+            const content = Mustache.render(templ, obj)
+            await this.operator.writeFile(path.join(name, `${outFile}`), content)
         }
 
         await render('action.js', 'action.js')

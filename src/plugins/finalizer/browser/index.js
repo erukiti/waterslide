@@ -2,6 +2,7 @@
 
 const open = require('open')
 const path = require('path')
+
 class BrowserFinalizer {
     constructor(builder) {
         this.builder = builder
@@ -9,7 +10,6 @@ class BrowserFinalizer {
     }
 
     run() {
-        // FIXME: 一度openしたら再度openしなくていいのでは？
         open(`file:///${path.resolve('./${this.dest}/index.html')}`)
     }
 

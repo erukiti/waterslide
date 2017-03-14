@@ -53,8 +53,6 @@ const generateCommand = () => {
                 process.exit(1)
             }
 
-            console.log(1)
-
             const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
             generate(cliUtils, argv).catch(e => console.dir(e))
         }

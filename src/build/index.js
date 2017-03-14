@@ -17,7 +17,7 @@ class Build {
     constructor(cliUtils, opts) {
         config.startLocal()
 
-        this._createBuilder()
+        this.builder = new Builder(this)
         this.cliUtils = cliUtils
 
         this.isBuild = opts.build
@@ -32,8 +32,6 @@ class Build {
             const Klass = plugin.requireBuilder(name)
             return new Klass(this.builder)
         })
-
-        this.builder = new Builder(this)
     }
 
     _compiled() {
@@ -47,7 +45,7 @@ class Build {
             // assert if (config.getLocal('finalizer')) {
 
             if (!config.getLocal('finalizer')) {
-                this.cliUtils.error('build complete.')
+                this.cliUtils.message('build complete.')
                 return
             }
 
@@ -60,6 +58,7 @@ class Build {
             if (this.isBuild) {
                 this.finalizer.build()
             } else if (this.isRun) {
+                this.cliUtils.message('run application')
                 this.finalizer.run()
             }
         }

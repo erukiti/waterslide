@@ -187,7 +187,7 @@ class Operator {
 
         return this.setup.fsio.writeFile(name, content, opts).then(isWrote => {
             if (isWrote) {
-                this.setup.cliUtils.verbose(`wrote ${name}`, 1)
+                this.setup.cliUtils.message(`wrote ${name}`, 1)
             }
         })
     }

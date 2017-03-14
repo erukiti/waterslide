@@ -51,22 +51,22 @@ class JsInstaller {
         return new this(operator)
     }
 
-    addPackage(name) {
+    addPackage(name, priorityAddition = 0) {
         if (utils.checkExistsNpm(name)) {
             return
         }
 
         this.packages.push(name)
-        this.operator.addCommand(0, `npm install ${name} -S`)
+        this.operator.addCommand(3 + priorityAddition, `npm install ${name} -S`)
     }
 
-    addDevPackage(name) {
+    addDevPackage(name, priorityAddition = 0) {
         if (utils.checkExistsNpm(name)) {
             return
         }
 
         this.devPackages.push(name)
-        this.operator.addCommand(0, `npm install ${name} -D`)
+        this.operator.addCommand(3 + priorityAddition, `npm install ${name} -D`)
     }
 
     addBin(binPath) {
