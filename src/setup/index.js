@@ -8,6 +8,7 @@ const config = getConfig()
 const plugin = new Plugin()
 const Fsio = require('./fsio')
 const Command = require('./command')
+const Operator = require('./operator')
 
 class Setup {
     constructor(cliUtils) {
@@ -30,108 +31,9 @@ class Setup {
         this.opt = config.getLocal('opt') || []
         this.info = config.getLocal('info') || []
 
-        this._createOperator()
+        this.operator = new Operator(this)
 
         this.operator.addBuilder('copy')
-    }
-
-    _createOperator() {
-        this.operator = {}
-        this.operator.getOpt = () => this.opt
-        this.operator.getNoOpt = () => this.noOpt
-        this.operator.getNoUse = () => this.noUse
-        this.operator.getProjectDir = () => this.projectDir
-        this.operator.addCommand = (priority, command) => this.command.addCommand(priority, command)
-        this.operator.setDirectory = async (directory, type, description) => {
-            const documentInstaller = await this.operator.getInstaller('document')
-            documentInstaller.setDirectory(directory, description)
-            if (type) {
-                this.directories[type] = directory
-                config.writeLocal('directories', this.directories)
-            }
-        }
-
-        this.operator.getGenerator = name => {
-            if (!this.generators[name]) {
-                const Generator = plugin.requireGenerator(name)
-                this.generators[name] = new Generator(this.operator)
-            }
-            return this.generators[name]
-        }
-
-        this.operator.replaceGenerator = (name, generator) => {
-            if (this.generators[name]) {
-                this.operator.error(`${name} generator is already used.`)
-            } else {
-                this.generators[name] = generator
-            }
-        }
-
-        this.operator.getInstaller = async name => {
-            if (!this.installers[name]) {
-                const klass = plugin.requireInstaller(name)
-                const installer = await klass.getInstaller(this.operator)
-                if (!installer) {
-                    this.cliUtils.verbose(`${name} installer is ignored.`)
-                    return null
-                }
-
-                this.cliUtils.verbose(`installer: ${name}`, 1)
-                this.installers[name] = installer
-            }
-
-            return this.installers[name]
-        }
-
-        this.operator.isInstalled = name => this.installers[name] !== null
-
-        this.operator.setFinalizer = name => {
-            this.finalizer = name
-            config.writeLocal('finalizer', this.finalizer)
-        }
-
-        this.operator.addBuilder = name => {
-            if (this.builders.includes(name)) {
-                return
-            }
-            this.builders.push(name)
-            config.writeLocal('builders', this.builders)
-        }
-
-        this.operator.addTester = name => {
-            if (this.testers.includes(name)) {
-                return
-            }
-
-            this.testers.push(name)
-            config.writeLocal('testers', this.testers)
-        }
-
-        this.operator.readFile = name => this.fsio.readFile(name)
-        this.operator.readFileSync = name => this.fsio.readFileSync(name)
-        this.operator.checkExists = name => this.fsio.checkExists(name)
-        this.operator.writeFile = (name, content, opts = {}) => {
-            this.entries.push({path: name, text: content, opts})
-
-            config.writeLocal('entries', this.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {
-                return {path: entry.path, opts: entry.opts}
-            }))
-
-            return this.fsio.writeFile(name, content, opts).then(isWrote => {
-                if (isWrote) {
-                    this.cliUtils.verbose(`wrote ${name}`, 1)
-                }
-            })
-        }
-
-        this.operator.postInstall = cb => this.postInstalls.push(cb)
-        this.operator.setInfo = (title, message) => {
-            this.info.push({title, message})
-            config.writeLocal('info', this.info)
-        }
-        this.operator.verbose = message => this.cliUtils.verbose(message, 1)
-        this.operator.message = message => this.cliUtils.message(message, 1)
-        this.operator.error = message => this.cliUtils.error(message, 1)
     }
 
     setProjectDir(name) {

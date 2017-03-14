@@ -64,9 +64,10 @@ class Builder {
     /**
      *
      * @param {string} type
+     * @returns {string}
      */
     getDirectory(type) {
-        config.getLocal('directories')[type]
+        return config.getLocal('directories')[type]
     }
 
     compiled() {
