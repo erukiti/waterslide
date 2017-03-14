@@ -12,6 +12,13 @@ class Builder {
     }
 
     /**
+     * @return {string} environment variable - NODE_ENV
+     */
+    getEnv() {
+        return this.parent.env
+    }
+
+    /**
      *
      * @param {string} mesg
      */

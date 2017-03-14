@@ -44,7 +44,7 @@ class WebpackBuilder {
             target,
             plugins: [
                 new this.webpack.DefinePlugin({
-                    'process.env.NODE_ENV': JSON.stringify('production')
+                    'process.env.NODE_ENV': JSON.stringify(this.builder.getEnv())
                 })
             ],
             stats: {
