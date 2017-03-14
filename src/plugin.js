@@ -9,31 +9,27 @@ class Plugin {
     }
 
     requireProject(name) {
-        return require(`./plugins/project/${name}`)
+        return require(`./plugins/${name}`).project
     }
 
     requireInstaller(name) {
-        return require(`./plugins/installer/${name}`)
+        return require(`./plugins/${name}`).installer
     }
 
     requireGenerator(name) {
-        return require(`./plugins/generator/${name}`)
-    }
-
-    findGenerator() {
-        return ['browser', 'bin']
+        return require(`./plugins/${name}`).generator
     }
 
     requireFinalizer(name) {
-        return require(`./plugins/finalizer/${name}`)
+        return require(`./plugins/${name}`).finalizer
     }
 
     requireBuilder(name) {
-        return require(`./plugins/builder/${name}`)
+        return require(`./plugins/${name}`).builder
     }
 
     requireTester(name) {
-        return require(`./plugins/tester/${name}`)
+        return require(`./plugins/${name}`).tester
     }
 }
 
