@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/plugins/riot-loader/riot-index.js"],"names":["riot","require","mount"],"mappings":"AAAA,MAAMA,OAAOC,QAAQ,MAAR,CAAb;AACAA,QAAQ,WAAR;AACAD,KAAKE,KAAL,CAAW,GAAX","file":"riot-index.js","sourcesContent":["const riot = require('riot')\nrequire('./app.tag')\nriot.mount('*')\n"]}

@@ -36,6 +36,7 @@ const install = async (cliUtils, argv) => {
     }
 
     await setup.install().catch(e => console.dir(e))
+    cliUtils.message('install finish.')
 }
 
 const installCommand = () => {

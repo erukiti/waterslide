@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/plugins/browser/sample.js"],"names":["div","document","getElementById","outerHTML"],"mappings":"AAAA;;AAEA,MAAMA,MAAMC,SAASC,cAAT,CAAwB,MAAxB,CAAZ;AACAF,IAAIG,SAAJ,GAAgB,iBAAhB","file":"sample.js","sourcesContent":["'use strict'\n\nconst div = document.getElementById('root')\ndiv.outerHTML = '<div>HOGE</div>'\n"]}

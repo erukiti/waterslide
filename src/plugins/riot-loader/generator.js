@@ -4,7 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const Mustache = require('mustache')
 
-class RiotGenerator {
+class RiotLoaderGenerator {
     constructor(operator) {
         this.operator = operator
     }
@@ -24,4 +24,4 @@ class RiotGenerator {
     }
 }
 
-module.exports = RiotGenerator
+module.exports = RiotLoaderGenerator

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/plugins/copy/index.js"],"names":["module","exports","builder","require"],"mappings":"AAAA;;AAEAA,OAAOC,OAAP,GAAiB;AACbC,aAASC,QAAQ,WAAR;AADI,CAAjB","file":"index.js","sourcesContent":["'use strict'\n\nmodule.exports = {\n    builder: require('./builder')\n}\n"]}

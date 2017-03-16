@@ -22,8 +22,8 @@ class EslintInstaller {
     }
 
     async install() {
-        const eslintignore = fs.readFileSync(path.join(__dirname, '.eslintignore'))
-        const eslintrc = fs.readFileSync(path.join(__dirname, '.eslintrc.json'))
+        const eslintignore = fs.readFileSync(path.join(__dirname, 'eslintignore'))
+        const eslintrc = fs.readFileSync(path.join(__dirname, 'eslintrc.json'))
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('eslint')

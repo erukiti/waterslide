@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/plugins/document/index.js"],"names":["module","exports","installer","require"],"mappings":"AAAA;;AAEAA,OAAOC,OAAP,GAAiB;AACbC,eAAWC,QAAQ,aAAR;AADE,CAAjB","file":"index.js","sourcesContent":["'use strict'\n\nmodule.exports = {\n    installer: require('./installer')\n}\n"]}

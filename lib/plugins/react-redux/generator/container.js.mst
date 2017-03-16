@@ -1,0 +1,24 @@
+'use strict'
+
+import {connect} from 'react-redux'
+
+import {{action}} from './action'
+import {{component}} from './component'
+
+function mapStateToProps(state) {
+    return {
+        count: state.{{name}}.count
+    }
+}
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+    const {dispatch} = dispatchProps
+
+    const action = new {{action}}(dispatch)
+
+    return Object.assign({}, stateProps, {
+        add: () => action.add()
+    })
+}
+
+export default connect(mapStateToProps, null, mergeProps)({{component}})

@@ -37,7 +37,7 @@ class WebpackBuilder {
                 filename: path.basename(filename.replace(/\.[a-z]+$/, '.js'))
             },
             resolve: {
-                extensions: ['.js', '.jsx']
+                extensions: ['.js', '.jsx', 'ts', 'tsx']
             },
             module: {rules},
             devtool: '#source-map',
@@ -76,6 +76,9 @@ class WebpackBuilder {
             this.builder.verbose(`webpack: ${entry.path} (${entry.opts.type})`)
             return this._createConfig(entry.path, entry.opts.type)
         })
+
+        const fs = require('fs')
+        fs.writeFileSync('webpack.config.json', JSON.stringify(conf[0], null, '  '))
 
         return this.webpack(conf)
     }

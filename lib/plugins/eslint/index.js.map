@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/plugins/eslint/index.js"],"names":["module","exports","installer","require","tester"],"mappings":"AAAA;;AAEAA,OAAOC,OAAP,GAAiB;AACbC,eAAWC,QAAQ,aAAR,CADE;AAEbC,YAAQD,QAAQ,UAAR;AAFK,CAAjB","file":"index.js","sourcesContent":["'use strict'\n\nmodule.exports = {\n    installer: require('./installer'),\n    tester: require('./tester')\n}\n"]}

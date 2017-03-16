@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/plugins/node/index.js"],"names":["module","exports","finalizer","require","project"],"mappings":"AAAA;;AAEAA,OAAOC,OAAP,GAAiB;AACbC,eAAWC,QAAQ,aAAR,CADE;AAEbC,aAASD,QAAQ,WAAR;AAFI,CAAjB","file":"index.js","sourcesContent":["'use strict'\n\nmodule.exports = {\n    finalizer: require('./finalizer'),\n    project: require('./project'),\n}\n"]}

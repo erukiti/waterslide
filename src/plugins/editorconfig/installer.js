@@ -16,7 +16,7 @@ class EditorconfigInstaller {
     }
 
     async install() {
-        const config = fs.readFileSync(path.join(__dirname, '.editorconfig'))
+        const config = fs.readFileSync(path.join(__dirname, 'editorconfig'))
         await this.operator.writeFile('.editorconfig', config)
     }
 }

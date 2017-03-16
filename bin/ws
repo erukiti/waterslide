@@ -1,4 +1,5 @@
 #!/usr/bin/env node
 
-const waterslide = require('../src/waterslide')
+const waterslide = require('../lib/waterslide')
+// const waterslide = require('../src/waterslide')
 waterslide.cli()

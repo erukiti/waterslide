@@ -5,10 +5,10 @@
   },
   "version": "0.8.7",
   "description": "Waterslide is easy setting method for JavaScript.",
-  "main": "src/waterslide.js",
+  "main": "lib/waterslide.js",
   "scripts": {
     "test": "ava",
-    "build": "babel -d dist src"
+    "build": "babel src --out-dir lib --copy-files -s --presets es2016,stage-3 --plugins unassert"
   },
   "repository": {
     "type": "git",
@@ -26,25 +26,29 @@
   },
   "homepage": "https://github.com/erukiti/waterslide",
   "dependencies": {
-    "babel-plugin-unassert": "^2.1.2",
-    "babel-register": "^6.23.0",
-    "babel-preset-es2016": "^6.22.0",
-    "babel-preset-stage-3": "^6.22.0",
-    "babel-preset-power-assert": "^1.0.0",
-    "power-assert": "^1.4.2",
     "github-api": "^3.0.0",
+    "icon-gen": "^1.0.7",
+    "jimp": "^0.2.27",
     "mkdirp": "^0.5.1",
     "mustache": "^2.3.0",
     "node-sass": "^4.5.0",
     "open": "0.0.5",
+    "power-assert": "^1.4.2",
     "read": "^1.0.7",
     "sillyname": "^0.1.0",
     "terminal-menu": "^2.1.1",
     "yargs": "^7.0.1"
   },
   "devDependencies": {
-    "babel-eslint": "^7.1.1",
     "ava": "^0.18.2",
+    "babel-cli": "^6.24.0",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.4.0",
+    "babel-plugin-unassert": "^2.1.2",
+    "babel-preset-es2016": "^6.22.0",
+    "babel-preset-power-assert": "^1.0.0",
+    "babel-preset-stage-3": "^6.22.0",
+    "babel-register": "^6.23.0",
     "eslint": "^3.17.1",
     "webpack": "^2.2.1"
   },

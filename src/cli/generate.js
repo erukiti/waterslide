@@ -30,6 +30,7 @@ const generate = async (cliUtils, argv) => {
     await setup.operator.getGenerator(argv.generatorName).generate(argv.args[0])
 
     await setup.install().catch(e => console.dir(e))
+    cliUtils.message('generate finish.')
 }
 
 const generateCommand = () => {

@@ -14,7 +14,14 @@ class WebpackInstaller {
     }
 
     addLoader(test, use) {
-        if (this.values.rules.find(value => value.test === test)) {
+        const found = this.values.rules.findIndex(value => value.test === test)
+        if (found !== -1) {
+            use.forEach(({loader, options}) => {
+                if (!this.values.rules[found].use.find(value => value.loader === loader)) {
+                    this.values.rules[found].use.push({loader, options, exclude: 'node_modules'})
+                }
+            })
+
             return
         }
         this.values.rules.push({test, use})

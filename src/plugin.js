@@ -5,7 +5,11 @@ const fs = require('fs')
 
 class Plugin {
     requireLocal(name) {
-        return require(`${process.cwd()}/node_modules/${name}`)
+        try {
+            return require(`${process.cwd()}/node_modules/${name}`)
+        } catch (e) {
+            return require(name)
+        }
     }
 
     requireProject(name) {

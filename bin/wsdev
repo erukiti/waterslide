@@ -1,0 +1,9 @@
+#! /usr/bin/env node
+
+require('babel-register')({
+    presets: ['es2016', 'stage-3', 'power-assert'],
+    plugins: [],
+})
+
+const waterslide = require('../src/waterslide.js')
+waterslide.cli()

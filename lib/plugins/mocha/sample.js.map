@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/plugins/mocha/sample.js"],"names":["describe","it"],"mappings":";;AAEAA,SAAS,MAAT,EAAiB,MAAM;AACnBC,OAAG,MAAH,EAAW,MAAM,CAEhB,CAFD;AAGH,CAJD","file":"sample.js","sourcesContent":["const assert = require('power-assert')\n\ndescribe('test', () => {\n    it('hoge', () => {\n        assert(1 + 1 === 2)\n    })\n})\n"]}
