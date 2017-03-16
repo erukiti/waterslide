@@ -34,7 +34,6 @@ class RiotLoaderInstaller {
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addPackage('riot')
         jsInstaller.addDevPackage('tag-loader')
-        // jsInstaller.addDevPackage('riotjs-loader', 1)
 
         const webpackInstaller = await this.operator.getInstaller('webpack')
         webpackInstaller.addLoader('\\.tag', [

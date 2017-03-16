@@ -21,6 +21,8 @@ class JsInstaller {
 
         this.packages = []
         this.devPackages = []
+
+        this.isYarn = this.operator.getOpt().includes('yarn')
     }
 
     _init() {
@@ -51,22 +53,20 @@ class JsInstaller {
         return new this(operator)
     }
 
-    addPackage(name, priorityAddition = 0) {
+    addPackage(name) {
         if (utils.checkExistsNpm(name)) {
             return
         }
 
         this.packages.push(name)
-        this.operator.addCommand(3 + priorityAddition, `npm install ${name} -S`)
     }
 
-    addDevPackage(name, priorityAddition = 0) {
+    addDevPackage(name) {
         if (utils.checkExistsNpm(name)) {
             return
         }
 
         this.devPackages.push(name)
-        this.operator.addCommand(3 + priorityAddition, `npm install ${name} -D`)
     }
 
     addBin(binPath) {
@@ -103,6 +103,24 @@ class JsInstaller {
 
         this.operator.postInstall(async () => {
             await this.operator.writeFile('package.json', `${JSON.stringify(this.values, null, '  ')}\n`, {isRewritable: true})
+
+
+            if (this.isYarn) {
+                if (this.packages.length > 0) {
+                    this.operator.addCommand(3, `yarn add ${this.packages.join(' ')} -S`)
+                }
+                if (this.devPackages.length > 0) {
+                    this.operator.addCommand(3, `yarn add ${this.devPackages.join(' ')} -D`)
+                }
+            } else {
+                if (this.packages.length > 0) {
+                    this.operator.addCommand(3, `npm i ${this.packages.join(' ')} -S`)
+                }
+                if (this.devPackages.length > 0) {
+                    this.operator.addCommand(3, `npm i ${this.devPackages.join(' ')} -D`)
+                }
+            }
+
         })
     }
 }
