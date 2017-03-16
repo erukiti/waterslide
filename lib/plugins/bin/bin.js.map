@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../src/plugins/bin/bin.js"],"names":["console","log"],"mappings":";;AAEAA,QAAQC,GAAR,CAAY,2BAAZ","file":"bin.js","sourcesContent":["\n\nconsole.log('Hello, Node.js bin World.')\n"]}

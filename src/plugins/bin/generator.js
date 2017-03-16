@@ -9,7 +9,7 @@ class BinGenerator {
     }
 
     async generate(name, opts = {}) {
-        const binText = fs.readFileSync(path.join(__dirname, 'bin.js'))
+        const binText = fs.readFileSync(path.join(__dirname, 'sample.bin.js'))
         this.operator.writeFile(`bin/${name}`, binText, {mode: 0o755})
 
         const jsInstaller = await this.operator.getInstaller('js')

@@ -28,6 +28,7 @@ class EslintInstaller {
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('eslint')
         jsInstaller.addDevPackage('babel-eslint')
+        jsInstaller.addDevPackage('espower-babel')
         this.operator.addTester('eslint')
 
         await this.operator.writeFile('.eslintignore', eslintignore)

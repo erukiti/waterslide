@@ -12,9 +12,9 @@ class MochaInstaller {
 
     static async getInstaller(operator) {
         if (utils.checkExistsNpm('mocha')
-            || await this.operator.checkExists('test/mocha.opts')
-            || await this.operator.checkExists('test/test-helper.js')
-            || await this.operator.checkExists('test/test.js')
+            || await operator.checkExists('test/mocha.opts')
+            || await operator.checkExists('test/test-helper.js')
+            || await operator.checkExists('test/test.js')
         ) {
             return null
         }

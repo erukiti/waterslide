@@ -8,7 +8,7 @@
   "main": "lib/waterslide.js",
   "scripts": {
     "test": "ava",
-    "build": "babel src --out-dir lib --copy-files -s --presets es2016,stage-3 --plugins unassert"
+    "build": "node -e \"require('ncp').ncp('./src', './lib')\" && babel src --out-dir lib -s --presets es2016,stage-3 --plugins unassert --ignore sample"
   },
   "repository": {
     "type": "git",
@@ -50,6 +50,7 @@
     "babel-preset-stage-3": "^6.22.0",
     "babel-register": "^6.23.0",
     "eslint": "^3.17.1",
+    "ncp": "^2.0.0",
     "webpack": "^2.2.1"
   },
   "ava": {

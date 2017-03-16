@@ -16,8 +16,8 @@ class RiotLoaderInstaller {
                 }
 
                 const dir = path.dirname(name)
-                await render('riot-index.html', `${dir}/index.html`, {type: 'copy'})
-                await render('riot-index.js', `${dir}/index.js`, opts)
+                await render('sample.html', `${dir}/index.html`, {type: 'copy'})
+                await render('sample.js', `${dir}/index.js`, opts)
 
                 await this.operator.getGenerator('riot-loader').generate(`${dir}/app.tag`)
             }

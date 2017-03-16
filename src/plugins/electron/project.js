@@ -29,7 +29,7 @@ class ElectronProject {
         const iconGenerator = this.operator.getGenerator('electron-icon')
         await iconGenerator.generate('src/app.png')
 
-        const appJsText = fs.readFileSync(path.join(__dirname, 'app.js'))
+        const appJsText = fs.readFileSync(path.join(__dirname, 'sample.app.js'))
         await this.operator.writeFile('src/browser/app.js', appJsText, {type: 'copy'})
         await this.operator.writeFile('src/package.json', `${JSON.stringify({'main': 'browser/app.js'}, null, '  ')}\n`, {type: 'copy'})
 
