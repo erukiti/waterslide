@@ -1,4 +1,5 @@
 'use strict'
+// @flow
 
 const {EventEmitter} = require('events')
 
@@ -7,14 +8,47 @@ const Plugin = require('../plugin')
 const plugin = new Plugin()
 
 const Builder = require('./builder')
+const CliUtils = require('../cli/utils')
+
+import type {Entry} from '../config'
+
+export interface Tester {
+    test(): Object
+}
+
+export interface Builder2 {
+    constructor(builder: Builder): Builder2,
+    getTypes(): Array<string>,
+    run(entries: Array<Entry>): any,
+    watch(entries: Array<Entry>): any,
+    isCompiled: boolean
+}
+
+export interface Finalizer {
+    constructor(builder: Builder): Builder2,
+    run(): any,
+    build(): any
+}
 
 class Build {
+    cliUtils: CliUtils
+    builder: Builder
+    isBuild: boolean
+    isRun: boolean
+    isTest: boolean
+    isWatch: boolean
+    env: string
+    entries: Array<Entry>
+    testers: Array<Tester>
+    builders: Array<Builder2>
+    finalizer: Finalizer
+
     /**
      *
      * @param {CliUtis} cliUtils
      * @param {*} opts
      */
-    constructor(cliUtils, opts) {
+    constructor(cliUtils: CliUtils, opts: Object) {
         config.startLocal()
 
         this.builder = new Builder(this)
@@ -105,9 +139,14 @@ class Build {
         }
 
         this.builders.forEach(builder => {
-            const entries = this.entries.filter(entry =>
-                entry.opts && builder.getTypes().includes(entry.opts.type)
-            )
+            const entries = this.entries.filter(entry => {
+                if (entry.opts && entry.opts.type) {
+                    const opts = entry.opts     // Flow work around
+                    return builder.getTypes().includes(opts.type)
+                } else {
+                    return false
+                }
+            })
 
             if (this.isWatch) {
                 builder.watch(entries)

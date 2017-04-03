@@ -1,4 +1,5 @@
 'use strict'
+// @flow
 
 const process = require('process')
 const fs = require('fs')
@@ -9,9 +10,48 @@ const plugin = new Plugin()
 const Fsio = require('./fsio')
 const Command = require('./command')
 const Operator = require('./operator')
+const CliUtils = require('../cli/utils')
+
+import type {Entry} from '../config'
+
+export interface Generator {
+    generate(name: string, opts?: Object): void
+}
+
+// FIXME
+export type Installer = any
+
+// export interface Installer {
+//     install: () => {},
+//     setDirectory?: (path: string, description?: string) => void
+// }
+
+type Info = {
+    title: string,
+    message: string
+}
+
 
 class Setup {
-    constructor(cliUtils) {
+    fsio: Fsio
+    command: Command
+    cliUtils: CliUtils
+    projectDir: ?string
+    installers: {[string]: Installer}
+    noOpt: Array<string>
+    noUse: Array<string>
+    opt: Array<string>
+    postInstalls: Array<() => void>
+    directories: {[string]: string}
+    generators: {[string]: Generator}
+    entries: Array<Entry>
+    operator: Operator
+    finalizer: ?string
+    builders: Array<string>
+    testers: Array<string>
+    info: Array<Info>
+
+    constructor(cliUtils: CliUtils) {
         this.fsio = new Fsio()
         this.cliUtils = cliUtils
         this.command = new Command(require('child_process'))
@@ -36,11 +76,11 @@ class Setup {
         this.operator.addBuilder('copy')
     }
 
-    setProjectDir(name) {
+    setProjectDir(name: string) {
         this.projectDir = name
     }
 
-    setOpt(opt) {
+    setOpt(opt: Array<string>) {
         if (this.opt.length > 0) {
             this.cliUtils.error('warning: opt is already set.')
         }
@@ -49,7 +89,7 @@ class Setup {
         config.writeLocal('opt', this.opt)
     }
 
-    setNoOpt(noOpt) {
+    setNoOpt(noOpt: Array<string>) {
         if (this.noOpt.length > 0) {
             this.cliUtils.error('warning: noOpts is already set.')
         }
@@ -57,7 +97,7 @@ class Setup {
         this.noOpt = noOpt
     }
 
-    setNoUse(noUse) {
+    setNoUse(noUse: Array<string>) {
         if (this.noUse.length > 0) {
             this.cliUtils.error('warning: noUse is already set.')
         }

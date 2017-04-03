@@ -1,4 +1,5 @@
 'use strict'
+// @flow
 
 const generateName = require('sillyname')
 const process = require('process')
@@ -10,7 +11,7 @@ const Plugin = require('../plugin')
 const config = require('../config')
 const CliUtils = require('./utils')
 
-const setupProject = async (cliUtils, argv) => {
+const setupProject = async (cliUtils: CliUtils, argv) => {
     const projectType = argv.projectType
 
     cliUtils.message(`create a new project of ${projectType}`)
@@ -87,7 +88,7 @@ const newCommand = () => {
     return {
         command: 'new <projectType> [projectDir]',
         describe: 'create a new project',
-        builder: yargs => {
+        builder: (yargs: Object) => {
             yargs
                 .option('use', {
                     describe: 'use install plugin',
@@ -106,7 +107,7 @@ const newCommand = () => {
                     type: 'string'
                 })
         },
-        handler: argv => {
+        handler: (argv: Object) => {
             const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
             setupProject(cliUtils, argv).catch(e => console.dir(e))
         }

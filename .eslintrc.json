@@ -31,7 +31,6 @@
         "no-with": 2,
         "no-catch-shadow": 1,
         "no-label-var": 1,
-        "no-undefined": 1,
         "handle-callback-err": 1,
         "no-new-require": 1,
         "array-bracket-spacing": [1, "never"],
@@ -93,7 +92,9 @@
         "yield-star-spacing": 1,
         "complexity": [1, 20],
         "eqeqeq": 2,
-        "no-shadow": 1
+        "no-shadow": 1,
+        "flowtype/define-flow-type": 1,
+        "flowtype/use-flow-type": 1
     },
     "ecmaFeatures": {
         "jsx": true
@@ -104,5 +105,8 @@
         "node": true,
         "mocha": true
     },
+    "plugins": [
+        "flowtype"
+    ],
     "extends": "eslint:recommended"
 }

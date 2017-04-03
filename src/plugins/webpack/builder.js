@@ -33,7 +33,7 @@ class WebpackBuilder {
         return {
             entry: `./${filename}`,
             output: {
-                path: path.dirname(filename.replace(reSrc, `./${this.dest}/`)),
+                path: path.dirname(path.resolve(filename.replace(reSrc, `./${this.dest}/`))),
                 filename: path.basename(filename.replace(/\.[a-z]+$/, '.js'))
             },
             resolve: {

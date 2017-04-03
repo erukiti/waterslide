@@ -1,12 +1,21 @@
 'use strict'
+// @flow
 
 const {getConfig, Plugin} = require('../waterslide')
+const Setup = require('./')
+import type {Generator, Installer} from './'
 
 const config = getConfig()
 const plugin = new Plugin()
 
+type InstallerFactory = {
+    getInstaller: (Operator) => ?Installer
+}
+
 class Operator {
-    constructor(setup) {
+    setup: Setup
+
+    constructor(setup: Setup) {
         this.setup = setup
     }
 
@@ -35,7 +44,7 @@ class Operator {
      * @param {number} priority [0..9]
      * @param {string} command
      */
-    addCommand(priority, command) {
+    addCommand(priority: number, command: string) {
         this.setup.command.addCommand(priority, command)
     }
 
@@ -47,8 +56,12 @@ class Operator {
      * @param {string} description
      */
     // FIXME
-    async setDirectory(directory, type, description) {
+    async setDirectory(directory: string, type: string, description: string) {
         const documentInstaller = await this.setup.operator.getInstaller('document')
+        if (!documentInstaller.setDriectory) {
+            throw Error()
+        }
+
         documentInstaller.setDirectory(directory, description)
         if (type) {
             this.setup.directories[type] = directory
@@ -60,10 +73,10 @@ class Operator {
      *
      * @param {string} name
      */
-    getGenerator(name) {
+    getGenerator(name: string) {
         if (!this.setup.generators[name]) {
-            const Generator = plugin.requireGenerator(name)
-            this.setup.generators[name] = new Generator(this.setup.operator)
+            const Klass = plugin.requireGenerator(name)
+            this.setup.generators[name] = new Klass(this.setup.operator)
         }
         return this.setup.generators[name]
     }
@@ -73,7 +86,7 @@ class Operator {
      * @param {string} name
      * @param {Generator} generator
      */
-    replaceGenerator(name, generator) {
+    replaceGenerator(name: string, generator: Generator) {
         if (this.setup.generators[name]) {
             this.setup.operator.error(`${name} generator is already used.`)
         } else {
@@ -86,13 +99,16 @@ class Operator {
      * @param {string} name
      * @returns {Installer}
      */
-    async getInstaller(name) {
+    async getInstaller(name: string) {
         if (!this.setup.installers[name]) {
-            const klass = plugin.requireInstaller(name)
+            const klass: InstallerFactory = plugin.requireInstaller(name)
             const installer = await klass.getInstaller(this.setup.operator)
             if (!installer) {
                 this.setup.cliUtils.verbose(`${name} installer is ignored.`)
-                return null
+
+                return {
+                    install: () => {}
+                }
             }
 
             this.setup.cliUtils.verbose(`installer: ${name}`, 1)
@@ -107,7 +123,7 @@ class Operator {
      * @param {string} name
      * @returns {boolean}
      */
-    isInstalled(name) {
+    isInstalled(name: string) {
         return this.setup.installers[name] !== null
     }
 
@@ -115,7 +131,7 @@ class Operator {
      *
      * @param {string} name
      */
-    setFinalizer(name) {
+    setFinalizer(name: string) {
         this.setup.finalizer = name
         config.writeLocal('finalizer', this.setup.finalizer)
     }
@@ -124,7 +140,7 @@ class Operator {
      *
      * @param {string} name
      */
-    addBuilder(name) {
+    addBuilder(name: string) {
         if (this.setup.builders.includes(name)) {
             return
         }
@@ -136,7 +152,7 @@ class Operator {
      *
      * @param {string} name
      */
-    addTester(name) {
+    addTester(name: string) {
         if (this.setup.testers.includes(name)) {
             return
         }
@@ -150,7 +166,7 @@ class Operator {
      * @param {string} name
      * @returns {Promise<Buffer>}
      */
-    readFile(name) {
+    readFile(name: string) {
         return this.setup.fsio.readFile(name)
     }
 
@@ -159,7 +175,7 @@ class Operator {
      * @param {string} name
      * @returns {Buffer}
      */
-    readFileSync(name) {
+    readFileSync(name: string) {
         return this.setup.fsio.readFileSync(name)
     }
 
@@ -168,7 +184,7 @@ class Operator {
      * @param {string} name
      * @returns {boolean}
      */
-    checkExists(name) {
+    checkExists(name: string) {
         return this.setup.fsio.checkExists(name)
     }
 
@@ -178,7 +194,7 @@ class Operator {
      * @param {string|Buffer} content
      * @param {Object} opts
      */
-    writeFile(name, content, opts = {}) {
+    writeFile(name: string, content: string | Buffer, opts: Object = {}) {
         this.setup.entries.push({path: name, text: content, opts})
 
         config.writeLocal('entries', this.setup.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {
@@ -196,7 +212,7 @@ class Operator {
      *
      * @param {function} cb
      */
-    postInstall(cb) {
+    postInstall(cb: () => void) {
         this.setup.postInstalls.push(cb)
     }
 
@@ -205,7 +221,7 @@ class Operator {
      * @param {string} title
      * @param {string} message
      */
-    setInfo(title, message) {
+    setInfo(title: string, message: string) {
         this.setup.info.push({title, message})
         config.writeLocal('info', this.setup.info)
     }
@@ -214,7 +230,7 @@ class Operator {
      *
      * @param {string} message
      */
-    verbose(message) {
+    verbose(message: string) {
         this.setup.cliUtils.verbose(message, 1)
     }
 
@@ -222,7 +238,7 @@ class Operator {
      *
      * @param {string} message
      */
-    message(message) {
+    message(message: string) {
         this.setup.cliUtils.message(message, 1)
     }
 
@@ -230,7 +246,7 @@ class Operator {
      *
      * @param {string} message
      */
-    error(message) {
+    error(message: string) {
         this.setup.cliUtils.error(message, 1)
     }
 }

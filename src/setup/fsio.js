@@ -1,15 +1,23 @@
 'use strict'
+// @flow
 
 const path = require('path')
 const mkdirp = require('mkdirp')
 const fs = require('fs')
 
+export type FsioOption = {
+    mode?: number,
+    isRewritable?: boolean
+}
+
 class Fsio {
+    cache: {[string]: Buffer}
+
     constructor() {
         this.cache = {}
     }
 
-    writeFile(filename, content, opts = {}) {
+    writeFile(filename: string, content: string | Buffer, opts: FsioOption = {}) {
         return new Promise((resolve, reject) => {
             let buf
             if (typeof content === 'string') {
@@ -45,7 +53,7 @@ class Fsio {
         })
     }
 
-    readFile(filename) {
+    readFile(filename: string) {
         return new Promise((resolve, reject) => {
             fs.readFile(filename, (err, content) => {
                 if (err) {
@@ -58,7 +66,7 @@ class Fsio {
         })
     }
 
-    readFileSync(filename) {
+    readFileSync(filename: string) {
         try {
             const content = fs.readFileSync(filename)
             this.cache[filename] = content
@@ -68,7 +76,7 @@ class Fsio {
         }
     }
 
-    checkExists(filename) {
+    checkExists(filename: string) {
         return new Promise((resolve, reject) => {
             fs.stat(filename, (err, stat) => {
                 if (err) {

@@ -2,7 +2,7 @@
 
 require('babel-register')({
     presets: ['es2016', 'stage-3', 'power-assert'],
-    plugins: [],
+    plugins: ['transform-flow-strip-types'],
 })
 
 const waterslide = require('../src/waterslide.js')

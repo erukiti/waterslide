@@ -1,11 +1,22 @@
 'use strict'
+// @flow
 
 const os = require('os')
 const path = require('path')
 const process = require('process')
 const fs = require('fs')
 
+export type Entry = {
+    path: string,
+    opts?: {[string]: string}
+}
+
 class Config {
+    globalConfigPath: string
+    globalConfig: Object
+    localConfigPath: string
+    localConfig: Object
+
     constructor() {
         this.globalConfigPath = path.join(os.homedir(), '.waterslide.json')
         this.globalConfig = this._configRead(this.globalConfigPath)
@@ -26,23 +37,23 @@ class Config {
         this.localConfig = this._configRead(this.localConfigPath)
     }
 
-    _configRead(filePath) {
+    _configRead(filePath: string) {
         try {
-            return JSON.parse(fs.readFileSync(filePath))
+            return JSON.parse(fs.readFileSync(filePath).toString())
         } catch (e) {
             return {}
         }
     }
 
-    _configWrite(filePath, config) {
+    _configWrite(filePath: string, config: any) {
         fs.writeFileSync(filePath, `${JSON.stringify(config, null, '  ')}\n`)
     }
 
-    getLocal(key) {
+    getLocal(key: string) {
         return this.localConfig[key]
     }
 
-    getGlobal(key) {
+    getGlobal(key: string) {
         return this.globalConfig[key]
     }
 
@@ -65,12 +76,12 @@ class Config {
         }
     }
 
-    writeLocal(key, value) {
+    writeLocal(key: string, value: any) {
         this.localConfig[key] = value
         this._configWrite(this.localConfigPath, this.localConfig)
     }
 
-    writeGlobal(key, value) {
+    writeGlobal(key: string, value: any) {
         this.globalConfig[key] = value
         this._configWrite(this.globalConfigPath, this.globalConfig)
     }

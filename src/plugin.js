@@ -4,7 +4,7 @@ const process = require('process')
 const fs = require('fs')
 
 class Plugin {
-    requireLocal(name) {
+    requireLocal(name: string) {
         try {
             return require(`${process.cwd()}/node_modules/${name}`)
         } catch (e) {
@@ -12,27 +12,27 @@ class Plugin {
         }
     }
 
-    requireProject(name) {
+    requireProject(name: string) {
         return require(`./plugins/${name}`).project
     }
 
-    requireInstaller(name) {
+    requireInstaller(name: string) {
         return require(`./plugins/${name}`).installer
     }
 
-    requireGenerator(name) {
+    requireGenerator(name: string) {
         return require(`./plugins/${name}`).generator
     }
 
-    requireFinalizer(name) {
+    requireFinalizer(name: string) {
         return require(`./plugins/${name}`).finalizer
     }
 
-    requireBuilder(name) {
+    requireBuilder(name: string) {
         return require(`./plugins/${name}`).builder
     }
 
-    requireTester(name) {
+    requireTester(name: string) {
         return require(`./plugins/${name}`).tester
     }
 }

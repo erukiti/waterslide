@@ -1,10 +1,23 @@
 'use strict'
+// @flow
 
 const path = require('path')
 const process = require('process')
 
+type Opts = {
+    verbose: boolean,
+    debug: boolean,
+}
+
 class CliUtils {
-    constructor(opts = {}) {
+    isVerbose: boolean
+    isDebug: boolean
+    isMessage: boolean
+    isError: boolean
+    isWarning: boolean
+    latestLength: number
+
+    constructor(opts: Opts = {verbose: false, debug: false}) {
         this.isVerbose = opts.verbose || opts.debug
         this.isDebug = opts.debug
         this.isMessage = true
@@ -14,7 +27,7 @@ class CliUtils {
         this.latestLength = 0
     }
 
-    _getCaller(depth) {
+    _getCaller(depth: number) {
         const reStackTrace = /at .+ \(([^:]+:[0-9]+:[0-9]+)\)/g
 
         let n = depth + 2
@@ -26,7 +39,7 @@ class CliUtils {
                 return path.join(path.basename(path.dirname(result[1])), path.basename(result[1]))
             }
         }
-        return null
+        return ''
     }
 
     _hook() {
@@ -78,7 +91,7 @@ class CliUtils {
      * @param {string} [mesg]
      * @param {number} [depth]
      */
-    verbose(mesg = '', depth = 0) {
+    verbose(mesg: string = '', depth: number = 0) {
         let header = ''
         const caller = this._getCaller(depth + 1)
         if (this.isDebug && caller) {
@@ -101,7 +114,7 @@ class CliUtils {
      * @param {string} [mesg]
      * @param {number} [depth]
      */
-    debug(mesg = '', depth = 0) {
+    debug(mesg: string = '', depth: number = 0) {
         if (this.isDebug) {
             const header = `debug ${this._getCaller(depth + 1)}`
             console.log(`\x1b[36m${header}:\x1b[m ${mesg}`)
@@ -113,7 +126,7 @@ class CliUtils {
      * @param {string} [mesg]
      * @param {number} [depth]
      */
-    message(mesg = '', depth = 0) {
+    message(mesg: string = '', depth: number = 0) {
         if (this.isMessage) {
             let header = ''
             if (this.isDebug) {
@@ -129,7 +142,7 @@ class CliUtils {
      * @param {string} [mesg]
      * @param {number} [depth]
      */
-    warning(mesg = '', depth = 0) {
+    warning(mesg: string = '', depth: number = 0) {
         if (this.isWarning) {
             let header = ''
             if (this.isDebug) {
@@ -141,7 +154,7 @@ class CliUtils {
         }
     }
 
-    error(mesg = '', depth = 0) {
+    error(mesg: string = '', depth: number = 0) {
         if (this.isError) {
             let header = ''
             if (this.isDebug) {

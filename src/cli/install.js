@@ -1,4 +1,5 @@
 'use strict'
+// @flow
 
 const generateName = require('sillyname')
 const process = require('process')
@@ -10,7 +11,7 @@ const Plugin = require('../plugin')
 const config = require('../config')
 const CliUtils = require('./utils')
 
-const install = async (cliUtils, argv) => {
+const install = async (cliUtils: CliUtils, argv) => {
     config.startLocal()
 
     const setup = new Setup(cliUtils)
@@ -43,7 +44,7 @@ const installCommand = () => {
     return {
         command: 'install [options] <pluginNames...>',
         describe: 'install to project',
-        builder: yargs => {
+        builder: (yargs: Object) => {
             yargs
                 .option('opt', {
                     describe: 'set option',
@@ -54,7 +55,7 @@ const installCommand = () => {
                     type: 'string'
                 })
         },
-        handler: argv => {
+        handler: (argv: Object) => {
             if (!config.isExists()) {
                 console.log('If you want to install, you need to setup waterslide')
                 process.exit(1)

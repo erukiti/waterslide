@@ -1,13 +1,17 @@
 'use strict'
+// @flow
 
 const config = require('../config')
+const Build = require('./')
 
 class Builder {
+    parent: Build
+
     /**
      *
      * @param {Build} parent
      */
-    constructor(parent) {
+    constructor(parent: Build) {
         this.parent = parent
     }
 
@@ -22,7 +26,7 @@ class Builder {
      *
      * @param {string} mesg
      */
-    message(mesg) {
+    message(mesg: string) {
         this.parent.cliUtils.message(mesg, 1)
     }
 
@@ -30,7 +34,7 @@ class Builder {
      *
      * @param {string} mesg
      */
-    verbose(mesg) {
+    verbose(mesg: string) {
         this.parent.cliUtils.verbose(mesg, 1)
     }
 
@@ -38,7 +42,7 @@ class Builder {
      *
      * @param {string} mesg
      */
-    debug(mesg) {
+    debug(mesg: string) {
         this.parent.cliUtils.debug(mesg, 1)
     }
 
@@ -46,7 +50,7 @@ class Builder {
      *
      * @param {string} err
      */
-    error(err) {
+    error(err: string) {
         this.parent.cliUtils.error(err, 1)
     }
 
@@ -54,7 +58,7 @@ class Builder {
      *
      * @param {string} details
      */
-    compileError(details) {
+    compileError(details: string) {
         this.parent.cliUtils.message('compile error')
         this.parent.cliUtils.error(details, 1)
     }
@@ -63,7 +67,7 @@ class Builder {
      *
      * @param {string} details
      */
-    warning(details) {
+    warning(details: string) {
         this.parent.cliUtils.message('compile warning')
         this.parent.cliUtils.error(details, 1)
     }
@@ -73,7 +77,7 @@ class Builder {
      * @param {string} type
      * @returns {string}
      */
-    getDirectory(type) {
+    getDirectory(type: string) {
         return config.getLocal('directories')[type]
     }
 

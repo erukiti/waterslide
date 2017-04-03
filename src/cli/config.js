@@ -1,10 +1,17 @@
 'use strict'
+// @flow
 
 const config = require('../config')
 const Menu = require('terminal-menu')
 const createCharm = require('charm')
 const readPrompt = require('read')
 const {PassThrough} = require('stream')
+
+
+type MenuItem = {
+    label: string,
+    cb?: () => any,
+}
 
 class DummyInput extends PassThrough {
     destroy() {}
@@ -25,7 +32,7 @@ const prompt = item => {
     })
 }
 
-const createMenu = items => {
+const createMenu = (items: Array<MenuItem>) => {
     return new Promise((resolve, reject) => {
         const menu = new Menu({charm})
         menu.reset()
@@ -46,15 +53,18 @@ const createMenu = items => {
             }
         })
 
+        // see. https://github.com/facebook/flow/issues/2944
+        const workAround: any = process.stdin
+
         process.stdin.on('data', passDataToMenu)
         menuStream.pipe(process.stdout, {end: false})
-        process.stdin.setRawMode(true)
+        workAround.setRawMode(true)
         process.stdin.resume()
 
         menu.on('close', () => {
             menuStream.unpipe(process.stdout)
             process.stdin.removeListener('data', passDataToMenu)
-            process.stdin.setRawMode(false)
+            workAround.setRawMode(false)
             resolve(cb)
         })
     })
@@ -74,7 +84,7 @@ const selectLicense = item => {
         {name: 'MIT', desc: 'MIT License'},
     ]
 
-    const items = []
+    const items: Array<MenuItem> = []
     items.push({label: 'Please select default your license\n\n'})
     licenses.forEach(license => {
         items.push({label: license.desc, cb: () => {
@@ -100,7 +110,7 @@ const configurable = [
 ]
 
 const configMenu = () => {
-    const items = []
+    const items: Array<MenuItem> = []
     items.push({label: 'waterslide global configuration\n\n'})
 
     configurable.forEach(item => {
@@ -128,10 +138,10 @@ const configCommand = () => {
     return {
         command: 'config [key] [value]',
         describe: 'global configuration',
-        builder: yargs => {
+        builder: (yargs: Object) => {
 
         },
-        handler: argv => {
+        handler: (argv: Object) => {
             if (!argv.key && !argv.value) {
                 configLoop()
                 return

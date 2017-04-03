@@ -1,9 +1,10 @@
 'use strict'
+// @flow
 
 const Build = require('../build')
 const CliUtils = require('./utils')
 
-const buildCommand = type => {
+const buildCommand = (type: string) => {
     const defaults = {
         test: {watch: false, build: false, run: false, test: true, env: 'development'},
         run: {watch: false, build: false, run: true, test: true, env: 'development'},
@@ -14,7 +15,7 @@ const buildCommand = type => {
     return {
         command: `${type} [options]`,
         describe: `${type} application`,
-        builder: yargs => {
+        builder: (yargs: Object) => {
             yargs.options({
                 'env': {type: 'string', describe: 'set NODE_ENV', default: defaults[type].env},
                 'watch': {type: 'boolean', default: defaults[type].watch},
@@ -23,7 +24,7 @@ const buildCommand = type => {
                 'test': {type: 'boolean', default: defaults[type].test},
             })
         },
-        handler: argv => {
+        handler: (argv: Object) => {
             const cliUtils = new CliUtils({verbose: argv.verbose, debug: argv.debug})
 
             const build = new Build(cliUtils, argv)

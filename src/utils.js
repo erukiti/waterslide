@@ -1,4 +1,5 @@
 'use strict'
+// @flow
 
 const childProcess = require('child_process')
 const fs = require('fs')
@@ -10,7 +11,7 @@ const waitStream = stream => new Promise(resolve => {
 let cachePackageJson = null
 
 const utils = {
-    execSync: cmd => {
+    execSync: (cmd: string) => {
         try {
             const stdout = childProcess.execSync(cmd).toString('utf-8')
             return {isError: false, stdout}
@@ -20,7 +21,7 @@ const utils = {
             return {isError: true, stdout, stderr}
         }
     },
-    exec: cmd => new Promise((resolve, reject) => {
+    exec: (cmd: string) => new Promise((resolve, reject) => {
         const child = childProcess.exec(cmd)
 
         let stdout = ''
@@ -43,7 +44,7 @@ const utils = {
             resolve({code, stdout, stderr})
         })
     }),
-    readNpmVersion: name => {
+    readNpmVersion: (name: string) => {
         const result = childProcess.execSync('npm list --depth=0').toString()
         const ind = result.indexOf(`${name}@`)
         if (ind !== -1) {
@@ -52,10 +53,10 @@ const utils = {
             return null
         }
     },
-    checkExistsNpm: name => {
+    checkExistsNpm: (name: string) => {
         if (!cachePackageJson) {
             try {
-                cachePackageJson = JSON.parse(fs.readFileSync('package.json'))
+                cachePackageJson = JSON.parse(fs.readFileSync('package.json').toString())
             } catch (e) {
                 return false
             }

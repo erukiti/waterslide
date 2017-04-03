@@ -1,4 +1,5 @@
 'use strict'
+// @flow
 
 const process = require('process')
 const path = require('path')
@@ -37,7 +38,7 @@ const generateCommand = () => {
     return {
         command: 'generate [options] <generatorName> <args...>',
         describe: 'generate file',
-        builder: yargs => {
+        builder: (yargs: Object) => {
             yargs
                 .option('opt', {
                     describe: 'set option',
@@ -48,7 +49,7 @@ const generateCommand = () => {
                     type: 'string'
                 })
         },
-        handler: argv => {
+        handler: (argv: Object) => {
             if (!config.isExists()) {
                 console.log('If you want to generate file, you need to setup waterslide')
                 process.exit(1)

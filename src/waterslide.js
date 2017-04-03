@@ -1,4 +1,5 @@
 'use strict'
+// @flow
 
 const waterslide = {
     getConfig: () => require('./config'),
