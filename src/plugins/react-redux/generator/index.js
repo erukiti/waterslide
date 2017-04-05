@@ -11,16 +11,18 @@ class ReactReduxGenerator {
     }
 
     async generate(name, opts = {}) {
-        // FIXME: 'foo-bar'
+        const toLower = s => s.charAt(0).toLowerCase() + s.slice(1)
+        const toUpper = s => s.charAt(0).toUpperCase() + s.slice(1)
+        const createPrefix = s => s.split('-').map(v => toUpper(v)).join('')
 
-        const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1)
-        const basename = capitalize(path.basename(name))
+        const upperPrefix = createPrefix(path.basename(name))
+        const lowerPrefix = toLower(upperPrefix)
 
         const obj = {
-            action: `${basename}Action`,
-            component: `${basename}Component`,
-            reducer: `${path.basename(name)}Reducer`,
-            name: path.basename(name)
+            action: `${upperPrefix}Action`,
+            component: `${upperPrefix}Component`,
+            reducer: `${lowerPrefix}Reducer`,
+            name: lowerPrefix
         }
 
         const render = async (inFile, outFile) => {

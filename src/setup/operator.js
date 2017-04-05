@@ -57,10 +57,11 @@ class Operator {
      */
     // FIXME
     async setDirectory(directory: string, type: string, description: string) {
-        const documentInstaller = await this.setup.operator.getInstaller('document')
-        if (!documentInstaller.setDriectory) {
-            throw Error()
-        }
+        const documentInstaller = await this.getInstaller('document')
+        // console.dir(typeof documentInstaller.setDirectory)
+        // if (typeof documentInstaller.setDriectory !== 'function') {
+        //     throw Error()
+        // }
 
         documentInstaller.setDirectory(directory, description)
         if (type) {
