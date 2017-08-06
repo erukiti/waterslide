@@ -11,6 +11,8 @@ export type Entry = {
     opts?: {[string]: string}
 }
 
+const JsonFileName = '.innocentia.json'
+
 class Config {
     globalConfigPath: string
     globalConfig: Object
@@ -18,14 +20,14 @@ class Config {
     localConfig: Object
 
     constructor() {
-        this.globalConfigPath = path.join(os.homedir(), '.waterslide.json')
+        this.globalConfigPath = path.join(os.homedir(), JsonFileName)
         this.globalConfig = this._configRead(this.globalConfigPath)
         this.localConfig = {}
     }
 
     isExists() {
         try {
-            const stat = fs.statSync(path.join(process.cwd(), '.waterslide.json'))
+            const stat = fs.statSync(path.join(process.cwd(), JsonFileName))
             return stat && typeof stat !== 'undefined'
         } catch (e) {
             return false
@@ -33,7 +35,7 @@ class Config {
     }
 
     startLocal() {
-        this.localConfigPath = path.join(process.cwd(), '.waterslide.json')
+        this.localConfigPath = path.join(process.cwd(), JsonFileName)
         this.localConfig = this._configRead(this.localConfigPath)
     }
 

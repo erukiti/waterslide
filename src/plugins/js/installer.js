@@ -40,12 +40,13 @@ class JsInstaller {
             license: config.getGlobal('license'),
             keywords: [],
             scripts: {
-                start: 'ws run',
-                build: 'ws build',
+                start: 'innocentia run',
+                build: 'innocentia build',
                 watch: 'ws watch',
-                test: 'ws test'
+                test: 'innocentia test'
             },
             bin: {},
+            innocentia: {},
         }
     }
 
@@ -77,6 +78,10 @@ class JsInstaller {
         this.values.main = name
     }
 
+    setInnocentiaConfig(key, obj) {
+        this.values.innocentia[key] = obj
+    }
+
     async install() {
         this.addDevPackage('babel-core')
         this.addDevPackage('babel-loader')
@@ -90,7 +95,7 @@ class JsInstaller {
             babelInstaller.addPreset('es2016')
         }
 
-        this.addDevPackage('waterslide')
+        this.addDevPackage('~/work/innocentia')
 
         const noUse = this.operator.getNoUse()
         const defaultUse = ['power-assert', 'ava', 'eslint']
