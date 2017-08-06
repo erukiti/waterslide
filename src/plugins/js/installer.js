@@ -40,12 +40,13 @@ class JsInstaller {
             license: config.getGlobal('license'),
             keywords: [],
             scripts: {
-                start: 'ws run',
-                build: 'ws build',
-                watch: 'ws watch',
-                test: 'ws test'
+                start: 'innocentia run',
+                build: 'innocentia build',
+                watch: 'innocentia watch',
+                test: 'innocentia test'
             },
             bin: {},
+            innocentia: {},
         }
     }
 
@@ -77,29 +78,29 @@ class JsInstaller {
         this.values.main = name
     }
 
+    setInnocentiaConfig(key, obj) {
+        this.values.innocentia[key] = obj
+    }
+
+    setBuildConfig(obj) {
+        this.values.build = obj
+    }
+
     async install() {
-        this.addDevPackage('babel-core')
-        this.addDevPackage('babel-loader')
+        this.addDevPackage('~/work/innocentia')
 
-        const babelInstaller = await this.operator.getInstaller('babel')
-        if (this.operator.getOpt().includes('es2015')) {
-            this.addDevPackage('babel-preset-es2015')
-            babelInstaller.addPreset('es2015')
-        } else {
-            this.addDevPackage('babel-preset-es2016')
-            babelInstaller.addPreset('es2016')
+        if (!this.operator.getIsUse()) {
+            const noUse = this.operator.getNoUse()
+            const defaultUse = ['ava', 'eslint']
+
+            await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))
         }
-
-        this.addDevPackage('waterslide')
-
-        const noUse = this.operator.getNoUse()
-        const defaultUse = ['power-assert', 'ava', 'eslint']
-        await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))
 
         const webpackInstaller = await this.operator.getInstaller('webpack')
         webpackInstaller.addLoader('\\.jsx?$', [
             {loader: 'babel-loader', options: {sourceMap: true}}
         ])
+        await this.operator.getInstaller('babel')
 
         this.operator.postInstall(async () => {
             await this.operator.writeFile('package.json', `${JSON.stringify(this.values, null, '  ')}\n`, {isRewritable: true})

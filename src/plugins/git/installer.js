@@ -1,7 +1,8 @@
 'use strict'
 
 const GithubApi = require('github-api')
-
+const fs = require('fs')
+const path = require('path')
 const {utils, getConfig} = require('../../waterslide')
 
 class GitInstaller {
@@ -14,11 +15,13 @@ class GitInstaller {
     }
 
     static async getInstaller(operator) {
-        const {code, stdout, stderr} = await utils.exec('git status').catch(e => console.dir(e))
-        if (stderr.indexOf('fatal: Not a git repository') === -1) {
-            return null
+        try {
+            fs.existsSync(path.join(this.operator.getProjectDir(), '.git'))
+            console.log('alread installed')
+            process.exit(1)
+        } catch (e) {
+            //
         }
-
         return new this(operator)
     }
 

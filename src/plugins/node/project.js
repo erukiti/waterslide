@@ -9,7 +9,7 @@ console.log('Hello, Node.js World.')
 class NodeProject {
     constructor(operator) {
         this.operator = operator
-        operator.setFinalizer('node')
+        operator.setTarget('node')
     }
 
     async install() {

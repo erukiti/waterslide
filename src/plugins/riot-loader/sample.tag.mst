@@ -1,8 +1,0 @@
-<{{name}}>
-    <div>Hello, {message} world.</div>
-
-    <script>
-        this.message = 'riot'
-    </script>
-
-</{{name}}>

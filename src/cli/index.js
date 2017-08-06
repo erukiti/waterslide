@@ -3,8 +3,6 @@
 const process = require('process')
 const yargs = require('yargs')
 
-const buildCommand = require('./build')
-
 const cli = () => {
     yargs
         .detectLocale(false)
@@ -23,10 +21,6 @@ const cli = () => {
         .command(require('./install')())
         .command(require('./generate')())
         .command(require('./config')())
-        .command(buildCommand('run'))
-        .command(buildCommand('build'))
-        .command(buildCommand('watch'))
-        .command(buildCommand('test'))
         .demandCommand(1, 'Need subcommand.')
         .argv
 }

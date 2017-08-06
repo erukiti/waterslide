@@ -3,13 +3,17 @@
 
 const ChildProcess = require('child_process')
 
+const CliUtils = require('../cli/utils')
+
 class Command {
     childProcess: any
     commands: Array<Array<string>>
+    cliUtils: CliUtils
 
-    constructor(childProcess: any) {
+    constructor(childProcess: any, cliUtils: CliUtils) {
         this.childProcess = childProcess
         this.commands = [[], [], [], [], [], [], [], [], [], []]
+        this.cliUtils = cliUtils
     }
 
     addCommand(priority: number, command: string) {
@@ -18,13 +22,13 @@ class Command {
 
     exec(command: string) {
         return new Promise((resolve, reject) => {
+            // this.cliUtils.verbose(command)
             const child = this.childProcess.exec(command)
+            child.stdout.pipe(process.stdout)
+            child.stderr.pipe(process.stdout)
             child.on('error', err => reject(err))
             child.on('exit', (code, signal) => {
                 if (code) {
-                    child.stdout.pipe(process.stdout)
-                    child.stderr.pipe(process.stdout)
-
                     reject(new Error(`error '${command}' is failed. ${code}`))
                 } else {
                     resolve()

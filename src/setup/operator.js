@@ -32,6 +32,10 @@ class Operator {
         return this.setup.noUse
     }
 
+    getIsUse() {
+        return this.setup.isUse
+    }
+
     /**
      * @returns {string}
      */
@@ -132,9 +136,9 @@ class Operator {
      *
      * @param {string} name
      */
-    setFinalizer(name: string) {
-        this.setup.finalizer = name
-        config.writeLocal('finalizer', this.setup.finalizer)
+    setTarget(name: string) {
+        this.setup.target = name
+        config.writeLocal('target', this.setup.target)
     }
 
     /**
@@ -153,12 +157,12 @@ class Operator {
      *
      * @param {string} name
      */
-    addTester(name: string) {
-        if (this.setup.testers.includes(name)) {
+    addTester(name: string, command: string) {
+        if (typeof this.setup.testers[name] === 'string') {
             return
         }
 
-        this.setup.testers.push(name)
+        this.setup.testers[name] = command
         config.writeLocal('testers', this.setup.testers)
     }
 
@@ -191,20 +195,28 @@ class Operator {
 
     /**
      *
-     * @param {string} name
+     * @param {string} src
      * @param {string|Buffer} content
      * @param {Object} opts
      */
-    writeFile(name: string, content: string | Buffer, opts: Object = {}) {
-        this.setup.entries.push({path: name, text: content, opts})
+    writeFile(src: string, content: string | Buffer, opts: Object = {}) {
+        if ('type' in opts) {
+            const opts2 = Object.assign({}, opts)
+            delete opts2.type
+            this.setup.entries.push({src, type: opts.type, opts})
+        } else {
+            this.setup.entries.push({src, opts})
+        }
 
         config.writeLocal('entries', this.setup.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {
-            return {path: entry.path, opts: entry.opts}
+            const opts2 = Object.assign({}, entry.opts)
+            delete opts2.type
+            return {src: entry.src, type: entry.opts.type, opts: opts2}
         }))
 
-        return this.setup.fsio.writeFile(name, content, opts).then(isWrote => {
+        return this.setup.fsio.writeFile(src, content, opts).then(isWrote => {
             if (isWrote) {
-                this.setup.cliUtils.message(`wrote ${name}`, 1)
+                this.setup.cliUtils.message(`wrote ${src}`, 1)
             }
         })
     }

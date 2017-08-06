@@ -41,33 +41,35 @@ class Setup {
     noOpt: Array<string>
     noUse: Array<string>
     opt: Array<string>
+    isUse: boolean
     postInstalls: Array<() => void>
     directories: {[string]: string}
     generators: {[string]: Generator}
     entries: Array<Entry>
     operator: Operator
-    finalizer: ?string
+    target: ?string
     builders: Array<string>
-    testers: Array<string>
+    testers: {[string]: string}
     info: Array<Info>
 
     constructor(cliUtils: CliUtils) {
         this.fsio = new Fsio()
         this.cliUtils = cliUtils
-        this.command = new Command(require('child_process'))
+        this.command = new Command(require('child_process'), cliUtils)
         this.projectDir = null // FIXME
         this.installers = {}
         this.generators = {}
         this.noOpt = []
         this.noUse = []
+        this.isUse = false
 
         this.postInstalls = []
 
         this.directories = config.getLocal('directories') || {}
         this.entries = config.getLocal('entries') || []
-        this.finalizer = config.getLocal('finalizer')
+        this.target = config.getLocal('target')
         this.builders = config.getLocal('builders') || []
-        this.testers = config.getLocal('testers') || []
+        this.testers = config.getLocal('testers') || {}
         this.opt = config.getLocal('opt') || []
         this.info = config.getLocal('info') || []
 
@@ -78,6 +80,10 @@ class Setup {
 
     setProjectDir(name: string) {
         this.projectDir = name
+    }
+
+    setUse() {
+        this.isUse = true
     }
 
     setOpt(opt: Array<string>) {

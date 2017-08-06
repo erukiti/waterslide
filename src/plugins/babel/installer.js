@@ -28,6 +28,12 @@ class BabelInstaller {
     }
 
     async install() {
+        const jsInstaller = await this.operator.getInstaller('js')
+        jsInstaller.addDevPackage('babel-core')
+        jsInstaller.addDevPackage('babel-loader')
+        jsInstaller.addDevPackage('babel-preset-env')
+        this.addPreset('env')
+
         this.operator.postInstall(async () => {
             await this.operator.writeFile('.babelrc', `${JSON.stringify(this.values, null, '  ')}\n`, {isRewritable: true})
         })

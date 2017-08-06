@@ -47,10 +47,18 @@ const setupProject = async (cliUtils: CliUtils, argv) => {
         if (!argv[name]) {
             return []
         } else if (typeof argv[name] === 'string') {
-            return [argv[name]]
+            if (argv[name].indexOf(',') !== -1) {
+                return argv[name].split(',')
+            } else {
+                return [argv[name]]
+            }
         } else {
             return argv[name]
         }
+    }
+
+    if (parseOpt('use').length > 0) {
+        setup.setUse()
     }
 
     const noUse = parseOpt('noUse')

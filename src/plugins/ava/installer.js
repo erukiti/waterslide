@@ -25,7 +25,7 @@ class AvaInstaller {
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('ava')
-        this.operator.addTester('ava')
+        this.operator.addTester('ava', './node_modules/.bin/ava')
         await this.operator.writeFile('src/sample.test.js', testJs)
     }
 }

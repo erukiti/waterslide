@@ -3,7 +3,7 @@
 class BrowserProject {
     constructor(operator) {
         this.operator = operator
-        operator.setFinalizer('browser')
+        operator.setTarget('browser')
     }
 
     async install() {
