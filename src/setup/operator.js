@@ -191,20 +191,28 @@ class Operator {
 
     /**
      *
-     * @param {string} name
+     * @param {string} src
      * @param {string|Buffer} content
      * @param {Object} opts
      */
-    writeFile(name: string, content: string | Buffer, opts: Object = {}) {
-        this.setup.entries.push({path: name, text: content, opts})
+    writeFile(src: string, content: string | Buffer, opts: Object = {}) {
+        if ('type' in opts) {
+            const opts2 = Object.assign({}, opts)
+            delete opts2.type
+            this.setup.entries.push({src, type: opts.type, opts})
+        } else {
+            this.setup.entries.push({src, opts})
+        }
 
         config.writeLocal('entries', this.setup.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {
-            return {path: entry.path, opts: entry.opts}
+            const opts = Object.assign({}, entry.opts)
+            delete opts.type
+            return {src: entry.src, type: entry.opts.type, opts: entry.opts}
         }))
 
-        return this.setup.fsio.writeFile(name, content, opts).then(isWrote => {
+        return this.setup.fsio.writeFile(src, content, opts).then(isWrote => {
             if (isWrote) {
-                this.setup.cliUtils.message(`wrote ${name}`, 1)
+                this.setup.cliUtils.message(`wrote ${src}`, 1)
             }
         })
     }

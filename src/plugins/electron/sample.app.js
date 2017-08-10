@@ -18,11 +18,4 @@ app.on('ready', () => {
     win.on('closed', () => {
         win = null
     })
-    try {
-        const client = require('electron-connect').client
-        let cl = client.create(win)
-    } catch (err) {
-        // console.dir(err)
-        // nice catch !!!!!!
-    }
 })

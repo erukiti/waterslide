@@ -11,17 +11,15 @@ class ElectronProject {
 
     async install() {
         await this.operator.setDirectory('src', 'source', 'source code directory')
-        await this.operator.setDirectory('src/browser', null, 'source code directory (Electron Browser Process)')
         await this.operator.setDirectory('src/renderer', null, 'source code directory (Electron Renderer Process)')
         await this.operator.setDirectory('build', 'destination', 'build directory')
         await this.operator.setDirectory('release', null, 'release directory')
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('electron')
-        jsInstaller.addDevPackage('electron-connect')
         jsInstaller.addDevPackage('electron-packager')
         jsInstaller.addDevPackage('node-7z')
-        jsInstaller.setMain('src/browser/app.js')
+        jsInstaller.setMain('src/app.js')
 
         const browserGenerator = this.operator.getGenerator('browser')
         await browserGenerator.generate('src/renderer/index.js', {type: 'electron-renderer'})
@@ -30,7 +28,7 @@ class ElectronProject {
         await iconGenerator.generate('src/app.png')
 
         const appJsText = fs.readFileSync(path.join(__dirname, 'sample.app.js'))
-        await this.operator.writeFile('src/browser/app.js', appJsText, {type: 'copy'})
+        await this.operator.writeFile('src/app.js', appJsText, {type: 'copy'})
         await this.operator.writeFile('src/package.json', `${JSON.stringify({'main': 'browser/app.js'}, null, '  ')}\n`, {type: 'copy'})
 
         const gitInstaller = await this.operator.getInstaller('git')

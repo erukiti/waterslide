@@ -7,7 +7,8 @@ const process = require('process')
 const fs = require('fs')
 
 export type Entry = {
-    path: string,
+    src: string,
+    type?: string,
     opts?: {[string]: string}
 }
 
