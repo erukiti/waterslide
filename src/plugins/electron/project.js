@@ -19,7 +19,7 @@ class ElectronProject {
         jsInstaller.addDevPackage('electron')
         jsInstaller.addDevPackage('electron-packager')
         jsInstaller.addDevPackage('node-7z')
-        jsInstaller.setMain('src/app.js')
+        jsInstaller.setMain('build/app.js')
 
         const browserGenerator = this.operator.getGenerator('browser')
         await browserGenerator.generate('src/renderer/index.js', {type: 'electron-renderer'})

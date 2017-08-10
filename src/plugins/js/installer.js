@@ -83,22 +83,10 @@ class JsInstaller {
     }
 
     async install() {
-        this.addDevPackage('babel-core')
-        this.addDevPackage('babel-loader')
-
-        const babelInstaller = await this.operator.getInstaller('babel')
-        if (this.operator.getOpt().includes('es2015')) {
-            this.addDevPackage('babel-preset-es2015')
-            babelInstaller.addPreset('es2015')
-        } else {
-            this.addDevPackage('babel-preset-es2016')
-            babelInstaller.addPreset('es2016')
-        }
-
         this.addDevPackage('~/work/innocentia')
 
         const noUse = this.operator.getNoUse()
-        const defaultUse = ['power-assert', 'ava', 'eslint']
+        const defaultUse = ['power-assert', 'ava', 'eslint', 'babel']
         await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))
 
         const webpackInstaller = await this.operator.getInstaller('webpack')
