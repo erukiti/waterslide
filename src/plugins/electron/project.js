@@ -6,7 +6,7 @@ const path = require('path')
 class ElectronProject {
     constructor(operator) {
         this.operator = operator
-        operator.setFinalizer('electron')
+        operator.setTarget('electron')
     }
 
     async install() {

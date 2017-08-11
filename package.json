@@ -8,7 +8,7 @@
   "main": "lib/waterslide.js",
   "scripts": {
     "test": "ava",
-    "build": "node -e \"require('ncp').ncp('./src', './lib')\" && babel src --out-dir lib -s --presets es2016,stage-3 --plugins unassert,transform-flow-strip-types --ignore sample"
+    "build": "node -e \"require('ncp').ncp('./src', './lib')\" && babel src --out-dir lib -s --presets env --plugins unassert,transform-flow-strip-types --ignore sample"
   },
   "repository": {
     "type": "git",
@@ -47,9 +47,8 @@
     "babel-loader": "^6.4.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-unassert": "^2.1.2",
-    "babel-preset-es2016": "^6.22.0",
+    "babel-preset-env": "^1.6.0",
     "babel-preset-power-assert": "^1.0.0",
-    "babel-preset-stage-3": "^6.22.0",
     "babel-register": "^6.23.0",
     "eslint": "^3.17.1",
     "eslint-plugin-flowtype": "^2.30.4",

@@ -42,7 +42,7 @@ class JsInstaller {
             scripts: {
                 start: 'innocentia run',
                 build: 'innocentia build',
-                watch: 'ws watch',
+                watch: 'innocentia watch',
                 test: 'innocentia test'
             },
             bin: {},

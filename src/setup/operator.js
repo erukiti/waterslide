@@ -132,9 +132,9 @@ class Operator {
      *
      * @param {string} name
      */
-    setFinalizer(name: string) {
-        this.setup.finalizer = name
-        config.writeLocal('finalizer', this.setup.finalizer)
+    setTarget(name: string) {
+        this.setup.target = name
+        config.writeLocal('target', this.setup.target)
     }
 
     /**
@@ -205,9 +205,9 @@ class Operator {
         }
 
         config.writeLocal('entries', this.setup.entries.filter(entry => entry.opts && entry.opts.type).map(entry => {
-            const opts = Object.assign({}, entry.opts)
-            delete opts.type
-            return {src: entry.src, type: entry.opts.type, opts: entry.opts}
+            const opts2 = Object.assign({}, entry.opts)
+            delete opts2.type
+            return {src: entry.src, type: entry.opts.type, opts: opts2}
         }))
 
         return this.setup.fsio.writeFile(src, content, opts).then(isWrote => {

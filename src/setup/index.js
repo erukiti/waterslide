@@ -46,7 +46,7 @@ class Setup {
     generators: {[string]: Generator}
     entries: Array<Entry>
     operator: Operator
-    finalizer: ?string
+    target: ?string
     builders: Array<string>
     testers: Array<string>
     info: Array<Info>
@@ -65,7 +65,7 @@ class Setup {
 
         this.directories = config.getLocal('directories') || {}
         this.entries = config.getLocal('entries') || []
-        this.finalizer = config.getLocal('finalizer')
+        this.target = config.getLocal('target')
         this.builders = config.getLocal('builders') || []
         this.testers = config.getLocal('testers') || []
         this.opt = config.getLocal('opt') || []

@@ -23,18 +23,6 @@ class Plugin {
     requireGenerator(name: string) {
         return require(`./plugins/${name}`).generator
     }
-
-    requireFinalizer(name: string) {
-        return require(`./plugins/${name}`).finalizer
-    }
-
-    requireBuilder(name: string) {
-        return require(`./plugins/${name}`).builder
-    }
-
-    requireTester(name: string) {
-        return require(`./plugins/${name}`).tester
-    }
 }
 
 module.exports = Plugin

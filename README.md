@@ -39,13 +39,13 @@ For example, create React-Redux eletcron project and run the Electron applicatio
 ```sh
 $ ws new --use react-redux electron
 $ cd <projectDir>
-$ npm run
+$ npm start
 ```
 
 Build distribution pacakge of the Electron application:
 
 ```sh
-$ npm build
+$ npm run build
 ```
 
 ## License
