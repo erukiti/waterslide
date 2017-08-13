@@ -1,6 +1,0 @@
-You can require css.
-
-example:
-
-  require('./index.css')
-  const css = require('./index.css')
