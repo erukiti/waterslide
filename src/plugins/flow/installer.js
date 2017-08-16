@@ -28,6 +28,8 @@ class FlowInstaller {
         const babelInstaller = await this.operator.getInstaller('babel')
         babelInstaller.addPreset('flow')
 
+        this.operator.addTester('flow', './node_modules/.bin/flow')
+
         // const eslintInstaller = await this.operator.getInstaller('eslint')
         // eslintInstaller.
 

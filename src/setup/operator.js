@@ -32,6 +32,10 @@ class Operator {
         return this.setup.noUse
     }
 
+    getIsUse() {
+        return this.setup.isUse
+    }
+
     /**
      * @returns {string}
      */

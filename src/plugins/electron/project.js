@@ -18,8 +18,21 @@ class ElectronProject {
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('electron')
         jsInstaller.addDevPackage('electron-packager')
-        jsInstaller.addDevPackage('node-7z')
-        jsInstaller.setMain('build/app.js')
+        jsInstaller.addDevPackage('electron-installer-dmg')
+        jsInstaller.setMain('src/app.js')
+        jsInstaller.setBuildConfig({
+            'build': {
+                'artifactName': '${productName}_installer.${ext}',
+                'mac': {
+                    'target': 'dmg',
+                    'icon': 'build/app.icns'
+                },
+                'win': {
+                    'target': '7z',
+                    'icon': 'build/app.ico'
+                }
+            }
+        })
 
         const browserGenerator = this.operator.getGenerator('browser')
         await browserGenerator.generate('src/renderer/index.js', {type: 'electron-renderer'})
@@ -29,7 +42,7 @@ class ElectronProject {
 
         const appJsText = fs.readFileSync(path.join(__dirname, 'sample.app.js'))
         await this.operator.writeFile('src/app.js', appJsText, {type: 'copy'})
-        await this.operator.writeFile('src/package.json', `${JSON.stringify({'main': 'browser/app.js'}, null, '  ')}\n`, {type: 'copy'})
+        await this.operator.writeFile('src/package.json', `${JSON.stringify({'main': './app.js'}, null, '  ')}\n`, {type: 'copy'})
 
         const gitInstaller = await this.operator.getInstaller('git')
         gitInstaller.addIgnore('release/')

@@ -82,12 +82,16 @@ class JsInstaller {
         this.values.innocentia[key] = obj
     }
 
+    setBuildConfig(obj) {
+        this.values.build = obj
+    }
+
     async install() {
         this.addDevPackage('~/work/innocentia')
 
-        if (this.operator.isUse) {
+        if (!this.operator.getIsUse()) {
             const noUse = this.operator.getNoUse()
-            const defaultUse = ['ava', 'eslint', 'babel']
+            const defaultUse = ['ava', 'eslint']
 
             await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))
         }
@@ -96,6 +100,7 @@ class JsInstaller {
         webpackInstaller.addLoader('\\.jsx?$', [
             {loader: 'babel-loader', options: {sourceMap: true}}
         ])
+        await this.operator.getInstaller('babel')
 
         this.operator.postInstall(async () => {
             await this.operator.writeFile('package.json', `${JSON.stringify(this.values, null, '  ')}\n`, {isRewritable: true})

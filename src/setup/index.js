@@ -55,7 +55,7 @@ class Setup {
     constructor(cliUtils: CliUtils) {
         this.fsio = new Fsio()
         this.cliUtils = cliUtils
-        this.command = new Command(require('child_process'))
+        this.command = new Command(require('child_process'), cliUtils)
         this.projectDir = null // FIXME
         this.installers = {}
         this.generators = {}
