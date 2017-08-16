@@ -30,7 +30,8 @@ class MochaInstaller {
 
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('mocha')
-        this.operator.addTester('mocha')
+        jsInstaller.addDevPackage('babel-register')
+        this.operator.addTester('mocha', './node_modules/.bin/mocha -c test')
 
         await this.operator.writeFile('test/mocha.opts', mochaOptsText)
         await this.operator.writeFile('test/test.js', testJs)

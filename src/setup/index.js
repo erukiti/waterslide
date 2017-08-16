@@ -41,6 +41,7 @@ class Setup {
     noOpt: Array<string>
     noUse: Array<string>
     opt: Array<string>
+    isUse: boolean
     postInstalls: Array<() => void>
     directories: {[string]: string}
     generators: {[string]: Generator}
@@ -48,7 +49,7 @@ class Setup {
     operator: Operator
     target: ?string
     builders: Array<string>
-    testers: Array<string>
+    testers: {[string]: string}
     info: Array<Info>
 
     constructor(cliUtils: CliUtils) {
@@ -60,6 +61,7 @@ class Setup {
         this.generators = {}
         this.noOpt = []
         this.noUse = []
+        this.isUse = false
 
         this.postInstalls = []
 
@@ -67,7 +69,7 @@ class Setup {
         this.entries = config.getLocal('entries') || []
         this.target = config.getLocal('target')
         this.builders = config.getLocal('builders') || []
-        this.testers = config.getLocal('testers') || []
+        this.testers = config.getLocal('testers') || {}
         this.opt = config.getLocal('opt') || []
         this.info = config.getLocal('info') || []
 
@@ -78,6 +80,10 @@ class Setup {
 
     setProjectDir(name: string) {
         this.projectDir = name
+    }
+
+    setUse() {
+        this.isUse = true
     }
 
     setOpt(opt: Array<string>) {

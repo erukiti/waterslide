@@ -33,7 +33,6 @@
     "mustache": "^2.3.0",
     "node-sass": "^4.5.0",
     "open": "0.0.5",
-    "power-assert": "^1.4.2",
     "read": "^1.0.7",
     "sillyname": "^0.1.0",
     "terminal-menu": "^2.1.1",
@@ -53,6 +52,7 @@
     "eslint-plugin-flowtype": "^2.30.4",
     "flow-bin": "^0.42.0",
     "ncp": "^2.0.0",
+    "power-assert": "^1.4.2",
     "webpack": "^2.2.1"
   },
   "ava": {

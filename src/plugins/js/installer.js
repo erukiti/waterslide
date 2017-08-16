@@ -85,9 +85,12 @@ class JsInstaller {
     async install() {
         this.addDevPackage('~/work/innocentia')
 
-        const noUse = this.operator.getNoUse()
-        const defaultUse = ['power-assert', 'ava', 'eslint', 'babel']
-        await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))
+        if (this.operator.isUse) {
+            const noUse = this.operator.getNoUse()
+            const defaultUse = ['ava', 'eslint', 'babel']
+
+            await Promise.all(defaultUse.filter(value => !noUse.includes(value)).map(async value => await this.operator.getInstaller(value)))
+        }
 
         const webpackInstaller = await this.operator.getInstaller('webpack')
         webpackInstaller.addLoader('\\.jsx?$', [

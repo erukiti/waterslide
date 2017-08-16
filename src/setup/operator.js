@@ -153,12 +153,12 @@ class Operator {
      *
      * @param {string} name
      */
-    addTester(name: string) {
-        if (this.setup.testers.includes(name)) {
+    addTester(name: string, command: string) {
+        if (typeof this.setup.testers[name] === 'string') {
             return
         }
 
-        this.setup.testers.push(name)
+        this.setup.testers[name] = command
         config.writeLocal('testers', this.setup.testers)
     }
 

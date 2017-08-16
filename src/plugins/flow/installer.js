@@ -23,10 +23,10 @@ class FlowInstaller {
         const jsInstaller = await this.operator.getInstaller('js')
         jsInstaller.addDevPackage('flow-bin')
         jsInstaller.addDevPackage('flow-typed')
-        jsInstaller.addDevPackage('babel-plugin-transform-flow-strip-types')
+        jsInstaller.addDevPackage('babel-preset-flow')
 
         const babelInstaller = await this.operator.getInstaller('babel')
-        babelInstaller.addPlugin('transform-flow-strip-types')
+        babelInstaller.addPreset('flow')
 
         // const eslintInstaller = await this.operator.getInstaller('eslint')
         // eslintInstaller.
