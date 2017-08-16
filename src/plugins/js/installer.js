@@ -87,7 +87,7 @@ class JsInstaller {
     }
 
     async install() {
-        this.addDevPackage('~/work/innocentia')
+        this.addDevPackage('innocentia')
 
         if (!this.operator.getIsUse()) {
             const noUse = this.operator.getNoUse()
