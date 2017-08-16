@@ -3,7 +3,7 @@
   "bin": {
     "ws": "bin/ws"
   },
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Waterslide is easy setting method for JavaScript.",
   "main": "lib/waterslide.js",
   "scripts": {

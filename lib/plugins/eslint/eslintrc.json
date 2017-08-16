@@ -95,6 +95,11 @@
         "eqeqeq": 2,
         "no-shadow": 1
     },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
     "env": {
         "es6": true,
         "browser": true,
