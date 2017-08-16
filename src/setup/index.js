@@ -126,7 +126,7 @@ class Setup {
 
         await Promise.all(this.postInstalls.map(cb => cb()))
 
-        await this.command.execAll(command => this.cliUtils.verbose(command))
+        await this.command.execAll(command => this.cliUtils.debug(`${command} is installed`))
     }
 }
 

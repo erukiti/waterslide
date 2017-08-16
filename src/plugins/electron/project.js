@@ -19,7 +19,7 @@ class ElectronProject {
         jsInstaller.addDevPackage('electron')
         jsInstaller.addDevPackage('electron-packager')
         jsInstaller.addDevPackage('electron-installer-dmg')
-        jsInstaller.setMain('src/app.js')
+        jsInstaller.setMain('build/app.js')
         jsInstaller.setBuildConfig({
             'build': {
                 'artifactName': '${productName}_installer.${ext}',

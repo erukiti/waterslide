@@ -22,10 +22,10 @@ class Command {
 
     exec(command: string) {
         return new Promise((resolve, reject) => {
-            // this.cliUtils.verbose(command)
+            this.cliUtils.message(command)
             const child = this.childProcess.exec(command)
-            child.stdout.pipe(process.stdout)
-            child.stderr.pipe(process.stdout)
+            // child.stdout.pipe(process.stdout)
+            // child.stderr.pipe(process.stdout)
             child.on('error', err => reject(err))
             child.on('exit', (code, signal) => {
                 if (code) {
